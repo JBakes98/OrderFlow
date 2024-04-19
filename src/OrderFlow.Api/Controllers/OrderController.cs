@@ -1,5 +1,6 @@
 using Amazon.DynamoDBv2.DataModel;
 using Microsoft.AspNetCore.Mvc;
+using OrderFlow.Contracts.Requests;
 using OrderFlow.Models;
 
 namespace OrderFlow.Controllers
@@ -15,12 +16,15 @@ namespace OrderFlow.Controllers
             _context = context;
         }
 
-        /*// GET: api/Order
+        // GET: api/Order
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrder()
         {
-            return await _context.LoadAsync<Order>();
-        }*/
+            var conditions = new List<ScanCondition>();
+            var results = await _context.QueryAsync<Order>(conditions).GetRemainingAsync();
+
+            return results;
+        }
 
         // GET: api/Order/5
         [HttpGet("{id}")]
@@ -34,6 +38,16 @@ namespace OrderFlow.Controllers
             }
 
             return order;
+        }
+        
+        // POST: api/Order
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Order>> PostOrder(CreateOrder order)
+        {
+            await _context.SaveAsync(order);
+
+            return CreatedAtAction("GetOrder", new { id = order.Id }, order);
         }
 
         // PUT: api/Order/5
@@ -67,16 +81,6 @@ namespace OrderFlow.Controllers
             return NoContent();
         }
         */
-
-        // POST: api/Order
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
-        {
-            await _context.SaveAsync(order);
-
-            return CreatedAtAction("GetOrder", new { id = order.Id }, order);
-        }
 
         // DELETE: api/Order/5
         /*[HttpDelete("{id}")]

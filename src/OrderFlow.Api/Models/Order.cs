@@ -6,9 +6,9 @@ namespace OrderFlow.Models;
 public class Order
 {
     [DynamoDBHashKey]
-    public Guid Id { get; set; }
+    public string Id { get; set; }
     public int Quantity { get; set; }
-    public Guid InstrumentId { get; set; }
+    public string InstrumentId { get; set; }
     public double Price { get; set; }
     public DateTime OrderDate { get; set; }
 }
