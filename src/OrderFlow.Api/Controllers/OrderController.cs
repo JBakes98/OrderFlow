@@ -21,14 +21,14 @@ namespace OrderFlow.Controllers
         public async Task<ActionResult<IEnumerable<Order>>> GetOrder()
         {
             var conditions = new List<ScanCondition>();
-            var results = await _context.QueryAsync<Order>(conditions).GetRemainingAsync();
+            var results = await _context.ScanAsync<Order>(conditions).GetRemainingAsync();
 
             return results;
         }
 
         // GET: api/Order/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(Guid id)
+        public async Task<ActionResult<Order>> GetOrder(string id)
         {
             var order = await _context.LoadAsync<Order>(id);
 
@@ -43,7 +43,7 @@ namespace OrderFlow.Controllers
         // POST: api/Order
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(CreateOrder order)
+        public async Task<ActionResult<Order>> PostOrder(Order order)
         {
             await _context.SaveAsync(order);
 
