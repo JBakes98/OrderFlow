@@ -1,11 +1,15 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+using OrderFlow.Contracts.Requests;
+using OrderFlow.Mappers.Request;
+using OrderFlow.Models;
+using OrderFlow.Services.Handlers;
 
 namespace OrderFlow.Extensions;
 
 public static class ServiceExtensions
 {
-    public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration configuration)
+    public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
         // Add services to the container.
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -17,6 +21,7 @@ public static class ServiceExtensions
         services.AddAWSService<IAmazonDynamoDB>();
         services.AddTransient<IDynamoDBContext, DynamoDBContext>();
 
-        return services;
+        services.AddSingleton<IOrderHandler<Order>, CreateHandler>();
+        services.AddSingleton<IMapper<CreateOrder, Order>, CreateOrderToOrderMapper>();
     }
 }
