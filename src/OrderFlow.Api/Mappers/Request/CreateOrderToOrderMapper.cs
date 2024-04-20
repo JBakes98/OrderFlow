@@ -8,6 +8,10 @@ public class CreateOrderToOrderMapper : IMapper<CreateOrder, Order>
 {
     public Order Map(CreateOrder source)
     {
-        return new Order();
+        return new Order(
+                instrumentId: source.InstrumentId.ToString(),
+                quantity: source.Quantity,
+                price: source.Price
+            );
     }
 }

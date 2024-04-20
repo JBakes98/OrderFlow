@@ -1,5 +1,7 @@
 using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.DocumentModel;
 using Microsoft.AspNetCore.Mvc;
+using OrderFlow.Contracts.Requests;
 using OrderFlow.Models;
 using OrderFlow.Services.Handlers;
 
@@ -10,11 +12,11 @@ namespace OrderFlow.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IDynamoDBContext _context;
-        private readonly IOrderHandler<Order> _createHandler;
+        private readonly IOrderHandler<CreateOrder> _createHandler;
         private readonly IOrderHandler<Guid> _getHandler;
 
         public OrderController(IDynamoDBContext context,
-            IOrderHandler<Order> createHandler,
+            IOrderHandler<CreateOrder> createHandler,
             IOrderHandler<Guid> getHandler)
         {
             _context = context;
@@ -54,7 +56,7 @@ namespace OrderFlow.Controllers
         // POST: api/Order
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order request, CancellationToken cancellationToken)
+        public async Task<ActionResult<Order>> PostOrder(CreateOrder request, CancellationToken cancellationToken)
         {
             var result = await _createHandler.HandleAsync(request, cancellationToken);
 

@@ -21,7 +21,7 @@ public static class ServiceExtensions
         services.AddAWSService<IAmazonDynamoDB>();
         services.AddTransient<IDynamoDBContext, DynamoDBContext>();
 
-        services.AddSingleton<IOrderHandler<Order>, CreateHandler>();
+        services.AddSingleton<IOrderHandler<CreateOrder>, CreateHandler>();
         services.AddSingleton<IOrderHandler<Guid>, GetHandler>();
         services.AddSingleton<IMapper<CreateOrder, Order>, CreateOrderToOrderMapper>();
     }
