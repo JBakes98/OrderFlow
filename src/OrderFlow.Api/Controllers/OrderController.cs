@@ -11,19 +11,26 @@ namespace OrderFlow.Controllers
     {
         private readonly IDynamoDBContext _context;
         private readonly IOrderHandler<Order> _createHandler;
+        private readonly IOrderHandler<Guid> _getHandler;
 
         public OrderController(IDynamoDBContext context,
-            IOrderHandler<Order> createHandler)
+            IOrderHandler<Order> createHandler,
+            IOrderHandler<Guid> getHandler)
         {
             _context = context;
             _createHandler = createHandler;
+            _getHandler = getHandler;
         }
 
         // GET: api/Order
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrder()
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrder(
+            [FromQuery(Name = "instrument")] string instrumentId,
+            [FromQuery(Name = "order-date")] DateTime orderDate
+            )
         {
-            var conditions = new List<ScanCondition>();
+            var scanCondition = new ScanCondition("InstrumentId", ScanOperator.Equal, instrumentId.ToString());
+            var conditions = new List<ScanCondition>(){scanCondition};
             var results = await _context.ScanAsync<Order>(conditions).GetRemainingAsync();
 
             return results;
@@ -31,15 +38,16 @@ namespace OrderFlow.Controllers
 
         // GET: api/Order/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(string id)
+        public async Task<ActionResult<Order>> GetOrder([FromRoute] Guid id,  CancellationToken cancellationToken)
         {
-            var order = await _context.LoadAsync<Order>(id);
+            var result = await _getHandler.HandleAsync(id, cancellationToken);
 
-            if (order == null)
+            if (result.IsT1 || result.AsT0 == null)
             {
                 return NotFound();
             }
 
+            var order = result.AsT0;
             return order;
         }
         

@@ -22,6 +22,7 @@ public static class ServiceExtensions
         services.AddTransient<IDynamoDBContext, DynamoDBContext>();
 
         services.AddSingleton<IOrderHandler<Order>, CreateHandler>();
+        services.AddSingleton<IOrderHandler<Guid>, GetHandler>();
         services.AddSingleton<IMapper<CreateOrder, Order>, CreateOrderToOrderMapper>();
     }
 }
