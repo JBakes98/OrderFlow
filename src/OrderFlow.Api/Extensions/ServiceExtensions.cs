@@ -1,5 +1,6 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+using Humanizer;
 using OrderFlow.Contracts.Requests;
 using OrderFlow.Mappers.Request;
 using OrderFlow.Models;
@@ -23,6 +24,8 @@ public static class ServiceExtensions
 
         services.AddSingleton<IOrderHandler<CreateOrder>, CreateHandler>();
         services.AddSingleton<IOrderHandler<Guid>, GetHandler>();
+        
         services.AddSingleton<IMapper<CreateOrder, Order>, CreateOrderToOrderMapper>();
+        services.AddSingleton<IMapper<CreateInstrument, Instrument>, CreateInstrumentToInstrumentMapper>();
     }
 }
