@@ -1,9 +1,10 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
-using Humanizer;
 using OrderFlow.Contracts.Requests;
 using OrderFlow.Mappers.Request;
 using OrderFlow.Models;
+using OrderFlow.Repositories;
+using OrderFlow.Services;
 using OrderFlow.Services.Handlers;
 
 namespace OrderFlow.Extensions;
@@ -21,6 +22,8 @@ public static class ServiceExtensions
         services.AddDefaultAWSOptions(configuration.GetAWSOptions());
         services.AddAWSService<IAmazonDynamoDB>();
         services.AddTransient<IDynamoDBContext, DynamoDBContext>();
+
+        services.AddTransient<IRepository<Order>, OrderRepository>();
 
         services.AddSingleton<IOrderHandler<CreateOrder>, CreateHandler>();
         services.AddSingleton<IOrderHandler<Guid>, GetHandler>();
