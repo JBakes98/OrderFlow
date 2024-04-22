@@ -24,6 +24,7 @@ public static class ServiceExtensions
         services.AddTransient<IDynamoDBContext, DynamoDBContext>();
 
         services.AddTransient<IRepository<Order>, OrderRepository>();
+        services.AddTransient<IRepository<Instrument>, InstrumentRepository>();
 
         services.AddSingleton<IOrderHandler<CreateOrder>, CreateHandler>();
         services.AddSingleton<IOrderHandler<Guid>, GetHandler>();

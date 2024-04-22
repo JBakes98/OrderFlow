@@ -20,12 +20,15 @@ public class OrderRepository : IRepository<Order>, IDisposable
         _context.Dispose();
     }
 
-    public Task<IEnumerable<Order>> Get()
+    public async Task<OneOf<IEnumerable<Order>, Error>> QueryAsync()
     {
-        throw new NotImplementedException();
+        var conditions = new List<ScanCondition>();
+        var results = await _context.ScanAsync<Order>(conditions).GetRemainingAsync();
+
+        return results;
     }
 
-    public async Task<OneOf<Order, Error>> GetById(string id)
+    public async Task<OneOf<Order, Error>> GetByIdAsync(string id)
     {
         var result = await _context.LoadAsync<Order>(id);
 
@@ -35,17 +38,19 @@ public class OrderRepository : IRepository<Order>, IDisposable
         return result;
     }
 
-    public async Task Insert(Order source, CancellationToken cancellationToken)
+    public async Task<OneOf<Order, Error>> InsertAsync(Order source, CancellationToken cancellationToken)
     {
         await _context.SaveAsync(source, cancellationToken);
+
+        return source;
     }
 
-    public Task Delete(Order source)
+    public Task DeleteAsync(Order source)
     {
         throw new NotImplementedException();
     }
 
-    public Task Update(Order source)
+    public Task UpdateAsync(Order source)
     {
         throw new NotImplementedException();
     }
