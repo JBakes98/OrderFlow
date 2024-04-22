@@ -1,6 +1,7 @@
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using Microsoft.AspNetCore.Mvc;
+using OneOf;
 using OrderFlow.Contracts.Requests;
 using OrderFlow.Models;
 using OrderFlow.Services.Handlers;
@@ -12,12 +13,12 @@ namespace OrderFlow.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IDynamoDBContext _context;
-        private readonly IOrderHandler<CreateOrder> _createHandler;
-        private readonly IOrderHandler<Guid> _getHandler;
+        private readonly IHandler<CreateOrder, Order> _createHandler;
+        private readonly IHandler<Guid, Order> _getHandler;
 
         public OrderController(IDynamoDBContext context,
-            IOrderHandler<CreateOrder> createHandler,
-            IOrderHandler<Guid> getHandler)
+            IHandler<CreateOrder, Order> createHandler,
+            IHandler<Guid, Order> getHandler)
         {
             _context = context;
             _createHandler = createHandler;
@@ -40,32 +41,21 @@ namespace OrderFlow.Controllers
 
         // GET: api/Order/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder([FromRoute] Guid id,  CancellationToken cancellationToken)
+        public async Task<IActionResult> GetOrder([FromRoute] Guid id,  CancellationToken cancellationToken)
         {
             var result = await _getHandler.HandleAsync(id, cancellationToken);
 
-            if (result.IsT1 || result.AsT0 == null)
-            {
-                return NotFound();
-            }
-
-            var order = result.AsT0;
-            return order;
+            return GetOrderResponse(result);
         }
         
         // POST: api/Order
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(CreateOrder request, CancellationToken cancellationToken)
+        public async Task<IActionResult> PostOrder(CreateOrder request, CancellationToken cancellationToken)
         {
             var result = await _createHandler.HandleAsync(request, cancellationToken);
 
-            if (!result.IsT0) 
-                return BadRequest();
-            
-            var order = result.AsT0;
-            
-            return CreatedAtAction("GetOrder", new { id = order.Id }, order);
+            return CreateOrderResponse(result);
         }
 
         // PUT: api/Order/5
@@ -116,9 +106,18 @@ namespace OrderFlow.Controllers
             return NoContent();
         }*/
 
-        private bool OrderExists(Guid id)
+        private IActionResult CreateOrderResponse(OneOf<Order, Error> result)
         {
-            return _context.LoadAsync<Order>(id) == null;
+            return result.Match<IActionResult>(
+                order => new ObjectResult(order),
+                error => new ObjectResult(error));
+        }
+
+        private IActionResult GetOrderResponse(OneOf<Order, Error> result)
+        {
+            return result.Match<IActionResult>(
+                order => new ObjectResult(order),
+                error => new ObjectResult(error));
         }
     }
 }
