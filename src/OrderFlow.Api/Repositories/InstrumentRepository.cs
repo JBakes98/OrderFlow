@@ -2,6 +2,7 @@ using System.Net;
 using Amazon.DynamoDBv2.DataModel;
 using OneOf;
 using OrderFlow.Domain;
+using OrderFlow.Events;
 using OrderFlow.Models;
 
 namespace OrderFlow.Repositories;
