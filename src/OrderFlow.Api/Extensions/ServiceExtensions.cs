@@ -31,5 +31,7 @@ public static class ServiceExtensions
         
         services.AddSingleton<IMapper<CreateOrder, Order>, CreateOrderToOrderMapper>();
         services.AddSingleton<IMapper<CreateInstrument, Instrument>, CreateInstrumentToInstrumentMapper>();
+
+        services.AddSingleton<IInstrumentService, InstrumentService>();
     }
 }
