@@ -26,8 +26,11 @@ public static class ServiceExtensions
         services.AddTransient<IRepository<Order>, OrderRepository>();
         services.AddTransient<IRepository<Instrument>, InstrumentRepository>();
 
-        services.AddSingleton<IOrderHandler<CreateOrder>, CreateHandler>();
-        services.AddSingleton<IOrderHandler<Guid>, GetHandler>();
+        services.AddSingleton<IHandler<CreateOrder, Order>, OrderCreateHandler>();
+        services.AddSingleton<IHandler<Guid, Order>, OrderGetHandler>();
+        
+        services.AddSingleton<IHandler<CreateInstrument, Instrument>, InstrumentCreateHandler>();
+        services.AddSingleton<IHandler<Guid, Instrument>, InstrumentGetHandler>();
         
         services.AddSingleton<IMapper<CreateOrder, Order>, CreateOrderToOrderMapper>();
         services.AddSingleton<IMapper<CreateInstrument, Instrument>, CreateInstrumentToInstrumentMapper>();
