@@ -50,4 +50,20 @@ resource "aws_dynamodb_table" "instrument_table" {
     name = "Id"
     type = "S"
   }
+  
+  attribute {
+    name = "Ticker"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "TickerGSI"
+    hash_key        = "Ticker"
+    projection_type = "ALL"
+    read_capacity   = 5
+    write_capacity  = 5
+
+    # Define the attributes projected into the index
+    non_key_attributes = [] # Add attribute names here if projection_type is "INCLUDE"
+  }
 }
