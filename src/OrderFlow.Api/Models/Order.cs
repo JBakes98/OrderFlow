@@ -1,4 +1,5 @@
 using Amazon.DynamoDBv2.DataModel;
+using OrderFlow.Events;
 
 namespace OrderFlow.Models;
 
@@ -11,7 +12,6 @@ public class Order
     public string InstrumentId { get; set; }
     public double Price { get; set; }
     public DateTime OrderDate { get; set; } = DateTime.Now;
-    
     public Order(){}
 
     public Order(string instrumentId, int quantity, double price)
