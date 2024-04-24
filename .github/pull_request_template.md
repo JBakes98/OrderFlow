@@ -1,10 +1,13 @@
 # Pull Request
 ## Checklist
-- [] Changes follow SOLID principles
-- [] Changes to API contract
-- [] Changes to event schemas
+- [ ] Changes follow SOLID principles
+- [ ]  Changes to API contract
+- [ ] Changes to event schemas
 ## Functional Changes
+-
 
 ## Technical Changes
+- Migrating to Postgres DB
 
 ## How to test
+- 

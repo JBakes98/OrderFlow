@@ -17,8 +17,7 @@ public class InstrumentServiceTests
     public async void Should_RetrieveInstrument_If_Present(
         [Frozen] Mock<IRepository<Instrument>> mockRepository,
         Instrument instrument,
-        InstrumentService sut,
-        IFixture fixture)
+        InstrumentService sut)
     {
         mockRepository.Setup(x =>
                 x.GetByIdAsync(instrument.Id))
@@ -37,8 +36,7 @@ public class InstrumentServiceTests
     public async void Should_ReturnError_If_InstrumentNotFound(
         [Frozen] Mock<IRepository<Instrument>> mockRepository,
         InstrumentService sut,
-        string id,
-        IFixture fixture)
+        string id)
     {
         var expectedError = new Error(HttpStatusCode.UnprocessableEntity, ErrorCodes.InstrumentNotFound);
 

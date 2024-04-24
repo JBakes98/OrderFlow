@@ -12,10 +12,6 @@ public class Instrument
     public string Sector { get; set; }
     public string Exchange { get; set; }
 
-    public Instrument()
-    {
-    }
-
     public Instrument(string ticker, string name, string sector, string exchange)
     {
         Ticker = ticker;

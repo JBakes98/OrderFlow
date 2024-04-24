@@ -1,11 +1,7 @@
 name: build and test
 
 on:
-  push:
   pull_request:
-    paths:
-      - '**.cs'
-      - '**.csproj'
 
 env:
   DOTNET_VERSION: '8.0.x' # The .NET SDK version to use
@@ -33,4 +29,4 @@ jobs:
         run: dotnet build --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test --no-restore --verbosity normal
+        run: dotnet test --no-restore --verbosity minimal
