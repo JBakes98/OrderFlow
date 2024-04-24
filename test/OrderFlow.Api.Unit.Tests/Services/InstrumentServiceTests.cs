@@ -18,41 +18,39 @@ public class InstrumentServiceTests
         [Frozen] Mock<IRepository<Instrument>> mockRepository,
         Instrument instrument,
         InstrumentService sut,
-        CancellationToken cancellationToken,
         IFixture fixture)
     {
         mockRepository.Setup(x =>
                 x.GetByIdAsync(instrument.Id))
             .ReturnsAsync(instrument)
             .Verifiable();
-        
+
         var result = await sut.RetrieveInstrument(instrument.Id);
-        
+
         var retrievedInstrument = result.AsT0;
-        
+
         Assert.Equal(instrument, retrievedInstrument);
         mockRepository.Verify();
     }
-    
+
     [Theory, AutoMoqData]
     public async void Should_ReturnError_If_InstrumentNotFound(
         [Frozen] Mock<IRepository<Instrument>> mockRepository,
         InstrumentService sut,
         string id,
-        CancellationToken cancellationToken,
         IFixture fixture)
     {
         var expectedError = new Error(HttpStatusCode.UnprocessableEntity, ErrorCodes.InstrumentNotFound);
-        
+
         mockRepository.Setup(x =>
                 x.GetByIdAsync(It.IsAny<string>()))
             .ReturnsAsync(expectedError)
             .Verifiable();
-        
+
         var result = await sut.RetrieveInstrument(id);
-        
+
         var retrievedError = result.AsT1;
-        
+
         Assert.Equal(expectedError, retrievedError);
         mockRepository.Verify();
     }
@@ -68,24 +66,24 @@ public class InstrumentServiceTests
             .Verifiable();
 
         var result = await sut.RetrieveInstruments();
-        
+
         Assert.True(result.IsT0);
         mockRepository.Verify();
     }
-    
+
     [Theory, AutoMoqData]
     public async void Should_ReturnError_IfQuery_Fails(
         [Frozen] Mock<IRepository<Instrument>> mockRepository,
         InstrumentService sut)
     {
         var expectedError = new Error(HttpStatusCode.Conflict, ErrorCodes.InstrumentNotFound);
-        
+
         mockRepository.Setup(x => x.QueryAsync())
             .ReturnsAsync(expectedError)
             .Verifiable();
 
         var result = await sut.RetrieveInstruments();
-        
+
         Assert.True(result.IsT1);
         mockRepository.Verify();
     }

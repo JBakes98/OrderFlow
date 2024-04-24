@@ -6,8 +6,8 @@ public class BaseOrderEvent : DomainEvent
     public string OrderId { get; }
     public string InstrumentId { get; }
     public int Quantity { get; }
-    public double Price { get; } 
-    
+    public double Price { get; }
+
     public BaseOrderEvent(
         string orderId,
         string instrumentId,

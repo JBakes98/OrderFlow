@@ -4,7 +4,7 @@ namespace OrderFlow.Models;
 
 [DynamoDBTable("Instrument")]
 public class Instrument
-{   
+{
     [DynamoDBHashKey]
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public string Ticker { get; set; }

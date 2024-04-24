@@ -33,7 +33,7 @@ namespace OrderFlow.Controllers
             )
         {
             var scanCondition = new ScanCondition("InstrumentId", ScanOperator.Equal, instrumentId.ToString());
-            var conditions = new List<ScanCondition>(){scanCondition};
+            var conditions = new List<ScanCondition>() { scanCondition };
             var results = await _context.ScanAsync<Order>(conditions).GetRemainingAsync();
 
             return results;
@@ -41,13 +41,13 @@ namespace OrderFlow.Controllers
 
         // GET: api/Order/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetOrder([FromRoute] Guid id,  CancellationToken cancellationToken)
+        public async Task<IActionResult> GetOrder([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             var result = await _getHandler.HandleAsync(id, cancellationToken);
 
             return GetOrderResponse(result);
         }
-        
+
         // POST: api/Order
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]

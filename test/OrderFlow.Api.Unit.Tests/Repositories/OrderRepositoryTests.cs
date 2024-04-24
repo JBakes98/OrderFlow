@@ -45,7 +45,7 @@ public class OrderRepositoryTests
         Assert.Equivalent(expected, resultError);
         mockContext.Verify();
     }
-    
+
     [Theory, AutoMoqData]
     public async void Repository_QueryAsync_Should_ReturnObjects(
         List<Order> orders,
@@ -57,13 +57,13 @@ public class OrderRepositoryTests
                     .GetRemainingAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(orders)
             .Verifiable();
-        
+
         var result = await sut.QueryAsync();
 
         Assert.True(result.IsT0);
         mockContext.Verify();
     }
-    
+
     [Theory, AutoMoqData]
     public async void Repository_QueryAsync_Should_ReturnError(
         List<Order> orders,

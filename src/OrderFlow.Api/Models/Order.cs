@@ -6,13 +6,13 @@ namespace OrderFlow.Models;
 [DynamoDBTable("Order")]
 public class Order
 {
-    [DynamoDBHashKey] 
+    [DynamoDBHashKey]
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public int Quantity { get; set; }
     public string InstrumentId { get; set; }
     public double Price { get; set; }
     public DateTime OrderDate { get; set; } = DateTime.Now;
-    public Order(){}
+    public Order() { }
 
     public Order(string instrumentId, int quantity, double price)
     {

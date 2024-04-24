@@ -14,7 +14,7 @@ public class OrderRepository : IRepository<Order>, IDisposable
     {
         _context = context;
     }
-    
+
     public void Dispose()
     {
         _context.Dispose();

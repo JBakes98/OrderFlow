@@ -15,7 +15,7 @@ public class OrderEventsRepository : IRepository<DomainEvent>, IDisposable
     {
         _context = context;
     }
-    
+
     public void Dispose()
     {
         _context.Dispose();

@@ -45,7 +45,7 @@ public class InstrumentRepositoryTests
         Assert.Equivalent(expected, resultError);
         mockContext.Verify();
     }
-    
+
     [Theory, AutoMoqData]
     public async void Repository_QueryAsync_Should_ReturnObjects(
         List<Instrument> instruments,
@@ -62,7 +62,7 @@ public class InstrumentRepositoryTests
         Assert.True(result.IsT0);
         mockContext.Verify();
     }
-    
+
     [Theory, AutoMoqData]
     public async void Repository_QueryAsync_Should_ReturnError(
         List<Instrument> instruments,

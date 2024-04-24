@@ -15,7 +15,7 @@ public class InstrumentRepository : IRepository<Instrument>
     {
         _context = context;
     }
-    
+
     public void Dispose()
     {
         _context.Dispose();
@@ -49,7 +49,7 @@ public class InstrumentRepository : IRepository<Instrument>
     public Task DeleteAsync(Instrument source)
     {
         throw new NotImplementedException();
-    } 
+    }
 
     public Task UpdateAsync(Instrument source)
     {

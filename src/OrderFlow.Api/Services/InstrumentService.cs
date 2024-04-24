@@ -13,7 +13,7 @@ public class InstrumentService : IInstrumentService
     {
         _repository = repository;
     }
-    
+
     public async Task<OneOf<Instrument, Error>> RetrieveInstrument(string id)
     {
         var instrument = await _repository.GetByIdAsync(id);

@@ -19,11 +19,11 @@ public class InstrumentCreateHandler : IHandler<CreateInstrument, Instrument>
         _instrumentRepository = instrumentRepository;
         _createInstrumentToInstrumentMapper = createInstrumentToInstrumentMapper;
     }
-    
+
     public async Task<OneOf<Instrument, Error>> HandleAsync(CreateInstrument request, CancellationToken cancellationToken)
     {
         var instrument = _createInstrumentToInstrumentMapper.Map(request);
-            
+
         await _instrumentRepository.InsertAsync(instrument, cancellationToken);
 
         return instrument;

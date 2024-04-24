@@ -27,7 +27,7 @@ public static class ConfigurationExtensions
 
         foreach (var child in section.GetChildren())
             DumpSection(child, log, depth + 1);
-        
+
         if (!rootSection)
             return;
 

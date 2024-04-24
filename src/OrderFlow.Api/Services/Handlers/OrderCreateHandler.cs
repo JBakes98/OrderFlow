@@ -36,12 +36,12 @@ public class OrderCreateHandler : IHandler<CreateOrder, Order>
             return instrument.AsT1;
 
         var order = _createOrderToOrderMapper.Map(request);
-        
+
         await _repository.InsertAsync(order, cancellationToken);
-        
+
         var @event = _orderToOrderCreatedEventMapper.Map(order);
         await _domainRepository.InsertAsync(@event, cancellationToken);
-        
+
         return order;
     }
 }

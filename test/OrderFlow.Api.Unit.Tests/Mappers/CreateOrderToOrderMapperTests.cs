@@ -12,13 +12,12 @@ public class CreateOrderToOrderMapperTests
     )
     {
         var result = sut.Map(source);
-        
+
         Assert.Equal(source.InstrumentId.ToString(), result.InstrumentId);
         Assert.Equal(source.Quantity, result.Quantity);
         Assert.Equal(source.Price, result.Price);
-        
+
         Assert.NotNull(result.Id);
-        Assert.NotNull(result.OrderDate);
     }
-    
+
 }
