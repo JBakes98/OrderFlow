@@ -1,8 +1,5 @@
-using Amazon.DynamoDBv2.DataModel;
-
 namespace OrderFlow.Events;
 
-[DynamoDBTable("OrderEventsTable")]
 public class OrderCreatedEvent : BaseOrderEvent
 {
     public OrderCreatedEvent(

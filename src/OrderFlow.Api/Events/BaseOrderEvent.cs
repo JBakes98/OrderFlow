@@ -2,6 +2,12 @@ namespace OrderFlow.Events;
 
 public class BaseOrderEvent : DomainEvent
 {
+    public override string StreamId => OrderId;
+    public string OrderId { get; }
+    public string InstrumentId { get; }
+    public int Quantity { get; }
+    public double Price { get; } 
+    
     public BaseOrderEvent(
         string orderId,
         string instrumentId,
@@ -15,11 +21,4 @@ public class BaseOrderEvent : DomainEvent
         Quantity = quantity;
         Price = price;
     }
-    
-    public string OrderId { get; }
-    public string InstrumentId { get; }
-    public int Quantity { get; }
-    public double Price { get; }
-    
-    public override string StreamId => this.OrderId;
 }
