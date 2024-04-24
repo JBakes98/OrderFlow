@@ -1,11 +1,7 @@
 name: build and test
 
 on:
-  push:
   pull_request:
-    paths:
-      - '**.cs'
-      - '**.csproj'
 
 env:
   DOTNET_VERSION: '8.0.x' # The .NET SDK version to use
