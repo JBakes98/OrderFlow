@@ -1,19 +1,22 @@
-using System.Net;
+using System.Text.Json;
+using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.DocumentModel;
 using OneOf;
-using OrderFlow.Domain;
 using OrderFlow.Events;
 using OrderFlow.Models;
 
 namespace OrderFlow.Repositories;
 
-public class OrderEventsRepository : IRepository<DomainEvent>, IDisposable
+public class OrderEventsRepository : IRepository<Event>
 {
     private readonly IDynamoDBContext _context;
+    private readonly IAmazonDynamoDB _dynamoDBClient;
 
-    public OrderEventsRepository(IDynamoDBContext context)
+    public OrderEventsRepository(IAmazonDynamoDB dynamoDbClient)
     {
-        _context = context;
+        _dynamoDBClient = dynamoDbClient;
+        _context = new DynamoDBContext(_dynamoDBClient);
     }
 
     public void Dispose()
@@ -21,37 +24,38 @@ public class OrderEventsRepository : IRepository<DomainEvent>, IDisposable
         _context.Dispose();
     }
 
-    public async Task<OneOf<IEnumerable<DomainEvent>, Error>> QueryAsync()
+
+    public async Task<OneOf<IEnumerable<Event>, Error>> QueryAsync()
     {
         var conditions = new List<ScanCondition>();
-        var results = await _context.ScanAsync<DomainEvent>(conditions).GetRemainingAsync();
+        var results = await _context.ScanAsync<Event>(conditions).GetRemainingAsync();
 
         return results;
     }
 
-    public async Task<OneOf<DomainEvent, Error>> GetByIdAsync(string id)
-    {
-        var result = await _context.LoadAsync<DomainEvent>(id);
-
-        if (result == null)
-            return new Error(HttpStatusCode.NotFound, ErrorCodes.OrderNotFound);
-
-        return result;
-    }
-
-    public async Task<OneOf<DomainEvent, Error>> InsertAsync(DomainEvent source, CancellationToken cancellationToken)
-    {
-        await _context.SaveAsync(source, cancellationToken);
-
-        return source;
-    }
-
-    public Task DeleteAsync(DomainEvent source)
+    public Task<OneOf<Event, Error>> GetByIdAsync(string id)
     {
         throw new NotImplementedException();
     }
 
-    public Task UpdateAsync(DomainEvent source)
+    public async Task<OneOf<Event, Error>> InsertAsync(Event source, CancellationToken cancellationToken)
+    {
+        var json = JsonSerializer.Serialize(source);
+
+        var doc = Document.FromJson(json);
+        var table = Table.LoadTable(_dynamoDBClient, "OrderEvents");
+
+        await table.PutItemAsync(doc, cancellationToken);
+
+        return source;
+    }
+
+    public Task DeleteAsync(Event source)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task UpdateAsync(Event source)
     {
         throw new NotImplementedException();
     }
