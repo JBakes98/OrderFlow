@@ -1,24 +1,14 @@
+using System.Text.Json.Serialization;
+using Amazon.DynamoDBv2.DataModel;
+
 namespace OrderFlow.Events;
 
-public class BaseOrderEvent : DomainEvent
+[JsonDerivedType(typeof(OrderCreatedEvent))]
+public class BaseOrderEvent
 {
-    public override string StreamId => OrderId;
-    public string OrderId { get; }
-    public string InstrumentId { get; }
-    public int Quantity { get; }
-    public double Price { get; }
-
-    public BaseOrderEvent(
-        string orderId,
-        string instrumentId,
-        int quantity,
-        double price,
-        DateTime createdOn
-        ) : base(createdOn)
-    {
-        OrderId = orderId;
-        InstrumentId = instrumentId;
-        Quantity = quantity;
-        Price = price;
-    }
+    [DynamoDBHashKey] 
+    public string EventId { get; } = Guid.NewGuid().ToString();
+    public DateTime CreatedOn { get; set; }
+    public string EventType { get; set; }
+    public string OrderId { get; set; }
 }
