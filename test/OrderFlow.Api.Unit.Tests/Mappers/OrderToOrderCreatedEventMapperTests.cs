@@ -14,11 +14,10 @@ public class OrderToOrderCreatedEventMapperTests
         var result = sut.Map(source);
 
         Assert.Equal(source.Id, result.OrderId);
-        Assert.Equal(source.Id, result.StreamId);
         Assert.Equal(source.OrderDate, result.CreatedOn);
         Assert.Equal(source.InstrumentId, result.InstrumentId);
         Assert.Equal(source.Quantity, result.Quantity);
         Assert.Equal(source.Price, result.Price);
-
+        Assert.NotNull(result.EventId);
     }
 }
