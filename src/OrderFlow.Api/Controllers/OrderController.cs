@@ -1,5 +1,6 @@
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OrderFlow.Contracts.Requests;
@@ -27,6 +28,7 @@ namespace OrderFlow.Controllers
 
         // GET: api/Order
         [HttpGet]
+        [Authorize("read:orders")]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrder(
             [FromQuery(Name = "instrument")] string instrumentId,
             [FromQuery(Name = "order-date")] DateTime orderDate
@@ -89,22 +91,6 @@ namespace OrderFlow.Controllers
             return NoContent();
         }
         */
-
-        // DELETE: api/Order/5
-        /*[HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrder(Guid id)
-        {
-            var order = await _context.Order.FindAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            _context.Order.Remove(order);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }*/
 
         private IActionResult CreateOrderResponse(OneOf<Order, Error> result)
         {
