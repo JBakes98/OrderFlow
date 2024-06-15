@@ -1,4 +1,3 @@
-using Amazon.DynamoDBv2.DataModel;
 using OneOf;
 using OrderFlow.Models;
 using OrderFlow.Repositories;
