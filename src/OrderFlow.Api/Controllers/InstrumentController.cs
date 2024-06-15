@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OrderFlow.Contracts.Requests;
@@ -29,6 +30,7 @@ public class InstrumentController : ControllerBase
 
     // GET: api/<InstrumentController>
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetInstrument()
     {
         var results = await _instrumentService.RetrieveInstruments();
