@@ -27,7 +27,6 @@ resource "aws_cognito_user_pool" "user_pool" {
 }
 
 resource "aws_cognito_user_pool_domain" "cognito-domain" {
-  name = "order-flow-domain"
   domain = "orderflow"
   user_pool_id = "${aws_cognito_user_pool.user_pool.id}"
 }
