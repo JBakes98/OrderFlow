@@ -1,5 +1,3 @@
-using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
 using OrderFlow.Contracts.Requests;
 using OrderFlow.Events;
 using OrderFlow.Mappers.Events;
@@ -21,27 +19,24 @@ public static class ServiceExtensions
         services.AddSwaggerGen();
         services.AddControllers();
 
-        services.AddDefaultAWSOptions(configuration.GetAWSOptions());
-        services.AddAWSService<IAmazonDynamoDB>();
-        services.AddTransient<IDynamoDBContext, DynamoDBContext>();
-
         services.AddTransient<IRepository<Order>, OrderRepository>();
         services.AddTransient<IRepository<Event>, OrderEventsRepository>();
         services.AddTransient<IRepository<Instrument>, InstrumentRepository>();
 
-        services.AddSingleton<IHandler<CreateOrder, Order>, OrderCreateHandler>();
-        services.AddSingleton<IHandler<Guid, Order>, OrderGetHandler>();
+        services.AddScoped<IHandler<CreateOrder, Order>, OrderCreateHandler>();
+        services.AddScoped<IHandler<Guid, Order>, OrderGetHandler>();
 
-        services.AddSingleton<IHandler<CreateInstrument, Instrument>, InstrumentCreateHandler>();
-        services.AddSingleton<IHandler<Guid, Instrument>, InstrumentGetHandler>();
+        services.AddScoped<IHandler<CreateInstrument, Instrument>, InstrumentCreateHandler>();
+        services.AddScoped<IHandler<Guid, Instrument>, InstrumentGetHandler>();
 
         services.AddSingleton<IMapper<CreateOrder, Order>, CreateOrderToOrderMapper>();
         services.AddSingleton<IMapper<Order, OrderCreatedEvent>, OrderToOrderCreatedEventMapper>();
         services.AddSingleton<IMapper<CreateInstrument, Instrument>, CreateInstrumentToInstrumentMapper>();
         services.AddSingleton<IMapper<BaseOrderEvent, Event>, OrderEventToEventMapper>();
 
-        services.AddSingleton<IHandler<CreateOrder, Order>, OrderCreateHandler>();
+        services.AddScoped<IHandler<CreateOrder, Order>, OrderCreateHandler>();
 
-        services.AddSingleton<IInstrumentService, InstrumentService>();
+        services.AddScoped<IInstrumentService, InstrumentService>();
+        services.AddScoped<IOrderService, OrderService>();
     }
 }
