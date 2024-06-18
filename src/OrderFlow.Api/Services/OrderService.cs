@@ -21,7 +21,7 @@ public class OrderService : IOrderService
     public async Task<OneOf<Order, Error>> RetrieveOrder(string id)
     {
         var order = await _context.Orders.FindAsync(id);
-        
+
         if (order == null)
             return new Error(HttpStatusCode.NotFound, ErrorCodes.OrderNotFound);
 

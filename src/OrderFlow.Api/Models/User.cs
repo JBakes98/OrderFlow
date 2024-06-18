@@ -4,5 +4,5 @@ namespace OrderFlow.Models;
 
 public class User : IdentityUser
 {
-    
+
 }

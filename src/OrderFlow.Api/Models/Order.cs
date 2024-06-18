@@ -8,7 +8,7 @@ public class Order
         Quantity = quantity;
         Price = price;
     }
-    
+
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public int Quantity { get; set; }
     public string InstrumentId { get; set; }

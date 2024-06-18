@@ -9,8 +9,8 @@ public static class DatabaseExtensions
     {
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"),
-                x => 
-                    x.MigrationsHistoryTable("_EfMigrations", 
+                x =>
+                    x.MigrationsHistoryTable("_EfMigrations",
                         configuration.GetSection("Schema")
                             .GetSection("<YourDataSchema").Value)));
     }

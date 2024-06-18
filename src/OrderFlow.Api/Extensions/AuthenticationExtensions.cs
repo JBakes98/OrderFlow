@@ -8,11 +8,11 @@ public static class AuthenticationExtensions
 {
     public static void RegisterAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
-     services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
-     services.AddAuthorizationBuilder();
+        services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
+        services.AddAuthorizationBuilder();
 
-     services.AddIdentityCore<User>()
-            .AddEntityFrameworkStores<AppDbContext>()
-            .AddApiEndpoints();
+        services.AddIdentityCore<User>()
+               .AddEntityFrameworkStores<AppDbContext>()
+               .AddApiEndpoints();
     }
 }

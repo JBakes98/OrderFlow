@@ -20,8 +20,8 @@ public class OrderCreateHandler : IHandler<CreateOrder, Order>
     public OrderCreateHandler(
         IMapper<CreateOrder, Order> createOrderToOrderMapper,
         IMapper<Order, OrderCreatedEvent> orderToOrderCreatedEventMapper,
-        IInstrumentService instrumentService, 
-        IMapper<BaseOrderEvent, Event> orderEventToEventMapper, 
+        IInstrumentService instrumentService,
+        IMapper<BaseOrderEvent, Event> orderEventToEventMapper,
         AppDbContext context)
     {
         _createOrderToOrderMapper = Guard.Against.Null(createOrderToOrderMapper);
@@ -38,7 +38,7 @@ public class OrderCreateHandler : IHandler<CreateOrder, Order>
             return instrument.AsT1;
 
         var order = _createOrderToOrderMapper.Map(request);
-        
+
         _context.Orders.Add(order);
 
         var orderEvent = _orderToOrderCreatedEventMapper.Map(order);
@@ -46,7 +46,7 @@ public class OrderCreateHandler : IHandler<CreateOrder, Order>
         _context.Events.Add(@event);
 
         await _context.SaveChangesAsync(cancellationToken);
-        
+
         return order;
     }
 }
