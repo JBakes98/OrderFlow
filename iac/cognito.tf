@@ -26,6 +26,11 @@ resource "aws_cognito_user_pool" "user_pool" {
   }
 }
 
+resource "aws_cognito_user_pool_client" "client" {
+  name = "client"
+  user_pool_id = aws_cognito_user_pool.user_pool.id
+}
+
 resource "aws_cognito_user_pool_domain" "cognito-domain" {
   domain = "orderflow"
   user_pool_id = "${aws_cognito_user_pool.user_pool.id}"
