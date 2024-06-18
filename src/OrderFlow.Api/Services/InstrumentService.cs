@@ -1,4 +1,5 @@
 using System.Net;
+using Ardalis.GuardClauses;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using OrderFlow.Contexts;
@@ -15,7 +16,7 @@ public class InstrumentService : IInstrumentService
     public InstrumentService(
         AppDbContext context)
     {
-        _context = context;
+        _context = Guard.Against.Null(context);
     }
 
     public async Task<OneOf<Instrument, Error>> RetrieveInstrument(string id)

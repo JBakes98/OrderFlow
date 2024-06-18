@@ -1,4 +1,5 @@
 using System.Net;
+using Ardalis.GuardClauses;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using OrderFlow.Contexts;
@@ -14,7 +15,7 @@ public class OrderService : IOrderService
     public OrderService(
         AppDbContext context)
     {
-        _context = context;
+        _context = Guard.Against.Null(context);
     }
 
     public async Task<OneOf<Order, Error>> RetrieveOrder(string id)

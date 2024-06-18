@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
@@ -22,9 +23,9 @@ public class InstrumentController : ControllerBase
         IHandler<Guid, Instrument> getInstrumentHandler,
         IInstrumentService instrumentService)
     {
-        _createHandler = createHandler;
-        _getInstrumentHandler = getInstrumentHandler;
-        _instrumentService = instrumentService;
+        _createHandler = Guard.Against.Null(createHandler);
+        _getInstrumentHandler = Guard.Against.Null(getInstrumentHandler);
+        _instrumentService = Guard.Against.Null(instrumentService);
     }
 
     // GET: api/<InstrumentController>
