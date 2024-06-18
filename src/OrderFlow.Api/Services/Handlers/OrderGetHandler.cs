@@ -1,21 +1,27 @@
+using System.Net;
+using Ardalis.GuardClauses;
 using OneOf;
+using OrderFlow.Domain;
 using OrderFlow.Models;
-using OrderFlow.Repositories;
 
 namespace OrderFlow.Services.Handlers;
 
 public class OrderGetHandler : IHandler<Guid, Order>
 {
-    private readonly IRepository<Order> _repository;
+    private readonly IOrderService _orderService;
 
-    public OrderGetHandler(IRepository<Order> repository)
+    public OrderGetHandler(
+        IOrderService orderService)
     {
-        _repository = repository;
+        _orderService = Guard.Against.Null(orderService);
     }
 
-    public async Task<OneOf<Order, Error>> HandleAsync(Guid request, CancellationToken cancellationToken)
+    public async Task<OneOf<Order, Error>> HandleAsync(Guid id, CancellationToken cancellationToken)
     {
-        var order = await _repository.GetByIdAsync(request.ToString());
+        var order = await _orderService.RetrieveOrder(id.ToString());
+
+        if (order.IsT1)
+            return new Error(HttpStatusCode.NotFound, ErrorCodes.OrderNotFound);
 
         return order;
     }

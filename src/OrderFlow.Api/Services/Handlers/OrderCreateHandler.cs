@@ -1,4 +1,6 @@
+using Ardalis.GuardClauses;
 using OneOf;
+using OrderFlow.Contexts;
 using OrderFlow.Contracts.Requests;
 using OrderFlow.Events;
 using OrderFlow.Extensions;
@@ -12,24 +14,21 @@ public class OrderCreateHandler : IHandler<CreateOrder, Order>
     private readonly IMapper<CreateOrder, Order> _createOrderToOrderMapper;
     private readonly IMapper<Order, OrderCreatedEvent> _orderToOrderCreatedEventMapper;
     private readonly IMapper<BaseOrderEvent, Event> _orderEventToEventMapper;
-    private readonly IRepository<Order> _repository;
-    private readonly IRepository<Event> _eventRepository;
+    private readonly AppDbContext _context;
     private readonly IInstrumentService _instrumentService;
 
     public OrderCreateHandler(
         IMapper<CreateOrder, Order> createOrderToOrderMapper,
         IMapper<Order, OrderCreatedEvent> orderToOrderCreatedEventMapper,
-        IRepository<Order> repository,
-        IRepository<Event> eventRepository,
         IInstrumentService instrumentService, 
-        IMapper<BaseOrderEvent, Event> orderEventToEventMapper)
+        IMapper<BaseOrderEvent, Event> orderEventToEventMapper, 
+        AppDbContext context)
     {
-        _createOrderToOrderMapper = createOrderToOrderMapper;
-        _orderToOrderCreatedEventMapper = orderToOrderCreatedEventMapper;
-        _repository = repository;
-        _eventRepository = eventRepository;
-        _instrumentService = instrumentService;
-        _orderEventToEventMapper = orderEventToEventMapper;
+        _createOrderToOrderMapper = Guard.Against.Null(createOrderToOrderMapper);
+        _orderToOrderCreatedEventMapper = Guard.Against.Null(orderToOrderCreatedEventMapper);
+        _instrumentService = Guard.Against.Null(instrumentService);
+        _orderEventToEventMapper = Guard.Against.Null(orderEventToEventMapper);
+        _context = Guard.Against.Null(context);
     }
     public async Task<OneOf<Order, Error>> HandleAsync(CreateOrder request, CancellationToken cancellationToken)
     {
@@ -39,13 +38,15 @@ public class OrderCreateHandler : IHandler<CreateOrder, Order>
             return instrument.AsT1;
 
         var order = _createOrderToOrderMapper.Map(request);
-
-        await _repository.InsertAsync(order, cancellationToken);
+        
+        _context.Orders.Add(order);
 
         var orderEvent = _orderToOrderCreatedEventMapper.Map(order);
         var @event = _orderEventToEventMapper.Map(orderEvent);
-        await _eventRepository.InsertAsync(@event, cancellationToken);
+        _context.Events.Add(@event);
 
+        await _context.SaveChangesAsync(cancellationToken);
+        
         return order;
     }
 }
