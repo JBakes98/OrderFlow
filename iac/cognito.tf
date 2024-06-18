@@ -30,3 +30,15 @@ resource "aws_cognito_user_pool_domain" "cognito-domain" {
   domain = "orderflow"
   user_pool_id = "${aws_cognito_user_pool.user_pool.id}"
 }
+
+resource "aws_cognito_resource_server" "resource" {
+  identifier   = "orderflow"
+  name         = "orderflow"
+  
+  user_pool_id = aws_cognito_user_pool.user_pool.id
+  
+  scope {
+    scope_name = "sample-scope"
+    scope_description        = "A Sample Scope"
+  }
+}
