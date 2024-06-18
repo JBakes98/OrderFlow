@@ -20,8 +20,7 @@ public class InstrumentController : ControllerBase
     public InstrumentController(
         IHandler<CreateInstrument, Instrument> createHandler,
         IHandler<Guid, Instrument> getInstrumentHandler,
-        IInstrumentService instrumentService
-        )
+        IInstrumentService instrumentService)
     {
         _createHandler = createHandler;
         _getInstrumentHandler = getInstrumentHandler;
