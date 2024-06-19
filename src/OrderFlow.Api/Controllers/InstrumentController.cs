@@ -68,21 +68,21 @@ public class InstrumentController : ControllerBase
     // {
     // }
 
-    private IActionResult CreateInstrumentResponse(OneOf<Instrument, Error> result)
+    private static IActionResult CreateInstrumentResponse(OneOf<Instrument, Error> result)
     {
         return result.Match<IActionResult>(
             instrument => new ObjectResult(instrument),
             error => new ObjectResult(error));
     }
 
-    private IActionResult GetInstrumentResponse(OneOf<Instrument, Error> result)
+    private static IActionResult GetInstrumentResponse(OneOf<Instrument, Error> result)
     {
         return result.Match<IActionResult>(
             instrument => new ObjectResult(instrument),
             error => new ObjectResult(error));
     }
 
-    private IActionResult QueryInstrumentsResponse(OneOf<IEnumerable<Instrument>, Error> result)
+    private static IActionResult QueryInstrumentsResponse(OneOf<IEnumerable<Instrument>, Error> result)
     {
         return result.Match<IActionResult>(
             instruments => new ObjectResult(instruments),

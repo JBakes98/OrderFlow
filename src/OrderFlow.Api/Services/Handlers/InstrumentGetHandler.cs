@@ -1,4 +1,3 @@
-using Amazon.DynamoDBv2.DataModel;
 using OneOf;
 using OrderFlow.Models;
 using OrderFlow.Repositories;
@@ -7,9 +6,9 @@ namespace OrderFlow.Services.Handlers;
 
 public class InstrumentGetHandler : IHandler<Guid, Instrument>
 {
-    private readonly IRepository<Instrument> _repository;
+    private readonly IInstrumentRepository _repository;
 
-    public InstrumentGetHandler(IRepository<Instrument> repository)
+    public InstrumentGetHandler(IInstrumentRepository repository)
     {
         _repository = repository;
     }

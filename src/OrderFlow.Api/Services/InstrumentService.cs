@@ -1,38 +1,40 @@
-using System.Net;
 using Ardalis.GuardClauses;
-using Microsoft.EntityFrameworkCore;
 using OneOf;
-using OrderFlow.Contexts;
-using OrderFlow.Domain;
 using OrderFlow.Models;
+using OrderFlow.Repositories;
 using Instrument = OrderFlow.Models.Instrument;
 
 namespace OrderFlow.Services;
 
 public class InstrumentService : IInstrumentService
 {
-    private readonly AppDbContext _context;
+    private readonly IInstrumentRepository _repository;
 
     public InstrumentService(
-        AppDbContext context)
+        IInstrumentRepository repository)
     {
-        _context = Guard.Against.Null(context);
+        _repository = Guard.Against.Null(repository);
     }
 
     public async Task<OneOf<Instrument, Error>> RetrieveInstrument(string id)
     {
-        var instrument = await _context.Instruments.FindAsync(id);
+        var result = await _repository.GetByIdAsync(id);
 
-        if (instrument == null)
-            return new Error(HttpStatusCode.NotFound, ErrorCodes.InstrumentNotFound);
+        if (result.IsT1)
+            return result.AsT1;
 
-        return instrument;
+        return result.AsT0;
     }
 
     public async Task<OneOf<IEnumerable<Instrument>, Error>> RetrieveInstruments()
     {
-        var result = await _context.Instruments.ToListAsync();
+        var result = await _repository.QueryAsync();
 
-        return result;
+        if (result.IsT1)
+            return result.AsT1;
+
+        var instruments = result.AsT0;
+
+        return instruments.ToList();
     }
 }
