@@ -1,7 +1,7 @@
 resource "aws_db_instance" "orderflow-postgres-db" {
   allocated_storage = 20
   engine = "postgres"
-  engine_version = "16.3-R1"
+  engine_version = "16.3"
   identifier = "orderflow-postgres-db"
   instance_class = "db.t3.micro"
   username = "postgres"
