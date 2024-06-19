@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
@@ -20,12 +21,11 @@ public class InstrumentController : ControllerBase
     public InstrumentController(
         IHandler<CreateInstrument, Instrument> createHandler,
         IHandler<Guid, Instrument> getInstrumentHandler,
-        IInstrumentService instrumentService
-        )
+        IInstrumentService instrumentService)
     {
-        _createHandler = createHandler;
-        _getInstrumentHandler = getInstrumentHandler;
-        _instrumentService = instrumentService;
+        _createHandler = Guard.Against.Null(createHandler);
+        _getInstrumentHandler = Guard.Against.Null(getInstrumentHandler);
+        _instrumentService = Guard.Against.Null(instrumentService);
     }
 
     // GET: api/<InstrumentController>
@@ -68,21 +68,21 @@ public class InstrumentController : ControllerBase
     // {
     // }
 
-    private IActionResult CreateInstrumentResponse(OneOf<Instrument, Error> result)
+    private static IActionResult CreateInstrumentResponse(OneOf<Instrument, Error> result)
     {
         return result.Match<IActionResult>(
             instrument => new ObjectResult(instrument),
             error => new ObjectResult(error));
     }
 
-    private IActionResult GetInstrumentResponse(OneOf<Instrument, Error> result)
+    private static IActionResult GetInstrumentResponse(OneOf<Instrument, Error> result)
     {
         return result.Match<IActionResult>(
             instrument => new ObjectResult(instrument),
             error => new ObjectResult(error));
     }
 
-    private IActionResult QueryInstrumentsResponse(OneOf<IEnumerable<Instrument>, Error> result)
+    private static IActionResult QueryInstrumentsResponse(OneOf<IEnumerable<Instrument>, Error> result)
     {
         return result.Match<IActionResult>(
             instruments => new ObjectResult(instruments),

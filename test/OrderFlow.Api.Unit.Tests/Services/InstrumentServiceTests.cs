@@ -1,9 +1,6 @@
 using System.Net;
-using Amazon.DynamoDBv2.DataModel;
-using AutoFixture;
 using AutoFixture.Xunit2;
 using Moq;
-using OneOf;
 using OrderFlow.Domain;
 using OrderFlow.Models;
 using OrderFlow.Repositories;
@@ -15,7 +12,7 @@ public class InstrumentServiceTests
 {
     [Theory, AutoMoqData]
     public async void Should_RetrieveInstrument_If_Present(
-        [Frozen] Mock<IRepository<Instrument>> mockRepository,
+        [Frozen] Mock<IInstrumentRepository> mockRepository,
         Instrument instrument,
         InstrumentService sut)
     {
@@ -34,7 +31,7 @@ public class InstrumentServiceTests
 
     [Theory, AutoMoqData]
     public async void Should_ReturnError_If_InstrumentNotFound(
-        [Frozen] Mock<IRepository<Instrument>> mockRepository,
+        [Frozen] Mock<IInstrumentRepository> mockRepository,
         InstrumentService sut,
         string id)
     {
@@ -55,7 +52,7 @@ public class InstrumentServiceTests
 
     [Theory, AutoMoqData]
     public async void Should_ReturnInstruments(
-        [Frozen] Mock<IRepository<Instrument>> mockRepository,
+        [Frozen] Mock<IInstrumentRepository> mockRepository,
         InstrumentService sut,
         List<Instrument> instruments)
     {
@@ -71,7 +68,7 @@ public class InstrumentServiceTests
 
     [Theory, AutoMoqData]
     public async void Should_ReturnError_IfQuery_Fails(
-        [Frozen] Mock<IRepository<Instrument>> mockRepository,
+        [Frozen] Mock<IInstrumentRepository> mockRepository,
         InstrumentService sut)
     {
         var expectedError = new Error(HttpStatusCode.Conflict, ErrorCodes.InstrumentNotFound);

@@ -1,37 +1,32 @@
 using System.Net;
-using Amazon.DynamoDBv2.DataModel;
+using Ardalis.GuardClauses;
+using Microsoft.EntityFrameworkCore;
 using OneOf;
+using OrderFlow.Contexts;
 using OrderFlow.Domain;
-using OrderFlow.Events;
 using OrderFlow.Models;
 
 namespace OrderFlow.Repositories;
 
-public class InstrumentRepository : IRepository<Instrument>
+public class InstrumentRepository : IInstrumentRepository
 {
-    private readonly IDynamoDBContext _context;
+    private readonly AppDbContext _context;
 
-    public InstrumentRepository(IDynamoDBContext context)
+    public InstrumentRepository(AppDbContext context)
     {
-        _context = context;
-    }
-
-    public void Dispose()
-    {
-        _context.Dispose();
+        _context = Guard.Against.Null(context);
     }
 
     public async Task<OneOf<IEnumerable<Instrument>, Error>> QueryAsync()
     {
-        var conditions = new List<ScanCondition>();
-        var results = await _context.ScanAsync<Instrument>(conditions).GetRemainingAsync();
+        var results = await _context.Instruments.ToListAsync();
 
         return results;
     }
 
     public async Task<OneOf<Instrument, Error>> GetByIdAsync(string id)
     {
-        var result = await _context.LoadAsync<Instrument>(id);
+        var result = await _context.Instruments.FindAsync(id);
 
         if (result == null)
             return new Error(HttpStatusCode.NotFound, ErrorCodes.InstrumentNotFound);
@@ -41,18 +36,9 @@ public class InstrumentRepository : IRepository<Instrument>
 
     public async Task<OneOf<Instrument, Error>> InsertAsync(Instrument source, CancellationToken cancellationToken)
     {
-        await _context.SaveAsync(source, cancellationToken);
+        _context.Instruments.Add(source);
+        await _context.SaveChangesAsync(cancellationToken);
 
         return source;
-    }
-
-    public Task DeleteAsync(Instrument source)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task UpdateAsync(Instrument source)
-    {
-        throw new NotImplementedException();
     }
 }
