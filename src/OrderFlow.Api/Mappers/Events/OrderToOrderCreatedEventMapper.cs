@@ -8,8 +8,7 @@ public class OrderToOrderCreatedEventMapper : IMapper<Order, OrderCreatedEvent>
 {
     public OrderCreatedEvent Map(Order source)
     {
-        return new OrderCreatedEvent
-        {
+        return new OrderCreatedEvent{
             OrderId = source.Id,
             InstrumentId = source.InstrumentId,
             Quantity = source.Quantity,

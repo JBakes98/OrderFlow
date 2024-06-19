@@ -1,10 +1,10 @@
-using Ardalis.GuardClauses;
+using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.DocumentModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OrderFlow.Contracts.Requests;
 using OrderFlow.Models;
-using OrderFlow.Services;
 using OrderFlow.Services.Handlers;
 
 namespace OrderFlow.Controllers
@@ -13,28 +13,32 @@ namespace OrderFlow.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
+        private readonly IDynamoDBContext _context;
         private readonly IHandler<CreateOrder, Order> _createHandler;
         private readonly IHandler<Guid, Order> _getHandler;
-        private readonly IOrderService _orderService;
 
-        public OrderController(
+        public OrderController(IDynamoDBContext context,
             IHandler<CreateOrder, Order> createHandler,
-            IHandler<Guid, Order> getHandler,
-            IOrderService orderService)
+            IHandler<Guid, Order> getHandler)
         {
-            _createHandler = Guard.Against.Null(createHandler);
-            _getHandler = Guard.Against.Null(getHandler);
-            _orderService = Guard.Against.Null(orderService);
+            _context = context;
+            _createHandler = createHandler;
+            _getHandler = getHandler;
         }
 
         // GET: api/Order
         [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetOrder()
+        [Authorize("read:orders")]
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrder(
+            [FromQuery(Name = "instrument")] string instrumentId,
+            [FromQuery(Name = "order-date")] DateTime orderDate
+            )
         {
-            var results = await _orderService.RetrieveOrders();
+            var scanCondition = new ScanCondition("InstrumentId", ScanOperator.Equal, instrumentId.ToString());
+            var conditions = new List<ScanCondition>() { scanCondition };
+            var results = await _context.ScanAsync<Order>(conditions).GetRemainingAsync();
 
-            return QueryOrdersResponse(results);
+            return results;
         }
 
         // GET: api/Order/5
@@ -88,24 +92,17 @@ namespace OrderFlow.Controllers
         }
         */
 
-        private static IActionResult CreateOrderResponse(OneOf<Order, Error> result)
+        private IActionResult CreateOrderResponse(OneOf<Order, Error> result)
         {
             return result.Match<IActionResult>(
                 order => new ObjectResult(order),
                 error => new ObjectResult(error));
         }
 
-        private static IActionResult GetOrderResponse(OneOf<Order, Error> result)
+        private IActionResult GetOrderResponse(OneOf<Order, Error> result)
         {
             return result.Match<IActionResult>(
                 order => new ObjectResult(order),
-                error => new ObjectResult(error));
-        }
-
-        private static IActionResult QueryOrdersResponse(OneOf<IEnumerable<Order>, Error> result)
-        {
-            return result.Match<IActionResult>(
-                orders => new ObjectResult(orders),
                 error => new ObjectResult(error));
         }
     }
