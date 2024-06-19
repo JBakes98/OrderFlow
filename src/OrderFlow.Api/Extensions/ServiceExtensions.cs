@@ -19,9 +19,9 @@ public static class ServiceExtensions
         services.AddSwaggerGen();
         services.AddControllers();
 
-        services.AddTransient<IRepository<Order>, OrderRepository>();
-        services.AddTransient<IRepository<Event>, OrderEventsRepository>();
-        services.AddTransient<IRepository<Instrument>, InstrumentRepository>();
+        services.AddTransient<IOrderRepository, OrderRepository>();
+        services.AddTransient<IEventRepository, EventRepository>();
+        services.AddTransient<IInstrumentRepository, InstrumentRepository>();
 
         services.AddScoped<IHandler<CreateOrder, Order>, OrderCreateHandler>();
         services.AddScoped<IHandler<Guid, Order>, OrderGetHandler>();
@@ -38,5 +38,6 @@ public static class ServiceExtensions
 
         services.AddScoped<IInstrumentService, InstrumentService>();
         services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<IEnqueueService, EnqueueService>();
     }
 }
