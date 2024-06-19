@@ -88,21 +88,21 @@ namespace OrderFlow.Controllers
         }
         */
 
-        private IActionResult CreateOrderResponse(OneOf<Order, Error> result)
+        private static IActionResult CreateOrderResponse(OneOf<Order, Error> result)
         {
             return result.Match<IActionResult>(
                 order => new ObjectResult(order),
                 error => new ObjectResult(error));
         }
 
-        private IActionResult GetOrderResponse(OneOf<Order, Error> result)
+        private static IActionResult GetOrderResponse(OneOf<Order, Error> result)
         {
             return result.Match<IActionResult>(
                 order => new ObjectResult(order),
                 error => new ObjectResult(error));
         }
 
-        private IActionResult QueryOrdersResponse(OneOf<IEnumerable<Order>, Error> result)
+        private static IActionResult QueryOrdersResponse(OneOf<IEnumerable<Order>, Error> result)
         {
             return result.Match<IActionResult>(
                 orders => new ObjectResult(orders),

@@ -1,11 +1,12 @@
+using System.Net;
 using Ardalis.GuardClauses;
 using OneOf;
 using OrderFlow.Contexts;
 using OrderFlow.Contracts.Requests;
+using OrderFlow.Domain;
 using OrderFlow.Events;
 using OrderFlow.Extensions;
 using OrderFlow.Models;
-using OrderFlow.Repositories;
 
 namespace OrderFlow.Services.Handlers;
 
@@ -16,14 +17,17 @@ public class OrderCreateHandler : IHandler<CreateOrder, Order>
     private readonly IMapper<BaseOrderEvent, Event> _orderEventToEventMapper;
     private readonly AppDbContext _context;
     private readonly IInstrumentService _instrumentService;
+    private readonly IEnqueueService _enqueueService;
 
     public OrderCreateHandler(
         IMapper<CreateOrder, Order> createOrderToOrderMapper,
         IMapper<Order, OrderCreatedEvent> orderToOrderCreatedEventMapper,
         IInstrumentService instrumentService,
         IMapper<BaseOrderEvent, Event> orderEventToEventMapper,
-        AppDbContext context)
+        AppDbContext context, 
+        IEnqueueService enqueueService)
     {
+        _enqueueService = Guard.Against.Null(enqueueService);
         _createOrderToOrderMapper = Guard.Against.Null(createOrderToOrderMapper);
         _orderToOrderCreatedEventMapper = Guard.Against.Null(orderToOrderCreatedEventMapper);
         _instrumentService = Guard.Against.Null(instrumentService);
@@ -39,14 +43,25 @@ public class OrderCreateHandler : IHandler<CreateOrder, Order>
 
         var order = _createOrderToOrderMapper.Map(request);
 
-        _context.Orders.Add(order);
+        await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 
-        var orderEvent = _orderToOrderCreatedEventMapper.Map(order);
-        var @event = _orderEventToEventMapper.Map(orderEvent);
-        _context.Events.Add(@event);
+        try
+        {
+            _context.Orders.Add(order);
 
-        await _context.SaveChangesAsync(cancellationToken);
+            var orderEvent = _orderToOrderCreatedEventMapper.Map(order);
+            var @event = _orderEventToEventMapper.Map(orderEvent);
+            await _enqueueService.PublishEvent(@event, cancellationToken);
 
-        return order;
+            await _context.SaveChangesAsync(cancellationToken);
+
+            await transaction.CommitAsync(cancellationToken);
+
+            return order;
+        }
+        catch (Exception e)
+        {
+            return new Error(HttpStatusCode.UnprocessableEntity, ErrorCodes.OrderNotFound);
+        }
     }
 }

@@ -1,37 +1,39 @@
-using System.Net;
 using Ardalis.GuardClauses;
-using Microsoft.EntityFrameworkCore;
 using OneOf;
-using OrderFlow.Contexts;
-using OrderFlow.Domain;
 using OrderFlow.Models;
+using OrderFlow.Repositories;
 
 namespace OrderFlow.Services;
 
 public class OrderService : IOrderService
 {
-    private readonly AppDbContext _context;
+    private readonly IOrderRepository _repository;
 
     public OrderService(
-        AppDbContext context)
+        IOrderRepository repository)
     {
-        _context = Guard.Against.Null(context);
+        _repository = Guard.Against.Null(repository);
     }
 
     public async Task<OneOf<Order, Error>> RetrieveOrder(string id)
     {
-        var order = await _context.Orders.FindAsync(id);
+        var result = await _repository.GetByIdAsync(id);
 
-        if (order == null)
-            return new Error(HttpStatusCode.NotFound, ErrorCodes.OrderNotFound);
+        if (result.IsT1)
+            return result.AsT1;
 
-        return order;
+        return result.AsT0;
     }
 
     public async Task<OneOf<IEnumerable<Order>, Error>> RetrieveOrders()
     {
-        var result = await _context.Orders.ToListAsync();
+        var result = await _repository.QueryAsync();
 
-        return result;
+        if (result.IsT1)
+            return result.AsT1;
+
+        var orders = result.AsT0;
+
+        return orders.ToList();
     }
 }
