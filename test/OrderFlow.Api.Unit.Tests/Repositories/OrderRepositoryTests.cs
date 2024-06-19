@@ -1,7 +1,10 @@
 using System.Net;
 using Amazon.DynamoDBv2.DataModel;
 using AutoFixture.Xunit2;
+using Microsoft.EntityFrameworkCore;
 using Moq;
+using Moq.EntityFrameworkCore;
+using OrderFlow.Contexts;
 using OrderFlow.Domain;
 using OrderFlow.Models;
 using OrderFlow.Repositories;
@@ -13,18 +16,17 @@ public class OrderRepositoryTests
     [Theory, AutoMoqData]
     public async void Repository_GetByIdAsync_Should_ReturnObject(
         Order order,
-        [Frozen] Mock<IDynamoDBContext> mockContext,
         OrderRepository sut)
     {
-        mockContext.Setup(x => x.LoadAsync<Order>(order.Id, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(order)
-            .Verifiable();
+        var appDbContextMock = new Mock<AppDbContext>();
+        appDbContextMock.Setup(x => x.Orders)
+            .ReturnsDbSet(TestDataHelper.GetFakeOrderList());
 
         var result = await sut.GetByIdAsync(order.Id);
 
         var resultOrder = result.AsT0;
         Assert.Equal(order, resultOrder);
-        mockContext.Verify();
+        appDbContextMock.Verify();
     }
 
     [Theory, AutoMoqData]
