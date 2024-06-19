@@ -17,7 +17,7 @@ public class EventRepository : IEventRepository
     {
         _context = Guard.Against.Null(context);
     }
-    
+
     public async Task<OneOf<IEnumerable<Event>, Error>> QueryAsync(string streamId = null)
     {
         var result = await _context.Events.Where(x => x.StreamId == streamId).ToListAsync();

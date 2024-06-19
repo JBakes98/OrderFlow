@@ -24,7 +24,7 @@ public class OrderCreateHandler : IHandler<CreateOrder, Order>
         IMapper<Order, OrderCreatedEvent> orderToOrderCreatedEventMapper,
         IInstrumentService instrumentService,
         IMapper<BaseOrderEvent, Event> orderEventToEventMapper,
-        AppDbContext context, 
+        AppDbContext context,
         IEnqueueService enqueueService)
     {
         _enqueueService = Guard.Against.Null(enqueueService);
