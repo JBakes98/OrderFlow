@@ -14,12 +14,12 @@ namespace OrderFlow.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IHandler<CreateOrder, Order> _createHandler;
-        private readonly IHandler<Guid, Order> _getHandler;
+        private readonly IHandler<string, Order> _getHandler;
         private readonly IOrderService _orderService;
 
         public OrderController(
             IHandler<CreateOrder, Order> createHandler,
-            IHandler<Guid, Order> getHandler,
+            IHandler<string, Order> getHandler,
             IOrderService orderService)
         {
             _createHandler = Guard.Against.Null(createHandler);
@@ -29,7 +29,6 @@ namespace OrderFlow.Controllers
 
         // GET: api/Order
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetOrder()
         {
             var results = await _orderService.RetrieveOrders();
@@ -41,13 +40,12 @@ namespace OrderFlow.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOrder([FromRoute] Guid id, CancellationToken cancellationToken)
         {
-            var result = await _getHandler.HandleAsync(id, cancellationToken);
+            var result = await _getHandler.HandleAsync(id.ToString(), cancellationToken);
 
             return GetOrderResponse(result);
         }
 
         // POST: api/Order
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<IActionResult> PostOrder(CreateOrder request, CancellationToken cancellationToken)
         {
@@ -55,38 +53,6 @@ namespace OrderFlow.Controllers
 
             return CreateOrderResponse(result);
         }
-
-        // PUT: api/Order/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        /*[HttpPut("{id}")]
-        public async Task<IActionResult> PutOrder(Guid id, Order order)
-        {
-            if (id != order.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(order).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OrderExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-        */
 
         private static IActionResult CreateOrderResponse(OneOf<Order, Error> result)
         {

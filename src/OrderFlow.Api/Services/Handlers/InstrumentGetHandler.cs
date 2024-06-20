@@ -1,22 +1,26 @@
+using Ardalis.GuardClauses;
 using OneOf;
 using OrderFlow.Models;
-using OrderFlow.Repositories;
 
 namespace OrderFlow.Services.Handlers;
 
-public class InstrumentGetHandler : IHandler<Guid, Instrument>
+public class InstrumentGetHandler : IHandler<string, Instrument>
 {
-    private readonly IInstrumentRepository _repository;
+    private readonly IInstrumentService _instrumentService;
 
-    public InstrumentGetHandler(IInstrumentRepository repository)
+    public InstrumentGetHandler(
+        IInstrumentService instrumentService)
     {
-        _repository = repository;
+        _instrumentService = Guard.Against.Null(instrumentService);
     }
 
-    public async Task<OneOf<Instrument, Error>> HandleAsync(Guid request, CancellationToken cancellationToken)
+    public async Task<OneOf<Instrument, Error>> HandleAsync(string id, CancellationToken cancellationToken)
     {
-        var instrument = await _repository.GetByIdAsync(request.ToString());
+        var result = await _instrumentService.RetrieveInstrument(id);
 
-        return instrument;
+        if (result.IsT1)
+            return result.AsT1;
+
+        return result.AsT0;
     }
 }

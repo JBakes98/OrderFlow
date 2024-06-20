@@ -1,18 +1,15 @@
-using Microsoft.AspNetCore.Identity;
-using OrderFlow.Contexts;
-using OrderFlow.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using OrderFlow.Services;
+using OrderFlow.Services.Handlers;
 
 namespace OrderFlow.Extensions;
 
 public static class AuthenticationExtensions
 {
-    public static void RegisterAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static void RegisterAuthentication(this WebApplicationBuilder builder, IConfiguration configuration)
     {
-        services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
-        services.AddAuthorizationBuilder();
-
-        services.AddIdentityCore<User>()
-               .AddEntityFrameworkStores<AppDbContext>()
-               .AddApiEndpoints();
     }
 }

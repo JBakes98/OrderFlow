@@ -1,18 +1,17 @@
 using System.Net;
+using Amazon.DynamoDBv2.DataModel;
 using Ardalis.GuardClauses;
-using Microsoft.EntityFrameworkCore;
 using OneOf;
-using OrderFlow.Contexts;
 using OrderFlow.Domain;
 using OrderFlow.Models;
 
 namespace OrderFlow.Repositories;
 
-public class OrderRepository : IOrderRepository
+public class OrderRepository : IRepository<Order>, IDisposable
 {
-    private readonly AppDbContext _context;
+    private readonly IDynamoDBContext _context;
 
-    public OrderRepository(AppDbContext context)
+    public OrderRepository(IDynamoDBContext context)
     {
         _context = Guard.Against.Null(context);
     }
@@ -24,19 +23,15 @@ public class OrderRepository : IOrderRepository
 
     public async Task<OneOf<IEnumerable<Order>, Error>> QueryAsync()
     {
-        var result = await _context.Orders.ToListAsync();
+        var conditions = new List<ScanCondition>();
+        var results = await _context.ScanAsync<Order>(conditions).GetRemainingAsync();
 
-        return result;
-    }
-
-    public Task<OneOf<IEnumerable<Order>, Error>> QueryAsync(string streamId)
-    {
-        throw new NotImplementedException();
+        return results;
     }
 
     public async Task<OneOf<Order, Error>> GetByIdAsync(string id)
     {
-        var result = await _context.Orders.FindAsync(id);
+        var result = await _context.LoadAsync<Order>(id);
 
         if (result == null)
             return new Error(HttpStatusCode.NotFound, ErrorCodes.OrderNotFound);
@@ -46,8 +41,7 @@ public class OrderRepository : IOrderRepository
 
     public async Task<OneOf<Order, Error>> InsertAsync(Order source, CancellationToken cancellationToken)
     {
-        _context.Orders.Add(source);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveAsync(source, cancellationToken);
 
         return source;
     }

@@ -1,14 +1,13 @@
 using OrderFlow.Extensions;
-using OrderFlow.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.RegisterServices(builder.Configuration);
 builder.Services.RegisterAwsServices(builder.Configuration);
-builder.Services.RegisterDatabase(builder.Configuration);
+builder.Services.RegisterServices(builder.Configuration);
 builder.RegisterLogging(builder.Configuration);
-builder.Services.RegisterAuthentication(builder.Configuration);
+builder.RegisterAuthentication(builder.Configuration);
 builder.Services.AddControllers();
+builder.Services.RegisterSwaggerServices();
 
 var app = builder.Build();
 
@@ -23,10 +22,11 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+app.UseCors("AllowSpecificOrigin");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapIdentityApi<User>();
 app.MapControllers();
 
 app.Run();

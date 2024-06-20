@@ -2,16 +2,14 @@ using Ardalis.GuardClauses;
 using OneOf;
 using OrderFlow.Models;
 using OrderFlow.Repositories;
-using Instrument = OrderFlow.Models.Instrument;
 
 namespace OrderFlow.Services;
 
 public class InstrumentService : IInstrumentService
 {
-    private readonly IInstrumentRepository _repository;
+    private readonly IRepository<Instrument> _repository;
 
-    public InstrumentService(
-        IInstrumentRepository repository)
+    public InstrumentService(IRepository<Instrument> repository)
     {
         _repository = Guard.Against.Null(repository);
     }
@@ -33,8 +31,16 @@ public class InstrumentService : IInstrumentService
         if (result.IsT1)
             return result.AsT1;
 
-        var instruments = result.AsT0;
+        return result.AsT0.ToList();
+    }
 
-        return instruments.ToList();
+    public async Task<OneOf<Instrument, Error>> CreateInstrument(Instrument instrument)
+    {
+        var result = await _repository.InsertAsync(instrument, default);
+
+        if (result.IsT1)
+            return result.AsT1;
+
+        return result.AsT0;
     }
 }

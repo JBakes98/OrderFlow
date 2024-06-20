@@ -1,3 +1,5 @@
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 using OrderFlow.Contracts.Requests;
 using OrderFlow.Events;
 using OrderFlow.Mappers.Events;
@@ -13,31 +15,26 @@ public static class ServiceExtensions
 {
     public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Add services to the container.
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
-        services.AddControllers();
+        services.AddTransient<IRepository<Order>, OrderRepository>();
+        services.AddTransient<IRepository<Event>, OrderEventsRepository>();
+        services.AddTransient<IRepository<Instrument>, InstrumentRepository>();
 
-        services.AddTransient<IOrderRepository, OrderRepository>();
-        services.AddTransient<IEventRepository, EventRepository>();
-        services.AddTransient<IInstrumentRepository, InstrumentRepository>();
+        services.AddSingleton<IHandler<CreateOrder, Order>, OrderCreateHandler>();
+        services.AddSingleton<IHandler<string, Order>, OrderGetHandler>();
 
-        services.AddScoped<IHandler<CreateOrder, Order>, OrderCreateHandler>();
-        services.AddScoped<IHandler<Guid, Order>, OrderGetHandler>();
-
-        services.AddScoped<IHandler<CreateInstrument, Instrument>, InstrumentCreateHandler>();
-        services.AddScoped<IHandler<Guid, Instrument>, InstrumentGetHandler>();
+        services.AddSingleton<IHandler<CreateInstrument, Instrument>, InstrumentCreateHandler>();
+        services.AddSingleton<IHandler<string, Instrument>, InstrumentGetHandler>();
 
         services.AddSingleton<IMapper<CreateOrder, Order>, CreateOrderToOrderMapper>();
         services.AddSingleton<IMapper<Order, OrderCreatedEvent>, OrderToOrderCreatedEventMapper>();
         services.AddSingleton<IMapper<CreateInstrument, Instrument>, CreateInstrumentToInstrumentMapper>();
         services.AddSingleton<IMapper<BaseOrderEvent, Event>, OrderEventToEventMapper>();
 
-        services.AddScoped<IHandler<CreateOrder, Order>, OrderCreateHandler>();
+        services.AddSingleton<IHandler<CreateOrder, Order>, OrderCreateHandler>();
 
-        services.AddScoped<IInstrumentService, InstrumentService>();
-        services.AddScoped<IOrderService, OrderService>();
-        services.AddScoped<IEnqueueService, EnqueueService>();
+        services.AddSingleton<IEnqueueService, EnqueueService>();
+
+        services.AddSingleton<IInstrumentService, InstrumentService>();
+        services.AddSingleton<IOrderService, OrderService>();
     }
 }
