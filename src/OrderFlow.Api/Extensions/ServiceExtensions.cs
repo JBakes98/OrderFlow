@@ -15,14 +15,6 @@ public static class ServiceExtensions
 {
     public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
-        services.AddControllers();
-
-        services.AddDefaultAWSOptions(configuration.GetAWSOptions());
-        services.AddAWSService<IAmazonDynamoDB>();
-        services.AddTransient<IDynamoDBContext, DynamoDBContext>();
-
         services.AddTransient<IRepository<Order>, OrderRepository>();
         services.AddTransient<IRepository<Event>, OrderEventsRepository>();
         services.AddTransient<IRepository<Instrument>, InstrumentRepository>();
