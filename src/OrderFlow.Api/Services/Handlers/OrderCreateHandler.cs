@@ -14,13 +14,14 @@ public class OrderCreateHandler : IHandler<CreateOrder, Order>
 
     public OrderCreateHandler(
         IMapper<CreateOrder, Order> createOrderToOrderMapper,
-        IInstrumentService instrumentService, 
+        IInstrumentService instrumentService,
         IOrderService orderService)
     {
         _createOrderToOrderMapper = Guard.Against.Null(createOrderToOrderMapper);
         _instrumentService = Guard.Against.Null(instrumentService);
         _orderService = Guard.Against.Null(orderService);
     }
+
     public async Task<OneOf<Order, Error>> HandleAsync(CreateOrder request, CancellationToken cancellationToken)
     {
         var instrument = await _instrumentService.RetrieveInstrument(request.InstrumentId.ToString());

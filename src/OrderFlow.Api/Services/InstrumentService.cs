@@ -33,7 +33,7 @@ public class InstrumentService : IInstrumentService
 
         return result.AsT0.ToList();
     }
-    
+
     public async Task<OneOf<Instrument, Error>> CreateInstrument(Instrument instrument)
     {
         var result = await _repository.InsertAsync(instrument, default);

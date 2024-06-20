@@ -19,7 +19,7 @@ namespace OrderFlow.Controllers
 
         public OrderController(
             IHandler<CreateOrder, Order> createHandler,
-            IHandler<string, Order> getHandler, 
+            IHandler<string, Order> getHandler,
             IOrderService orderService)
         {
             _createHandler = Guard.Against.Null(createHandler);
@@ -67,7 +67,7 @@ namespace OrderFlow.Controllers
                 order => new ObjectResult(order),
                 error => new ObjectResult(error));
         }
-        
+
         private static IActionResult QueryOrdersResponse(OneOf<IEnumerable<Order>, Error> result)
         {
             return result.Match<IActionResult>(

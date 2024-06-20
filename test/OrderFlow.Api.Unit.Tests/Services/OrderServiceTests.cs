@@ -84,7 +84,7 @@ public class OrderServiceTests
         Assert.True(result.IsT1);
         mockRepository.Verify();
     }
-    
+
     [Theory, AutoMoqData]
     public async void Should_CreateOrder_And_SaveTo_Repo(
         [Frozen] Mock<IRepository<Order>> mockRepository,
@@ -100,15 +100,15 @@ public class OrderServiceTests
                 x.InsertAsync(order, default))
             .ReturnsAsync(order)
             .Verifiable();
-        
+
         mockOrderToOrderCreatedEventMapper.Setup(x => x.Map(order))
             .Returns(orderCreatedEvent)
             .Verifiable();
-        
+
         mockOrderEventToEventMapper.Setup(x => x.Map(orderCreatedEvent))
             .Returns(@event)
             .Verifiable();
-        
+
         mockEnqueueService.Setup(x => x.PublishEvent(@event))
             .ReturnsAsync(true)
             .Verifiable();
@@ -118,13 +118,13 @@ public class OrderServiceTests
         var createdOrder = result.AsT0;
 
         Assert.Equal(order, createdOrder);
-        
+
         mockRepository.Verify();
         mockOrderToOrderCreatedEventMapper.Verify();
         mockOrderEventToEventMapper.Verify();
         mockEnqueueService.Verify();
     }
-    
+
     [Theory, AutoMoqData]
     public async void Should_ReturnError_If_Repo_Fails(
         [Frozen] Mock<IRepository<Order>> mockRepository,
@@ -132,7 +132,7 @@ public class OrderServiceTests
         OrderService sut)
     {
         var expectedError = new Error(HttpStatusCode.InternalServerError, ErrorCodes.OrderCouldNotBeCreated);
-        
+
         mockRepository.Setup(x =>
                 x.InsertAsync(order, default))
             .ReturnsAsync(expectedError)
@@ -145,7 +145,7 @@ public class OrderServiceTests
         Assert.Equal(expectedError, error);
         mockRepository.Verify();
     }
-    
+
     [Theory, AutoMoqData]
     public async void Should_ReturnError_If_EnqueueService_Fails_To_Publish(
         [Frozen] Mock<IRepository<Order>> mockRepository,
@@ -161,19 +161,19 @@ public class OrderServiceTests
                 x.InsertAsync(order, default))
             .ReturnsAsync(order)
             .Verifiable();
-        
+
         mockOrderToOrderCreatedEventMapper.Setup(x => x.Map(order))
             .Returns(orderCreatedEvent)
             .Verifiable();
-        
+
         mockOrderEventToEventMapper.Setup(x => x.Map(orderCreatedEvent))
             .Returns(@event)
             .Verifiable();
-        
+
         mockEnqueueService.Setup(x => x.PublishEvent(@event))
             .ReturnsAsync(false)
             .Verifiable();
-        
+
         var expectedError = new Error(HttpStatusCode.InternalServerError, ErrorCodes.EventCouldNotBePublished);
 
         var result = await sut.CreateOrder(order);
@@ -181,7 +181,7 @@ public class OrderServiceTests
         var error = result.AsT1;
 
         Assert.Equivalent(expectedError, error);
-        
+
         mockRepository.Verify();
         mockOrderToOrderCreatedEventMapper.Verify();
         mockOrderEventToEventMapper.Verify();

@@ -8,7 +8,7 @@ public class Instrument
     public Instrument()
     {
     }
-    
+
     public Instrument(string ticker, string name, string sector, string exchange)
     {
         Ticker = ticker;
@@ -17,8 +17,7 @@ public class Instrument
         Exchange = exchange;
     }
 
-    [DynamoDBHashKey]
-    public string Id { get; set; } = Guid.NewGuid().ToString();
+    [DynamoDBHashKey] public string Id { get; set; } = Guid.NewGuid().ToString();
     public string Ticker { get; set; }
     public string Name { get; set; }
     public string Sector { get; set; }

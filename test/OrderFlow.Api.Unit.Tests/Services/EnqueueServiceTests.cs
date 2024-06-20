@@ -23,11 +23,11 @@ public class EnqueueServiceTests
             .Verifiable();
 
         var result = await sut.PublishEvent(@event);
-        
+
         Assert.True(result);
         mockRepository.Verify();
     }
-    
+
     [Theory, AutoMoqData]
     public async void Should_ReturnError_If_Repo_Fails(
         [Frozen] Mock<IRepository<Event>> mockRepository,
@@ -35,14 +35,14 @@ public class EnqueueServiceTests
         EnqueueService sut)
     {
         var expectedError = new Error(HttpStatusCode.InternalServerError, ErrorCodes.InstrumentCouldNotBeCreated);
-        
+
         mockRepository.Setup(x =>
                 x.InsertAsync(@event, default))
             .ReturnsAsync(expectedError)
             .Verifiable();
 
         var result = await sut.PublishEvent(@event);
-        
+
         Assert.False(result);
         mockRepository.Verify();
     }

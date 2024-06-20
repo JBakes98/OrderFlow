@@ -9,6 +9,6 @@ public static class AwsExtensions
     {
         services.AddDefaultAWSOptions(configuration.GetAWSOptions());
         services.AddAWSService<IAmazonDynamoDB>();
-        services.AddTransient<IDynamoDBContext, DynamoDBContext>(); 
+        services.AddTransient<IDynamoDBContext, DynamoDBContext>();
     }
 }

@@ -82,7 +82,7 @@ public class InstrumentServiceTests
         Assert.True(result.IsT1);
         mockRepository.Verify();
     }
-    
+
     [Theory, AutoMoqData]
     public async void Should_CreateInstrument_And_SaveTo_Repo(
         [Frozen] Mock<IRepository<Instrument>> mockRepository,
@@ -101,7 +101,7 @@ public class InstrumentServiceTests
         Assert.Equal(instrument, createdInstrument);
         mockRepository.Verify();
     }
-    
+
     [Theory, AutoMoqData]
     public async void Should_ReturnError_If_Repo_Fails(
         [Frozen] Mock<IRepository<Instrument>> mockRepository,
@@ -109,7 +109,7 @@ public class InstrumentServiceTests
         InstrumentService sut)
     {
         var expectedError = new Error(HttpStatusCode.InternalServerError, ErrorCodes.InstrumentCouldNotBeCreated);
-        
+
         mockRepository.Setup(x =>
                 x.InsertAsync(instrument, default))
             .ReturnsAsync(expectedError)

@@ -11,6 +11,5 @@ public static class AuthenticationExtensions
 {
     public static void RegisterAuthentication(this WebApplicationBuilder builder, IConfiguration configuration)
     {
-        
     }
 }

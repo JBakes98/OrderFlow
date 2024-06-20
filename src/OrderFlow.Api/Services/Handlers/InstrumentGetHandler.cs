@@ -20,7 +20,7 @@ public class InstrumentGetHandler : IHandler<string, Instrument>
 
         if (result.IsT1)
             return result.AsT1;
-    
+
         return result.AsT0;
     }
 }

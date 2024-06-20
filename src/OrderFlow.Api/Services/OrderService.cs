@@ -18,9 +18,9 @@ public class OrderService : IOrderService
     private readonly IMapper<BaseOrderEvent, Event> _orderEventToEventMapper;
 
 
-    public OrderService(IRepository<Order> repository, 
-        IEnqueueService enqueueService, 
-        IMapper<Order, OrderCreatedEvent> orderToOrderCreatedEventMapper, 
+    public OrderService(IRepository<Order> repository,
+        IEnqueueService enqueueService,
+        IMapper<Order, OrderCreatedEvent> orderToOrderCreatedEventMapper,
         IMapper<BaseOrderEvent, Event> orderEventToEventMapper)
     {
         _orderEventToEventMapper = Guard.Against.Null(orderEventToEventMapper);
@@ -56,7 +56,7 @@ public class OrderService : IOrderService
 
         if (saveResult.IsT1)
             return saveResult.AsT1;
-        
+
         var orderEvent = _orderToOrderCreatedEventMapper.Map(order);
         var @event = _orderEventToEventMapper.Map(orderEvent);
 
