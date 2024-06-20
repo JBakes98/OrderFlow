@@ -1,7 +1,7 @@
+using Ardalis.GuardClauses;
 using OneOf;
 using OrderFlow.Models;
 using OrderFlow.Repositories;
-using Instrument = OrderFlow.Models.Instrument;
 
 namespace OrderFlow.Services;
 
@@ -11,23 +11,36 @@ public class InstrumentService : IInstrumentService
 
     public InstrumentService(IRepository<Instrument> repository)
     {
-        _repository = repository;
+        _repository = Guard.Against.Null(repository);
     }
 
     public async Task<OneOf<Instrument, Error>> RetrieveInstrument(string id)
     {
-        var instrument = await _repository.GetByIdAsync(id);
+        var result = await _repository.GetByIdAsync(id);
 
-        if (instrument.IsT1)
-            return instrument.AsT1;
+        if (result.IsT1)
+            return result.AsT1;
 
-        return instrument;
+        return result.AsT0;
     }
 
     public async Task<OneOf<IEnumerable<Instrument>, Error>> RetrieveInstruments()
     {
         var result = await _repository.QueryAsync();
 
-        return result;
+        if (result.IsT1)
+            return result.AsT1;
+
+        return result.AsT0.ToList();
+    }
+    
+    public async Task<OneOf<Instrument, Error>> CreateInstrument(Instrument instrument)
+    {
+        var result = await _repository.InsertAsync(instrument, default);
+
+        if (result.IsT1)
+            return result.AsT1;
+
+        return result.AsT0;
     }
 }

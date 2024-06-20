@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OrderFlow.Contracts.Requests;
@@ -14,12 +13,12 @@ namespace OrderFlow.Controllers;
 public class InstrumentController : ControllerBase
 {
     private readonly IHandler<CreateInstrument, Instrument> _createHandler;
-    private readonly IHandler<Guid, Instrument> _getInstrumentHandler;
+    private readonly IHandler<string, Instrument> _getInstrumentHandler;
     private readonly IInstrumentService _instrumentService;
 
     public InstrumentController(
         IHandler<CreateInstrument, Instrument> createHandler,
-        IHandler<Guid, Instrument> getInstrumentHandler,
+        IHandler<string, Instrument> getInstrumentHandler,
         IInstrumentService instrumentService
         )
     {
@@ -30,7 +29,6 @@ public class InstrumentController : ControllerBase
 
     // GET: api/<InstrumentController>
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> GetInstrument()
     {
         var results = await _instrumentService.RetrieveInstruments();
@@ -42,7 +40,7 @@ public class InstrumentController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetInstrument([FromRoute] Guid id, CancellationToken cancellationToken)
     {
-        var result = await _getInstrumentHandler.HandleAsync(id, cancellationToken);
+        var result = await _getInstrumentHandler.HandleAsync(id.ToString(), cancellationToken);
 
         return GetInstrumentResponse(result);
     }
@@ -56,33 +54,21 @@ public class InstrumentController : ControllerBase
         return CreateInstrumentResponse(result);
     }
 
-    // // PUT api/<InstrumentController>/5
-    // [HttpPut("{id}")]
-    // public void Put(int id, [FromBody] string value)
-    // {
-    // }
-    //
-    // // DELETE api/<InstrumentController>/5
-    // [HttpDelete("{id}")]
-    // public void Delete(int id)
-    // {
-    // }
-
-    private IActionResult CreateInstrumentResponse(OneOf<Instrument, Error> result)
+    private static IActionResult CreateInstrumentResponse(OneOf<Instrument, Error> result)
     {
         return result.Match<IActionResult>(
             instrument => new ObjectResult(instrument),
             error => new ObjectResult(error));
     }
 
-    private IActionResult GetInstrumentResponse(OneOf<Instrument, Error> result)
+    private static IActionResult GetInstrumentResponse(OneOf<Instrument, Error> result)
     {
         return result.Match<IActionResult>(
             instrument => new ObjectResult(instrument),
             error => new ObjectResult(error));
     }
 
-    private IActionResult QueryInstrumentsResponse(OneOf<IEnumerable<Instrument>, Error> result)
+    private static IActionResult QueryInstrumentsResponse(OneOf<IEnumerable<Instrument>, Error> result)
     {
         return result.Match<IActionResult>(
             instruments => new ObjectResult(instruments),
