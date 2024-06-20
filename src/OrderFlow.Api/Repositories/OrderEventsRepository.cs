@@ -11,12 +11,12 @@ namespace OrderFlow.Repositories;
 public class OrderEventsRepository : IRepository<Event>
 {
     private readonly IDynamoDBContext _context;
-    private readonly IAmazonDynamoDB _dynamoDBClient;
+    private readonly IAmazonDynamoDB _dynamoDbClient;
 
     public OrderEventsRepository(IAmazonDynamoDB dynamoDbClient)
     {
-        _dynamoDBClient = dynamoDbClient;
-        _context = new DynamoDBContext(_dynamoDBClient);
+        _dynamoDbClient = dynamoDbClient;
+        _context = new DynamoDBContext(_dynamoDbClient);
     }
 
     public void Dispose()
@@ -43,7 +43,7 @@ public class OrderEventsRepository : IRepository<Event>
         var json = JsonSerializer.Serialize(source);
 
         var doc = Document.FromJson(json);
-        var table = Table.LoadTable(_dynamoDBClient, "OrderEvents");
+        var table = Table.LoadTable(_dynamoDbClient, "OrderEvents");
 
         await table.PutItemAsync(doc, cancellationToken);
 

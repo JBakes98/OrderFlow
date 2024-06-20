@@ -1,5 +1,6 @@
 using System.Net;
 using Amazon.DynamoDBv2.DataModel;
+using Ardalis.GuardClauses;
 using OneOf;
 using OrderFlow.Domain;
 using OrderFlow.Models;
@@ -12,7 +13,7 @@ public class OrderRepository : IRepository<Order>, IDisposable
 
     public OrderRepository(IDynamoDBContext context)
     {
-        _context = context;
+        _context = Guard.Against.Null(context);
     }
 
     public void Dispose()

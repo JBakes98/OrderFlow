@@ -1,21 +1,20 @@
 using OneOf;
 using OrderFlow.Models;
-using OrderFlow.Repositories;
 
 namespace OrderFlow.Services.Handlers;
 
-public class OrderGetHandler : IHandler<Guid, Order>
+public class OrderGetHandler : IHandler<string, Order>
 {
-    private readonly IRepository<Order> _repository;
+    private readonly IOrderService _orderService;
 
-    public OrderGetHandler(IRepository<Order> repository)
+    public OrderGetHandler(IOrderService orderService)
     {
-        _repository = repository;
+        _orderService = orderService;
     }
 
-    public async Task<OneOf<Order, Error>> HandleAsync(Guid request, CancellationToken cancellationToken)
+    public async Task<OneOf<Order, Error>> HandleAsync(string request, CancellationToken cancellationToken)
     {
-        var order = await _repository.GetByIdAsync(request.ToString());
+        var order = await _orderService.RetrieveOrder(request);
 
         return order;
     }
