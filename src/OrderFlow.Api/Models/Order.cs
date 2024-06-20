@@ -1,5 +1,4 @@
 using Amazon.DynamoDBv2.DataModel;
-using OrderFlow.Events;
 
 namespace OrderFlow.Models;
 
