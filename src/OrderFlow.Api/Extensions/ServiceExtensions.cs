@@ -15,8 +15,6 @@ public static class ServiceExtensions
 {
     public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Add services to the container.
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddControllers();
@@ -30,10 +28,10 @@ public static class ServiceExtensions
         services.AddTransient<IRepository<Instrument>, InstrumentRepository>();
 
         services.AddSingleton<IHandler<CreateOrder, Order>, OrderCreateHandler>();
-        services.AddSingleton<IHandler<Guid, Order>, OrderGetHandler>();
+        services.AddSingleton<IHandler<string, Order>, OrderGetHandler>();
 
         services.AddSingleton<IHandler<CreateInstrument, Instrument>, InstrumentCreateHandler>();
-        services.AddSingleton<IHandler<Guid, Instrument>, InstrumentGetHandler>();
+        services.AddSingleton<IHandler<string, Instrument>, InstrumentGetHandler>();
 
         services.AddSingleton<IMapper<CreateOrder, Order>, CreateOrderToOrderMapper>();
         services.AddSingleton<IMapper<Order, OrderCreatedEvent>, OrderToOrderCreatedEventMapper>();
@@ -42,6 +40,9 @@ public static class ServiceExtensions
 
         services.AddSingleton<IHandler<CreateOrder, Order>, OrderCreateHandler>();
 
+        services.AddSingleton<IEnqueueService, EnqueueService>();
+
         services.AddSingleton<IInstrumentService, InstrumentService>();
+        services.AddSingleton<IOrderService, OrderService>();
     }
 }
