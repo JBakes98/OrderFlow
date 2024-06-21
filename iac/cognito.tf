@@ -1,6 +1,5 @@
 resource "aws_cognito_user_pool" "user_pool" {
   name = "user-pool"
-  
   username_attributes = ["email"]
   
   password_policy {
@@ -31,13 +30,19 @@ resource "aws_cognito_user_pool_client" "client" {
   user_pool_id = aws_cognito_user_pool.user_pool.id
   
   generate_secret = true
+  callback_urls = ["https://www.bbc.co.uk"]
+  explicit_auth_flows = ["ALLOW_USER_PASSWORD_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
 }
 
 resource "aws_cognito_user_pool_client" "password-client" {
   name         = "password-client"
   user_pool_id = aws_cognito_user_pool.user_pool.id
   
-  explicit_auth_flows = ["ALLOW_USER_PASSWORD_AUTH"]
+  explicit_auth_flows = ["ALLOW_USER_PASSWORD_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
+  callback_urls = ["https://google.com"]
+  supported_identity_providers         = ["COGNITO"]
+  allowed_oauth_flows                  = ["implicit"]
+  allowed_oauth_scopes                 = ["email", "openid"]
 }
 
 resource "aws_cognito_user_pool_domain" "cognito-domain" {
