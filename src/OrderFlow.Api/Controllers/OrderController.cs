@@ -29,6 +29,7 @@ namespace OrderFlow.Controllers
 
         // GET: api/Order
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetOrder()
         {
             var results = await _orderService.RetrieveOrders();
@@ -38,6 +39,7 @@ namespace OrderFlow.Controllers
 
         // GET: api/Order/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetOrder([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             var result = await _getHandler.HandleAsync(id.ToString(), cancellationToken);
@@ -47,6 +49,7 @@ namespace OrderFlow.Controllers
 
         // POST: api/Order
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> PostOrder(CreateOrder request, CancellationToken cancellationToken)
         {
             var result = await _createHandler.HandleAsync(request, cancellationToken);
