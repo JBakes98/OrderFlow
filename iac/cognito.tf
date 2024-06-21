@@ -1,6 +1,5 @@
 resource "aws_cognito_user_pool" "user_pool" {
   name = "user-pool"
-  domain = "orderflow"
   username_attributes = ["email"]
   
   password_policy {
