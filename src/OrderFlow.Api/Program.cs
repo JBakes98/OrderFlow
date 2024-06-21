@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.RegisterAwsServices(builder.Configuration);
 builder.Services.RegisterServices(builder.Configuration);
 builder.RegisterLogging(builder.Configuration);
-builder.RegisterAuthentication(builder.Configuration);
+builder.Services.RegisterAuthentication(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.RegisterSwaggerServices();
 
@@ -19,15 +19,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseRouting();
-
-app.UseCors("AllowSpecificOrigin");
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
-
