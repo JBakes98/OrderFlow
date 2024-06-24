@@ -42,7 +42,12 @@ resource "aws_cognito_user_pool_client" "password-client" {
   callback_urls = ["https://google.com"]
   supported_identity_providers         = ["COGNITO"]
   allowed_oauth_flows                  = ["implicit"]
-  allowed_oauth_scopes                 = ["email", "openid"]
+  allowed_oauth_scopes                 = [
+    "email", 
+    "openid", 
+    "https://orderflow.api.com/user_orders.read",
+    "https://orderflow.api.com/user_orders.write",
+  ]
 }
 
 resource "aws_cognito_user_pool_domain" "cognito-domain" {
