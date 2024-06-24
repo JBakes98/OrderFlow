@@ -42,12 +42,7 @@ resource "aws_cognito_user_pool_client" "password-client" {
   callback_urls                = ["https://google.com"]
   supported_identity_providers = ["COGNITO"]
   allowed_oauth_flows          = ["implicit"]
-  allowed_oauth_scopes = [
-    "email",
-    "openid",
-    "https://orderflow.api.com/user_orders.read",
-    "https://orderflow.api.com/user_orders.write",
-  ]
+  allowed_oauth_scopes         = ["email", "openid"]
 }
 
 resource "aws_cognito_user_pool_domain" "cognito-domain" {
@@ -65,14 +60,14 @@ resource "aws_cognito_resource_server" "resource" {
     scope_name        = "sample-scope"
     scope_description = "A Sample Scope"
   }
-  
+
   scope {
     scope_description = "Read users orders"
-    scope_name        = "https://orderflow.api.com/user_orders.read"
+    scope_name        = "user-orders.read"
   }
-  
+
   scope {
     scope_description = "Create orders"
-    scope_name        = "https://orderflow.api.com/user_orders.write"
+    scope_name        = "user-orders.write"
   }
 }
