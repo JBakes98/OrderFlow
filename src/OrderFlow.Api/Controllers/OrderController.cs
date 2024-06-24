@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OrderFlow.Contracts.Requests;
+using OrderFlow.Middleware;
 using OrderFlow.Models;
 using OrderFlow.Services;
 using OrderFlow.Services.Handlers;
@@ -27,9 +28,13 @@ namespace OrderFlow.Controllers
             _orderService = Guard.Against.Null(orderService);
         }
 
+        const string user_orders_read_scope = "https://orderflow.api.com/user_orders.read";
+        const string user_orders_write_scope = "https://orderflow.api.com/user_orders.write";
+
         // GET: api/Order
         [HttpGet]
         [Authorize]
+        [CustomScopeAuthorization(user_orders_read_scope)]
         public async Task<IActionResult> GetOrder()
         {
             var results = await _orderService.RetrieveOrders();
@@ -50,6 +55,7 @@ namespace OrderFlow.Controllers
         // POST: api/Order
         [HttpPost]
         [Authorize]
+        [CustomScopeAuthorization(user_orders_write_scope)]
         public async Task<IActionResult> PostOrder(CreateOrder request, CancellationToken cancellationToken)
         {
             var result = await _createHandler.HandleAsync(request, cancellationToken);
