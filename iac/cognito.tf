@@ -65,4 +65,14 @@ resource "aws_cognito_resource_server" "resource" {
     scope_name        = "sample-scope"
     scope_description = "A Sample Scope"
   }
+  
+  scope {
+    scope_description = "Read users orders"
+    scope_name        = "https://orderflow.api.com/user_orders.read"
+  }
+  
+  scope {
+    scope_description = "Create orders"
+    scope_name        = "https://orderflow.api.com/user_orders.write"
+  }
 }
