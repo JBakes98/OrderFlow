@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OrderFlow.Contracts.Requests;
@@ -20,7 +21,7 @@ public class InstrumentController : ControllerBase
         IHandler<CreateInstrument, Instrument> createHandler,
         IHandler<string, Instrument> getInstrumentHandler,
         IInstrumentService instrumentService
-        )
+    )
     {
         _createHandler = createHandler;
         _getInstrumentHandler = getInstrumentHandler;
@@ -29,6 +30,7 @@ public class InstrumentController : ControllerBase
 
     // GET: api/<InstrumentController>
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetInstrument()
     {
         var results = await _instrumentService.RetrieveInstruments();
@@ -38,6 +40,7 @@ public class InstrumentController : ControllerBase
 
     // GET api/<InstrumentController>/5
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<IActionResult> GetInstrument([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var result = await _getInstrumentHandler.HandleAsync(id.ToString(), cancellationToken);
@@ -47,6 +50,7 @@ public class InstrumentController : ControllerBase
 
     // POST api/<InstrumentController>
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> PostInstrument(CreateInstrument request, CancellationToken cancellationToken)
     {
         var result = await _createHandler.HandleAsync(request, cancellationToken);
