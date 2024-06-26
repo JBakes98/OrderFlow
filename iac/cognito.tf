@@ -30,15 +30,6 @@ resource "aws_cognito_user_pool" "user_pool" {
 }
 
 resource "aws_cognito_user_pool_client" "client" {
-  name         = "client"
-  user_pool_id = aws_cognito_user_pool.user_pool.id
-
-  generate_secret     = false
-  callback_urls       = ["https://www.bbc.co.uk"]
-  explicit_auth_flows = ["ALLOW_USER_PASSWORD_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
-}
-
-resource "aws_cognito_user_pool_client" "client" {
   name         = "orderflow-client"
   user_pool_id = aws_cognito_user_pool.user_pool.id
 
