@@ -23,26 +23,42 @@ resource "aws_cognito_user_pool" "user_pool" {
       max_length = 256
     }
   }
+
+  email_configuration {
+    email_sending_account = "COGNITO_DEFAULT"
+  }
 }
 
 resource "aws_cognito_user_pool_client" "client" {
   name         = "client"
   user_pool_id = aws_cognito_user_pool.user_pool.id
 
-  generate_secret     = true
+  generate_secret     = false
   callback_urls       = ["https://www.bbc.co.uk"]
   explicit_auth_flows = ["ALLOW_USER_PASSWORD_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
 }
 
-resource "aws_cognito_user_pool_client" "password-client" {
-  name         = "password-client"
+resource "aws_cognito_user_pool_client" "client" {
+  name         = "orderflow-client"
   user_pool_id = aws_cognito_user_pool.user_pool.id
 
-  explicit_auth_flows          = ["ALLOW_USER_PASSWORD_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
-  callback_urls                = ["https://google.com"]
-  supported_identity_providers = ["COGNITO"]
-  allowed_oauth_flows          = ["implicit"]
-  allowed_oauth_scopes         = ["email", "openid"]
+  generate_secret     = false
+  explicit_auth_flows = ["ALLOW_USER_PASSWORD_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
+
+  # Add OAuth settings
+  allowed_oauth_flows = ["code", "implicit"]
+  allowed_oauth_scopes = [
+    "email",
+    "openid",
+    "profile",
+    "${aws_cognito_resource_server.resource_server.identifier}/read:data",
+    "${aws_cognito_resource_server.resource_server.identifier}/write:data"
+  ]
+  allowed_oauth_flows_user_pool_client = true
+  supported_identity_providers         = ["COGNITO"]
+
+  callback_urls = ["https://google.com"]
+  logout_urls   = ["https://bbc.com"]
 }
 
 resource "aws_cognito_user_pool_domain" "cognito-domain" {
@@ -50,24 +66,19 @@ resource "aws_cognito_user_pool_domain" "cognito-domain" {
   user_pool_id = aws_cognito_user_pool.user_pool.id
 }
 
-resource "aws_cognito_resource_server" "resource" {
+resource "aws_cognito_resource_server" "resource_server" {
   identifier = "orderflow"
   name       = "orderflow"
 
   user_pool_id = aws_cognito_user_pool.user_pool.id
 
   scope {
-    scope_name        = "sample-scope"
-    scope_description = "A Sample Scope"
+    scope_description = "Read access to user data"
+    scope_name        = "read:data"
   }
 
   scope {
-    scope_description = "Read users orders"
-    scope_name        = "user-orders.read"
-  }
-
-  scope {
-    scope_description = "Create orders"
-    scope_name        = "user-orders.write"
+    scope_description = "Write access to user data"
+    scope_name        = "write:data"
   }
 }
