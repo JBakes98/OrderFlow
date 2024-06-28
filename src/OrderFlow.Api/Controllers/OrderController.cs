@@ -28,13 +28,13 @@ namespace OrderFlow.Controllers
             _orderService = Guard.Against.Null(orderService);
         }
 
-        const string user_orders_read_scope = "https://orderflow.api.com/user_orders.read";
-        const string user_orders_write_scope = "https://orderflow.api.com/user_orders.write";
+        private const string UserOrdersReadScope = "orderflow/read:data";
+        private const string UserOrdersWriteScope = "orderflow/write:data";
 
         // GET: api/Order
         [HttpGet]
         [Authorize]
-        [CustomScopeAuthorization(user_orders_read_scope)]
+        [CustomScopeAuthorization(UserOrdersReadScope)]
         public async Task<IActionResult> GetOrder()
         {
             var results = await _orderService.RetrieveOrders();
@@ -45,6 +45,7 @@ namespace OrderFlow.Controllers
         // GET: api/Order/5
         [HttpGet("{id}")]
         [Authorize]
+        [CustomScopeAuthorization(UserOrdersReadScope)]
         public async Task<IActionResult> GetOrder([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             var result = await _getHandler.HandleAsync(id.ToString(), cancellationToken);
@@ -55,7 +56,7 @@ namespace OrderFlow.Controllers
         // POST: api/Order
         [HttpPost]
         [Authorize]
-        [CustomScopeAuthorization(user_orders_write_scope)]
+        [CustomScopeAuthorization(UserOrdersWriteScope)]
         public async Task<IActionResult> PostOrder(CreateOrder request, CancellationToken cancellationToken)
         {
             var result = await _createHandler.HandleAsync(request, cancellationToken);

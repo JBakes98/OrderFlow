@@ -45,11 +45,16 @@ resource "aws_cognito_user_pool_client" "client" {
     "${aws_cognito_resource_server.resource_server.identifier}/read:data",
     "${aws_cognito_resource_server.resource_server.identifier}/write:data"
   ]
-  allowed_oauth_flows_user_pool_client = true
   supported_identity_providers         = ["COGNITO"]
 
   callback_urls = ["https://google.com"]
   logout_urls   = ["https://bbc.com"]
+
+  prevent_user_existence_errors = "ENABLED"
+  enable_token_revocation       = true
+
+  # This enables PKCE
+  allowed_oauth_flows_user_pool_client = true
 }
 
 resource "aws_cognito_user_pool_domain" "cognito-domain" {

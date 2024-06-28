@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -12,7 +13,7 @@ public class CustomScopeAuthorizationAttribute : TypeFilterAttribute
     public CustomScopeAuthorizationAttribute(params string[] requiredScopes) : base(
         typeof(CustomScopeAuthorizationFilter))
     {
-        Arguments = new object[] { requiredScopes };
+        Arguments = [requiredScopes];
     }
 }
 
@@ -25,7 +26,7 @@ public class CustomScopeAuthorizationFilter : IAuthorizationFilter
 
     public CustomScopeAuthorizationFilter(string[] requiredScopes)
     {
-        _requiredScopes = requiredScopes ?? throw new ArgumentNullException(nameof(requiredScopes));
+        _requiredScopes = Guard.Against.Null(requiredScopes);
     }
 
     public void OnAuthorization(AuthorizationFilterContext context)
@@ -42,12 +43,11 @@ public class CustomScopeAuthorizationFilter : IAuthorizationFilter
         // Check if the required scopes are present in the token
         var scopeClaim = user.Claims.FirstOrDefault(item => item.Type == "scope");
 
-        var tokenScopes = scopeClaim?.Value?.Trim().Split(" ").ToList() ?? [];
+        var tokenScopes = scopeClaim?.Value.Trim().Split(" ").ToList() ?? [];
 
         if (!_requiredScopes.All(scope => tokenScopes.Contains(scope)))
         {
             context.Result = new ForbidResult();
-            return;
         }
     }
 }
