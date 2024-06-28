@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OrderFlow.Contracts.Requests;
+using OrderFlow.Middleware;
 using OrderFlow.Models;
 using OrderFlow.Services;
 using OrderFlow.Services.Handlers;
@@ -28,9 +29,13 @@ public class InstrumentController : ControllerBase
         _instrumentService = instrumentService;
     }
 
+    private const string UserInstrumentsReadScope = "orderflow/read:data";
+    private const string UserInstrumentsWriteScope = "orderflow/write:data";
+
     // GET: api/<InstrumentController>
     [HttpGet]
     [Authorize]
+    [CustomScopeAuthorization(UserInstrumentsReadScope)]
     public async Task<IActionResult> GetInstrument()
     {
         var results = await _instrumentService.RetrieveInstruments();
@@ -41,6 +46,7 @@ public class InstrumentController : ControllerBase
     // GET api/<InstrumentController>/5
     [HttpGet("{id}")]
     [Authorize]
+    [CustomScopeAuthorization(UserInstrumentsReadScope)]
     public async Task<IActionResult> GetInstrument([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var result = await _getInstrumentHandler.HandleAsync(id.ToString(), cancellationToken);
@@ -51,6 +57,7 @@ public class InstrumentController : ControllerBase
     // POST api/<InstrumentController>
     [HttpPost]
     [Authorize]
+    [CustomScopeAuthorization(UserInstrumentsWriteScope)]
     public async Task<IActionResult> PostInstrument(CreateInstrument request, CancellationToken cancellationToken)
     {
         var result = await _createHandler.HandleAsync(request, cancellationToken);
