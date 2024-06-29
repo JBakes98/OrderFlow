@@ -6,8 +6,8 @@ on:
       - 'v*'
 
 env:
-  AWS_REGION: eu-west-2
-  ECR_REPOSITORY: orderflow-api
+  AWS_REGION: ${{ vars.AWS_REGION}}
+  ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
 
 jobs:
   build-and-push:
