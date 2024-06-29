@@ -8,8 +8,8 @@ resource "aws_ecs_task_definition" "oderflow_api" {
   family                   = "orderflow-api-task"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "0.25"
-  memory                   = "0.5"
+  cpu                      = ".5"
+  memory                   = "1"
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
 
   container_definitions = jsonencode([{
