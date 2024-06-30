@@ -8,7 +8,6 @@ on:
 env:
   AWS_REGION: ${{ vars.AWS_REGION}}
   ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
-  DOCKERFILE_PATH: ../../src/Orderflow.Api/Dockerfile
 
 jobs:
   build-and-push:
@@ -34,9 +33,6 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.ref_name }}
         run: |
-          # Navigate to the directory containing the Dockerfile
-          cd $(dirname ${{ env.DOCKERFILE_PATH }})
-        
           # Build the Docker image
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           
@@ -45,4 +41,6 @@ jobs:
           
           # Also push as 'latest'
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
