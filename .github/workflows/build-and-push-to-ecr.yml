@@ -8,7 +8,7 @@ on:
 env:
   AWS_REGION: ${{ vars.AWS_REGION}}
   ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
-  DOCKERFILE_PATH: ./src/Orderflow.Api/Dockerfile
+  DOCKERFILE_PATH: ../../src/Orderflow.Api/Dockerfile
 
 jobs:
   build-and-push:
