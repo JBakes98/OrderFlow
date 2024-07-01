@@ -2,10 +2,9 @@ namespace OrderFlow.Contracts.Requests;
 
 public class CreateOrder
 {
-    public CreateOrder(int quantity, double price, Guid instrumentId)
+    public CreateOrder(int quantity, Guid instrumentId)
     {
         Quantity = quantity;
-        Price = price;
         InstrumentId = instrumentId;
     }
 

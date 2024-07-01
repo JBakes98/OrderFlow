@@ -6,6 +6,7 @@ using OrderFlow.Events;
 using OrderFlow.Extensions;
 using OrderFlow.Models;
 using OrderFlow.Repositories;
+using Serilog;
 using Error = OrderFlow.Models.Error;
 
 namespace OrderFlow.Services;
@@ -16,13 +17,15 @@ public class OrderService : IOrderService
     private readonly IEnqueueService _enqueueService;
     private readonly IMapper<Order, OrderCreatedEvent> _orderToOrderCreatedEventMapper;
     private readonly IMapper<BaseOrderEvent, Event> _orderEventToEventMapper;
-
+    private readonly IDiagnosticContext _diagnosticContext;
 
     public OrderService(IRepository<Order> repository,
         IEnqueueService enqueueService,
         IMapper<Order, OrderCreatedEvent> orderToOrderCreatedEventMapper,
-        IMapper<BaseOrderEvent, Event> orderEventToEventMapper)
+        IMapper<BaseOrderEvent, Event> orderEventToEventMapper,
+        IDiagnosticContext diagnosticContext)
     {
+        _diagnosticContext = Guard.Against.Null(diagnosticContext);
         _orderEventToEventMapper = Guard.Against.Null(orderEventToEventMapper);
         _orderToOrderCreatedEventMapper = Guard.Against.Null(orderToOrderCreatedEventMapper);
         _enqueueService = Guard.Against.Null(enqueueService);
@@ -53,9 +56,11 @@ public class OrderService : IOrderService
     public async Task<OneOf<Order, Error>> CreateOrder(Order order)
     {
         var saveResult = await _repository.InsertAsync(order, default);
+        _diagnosticContext.Set($"Order", order, true);
 
         if (saveResult.IsT1)
             return saveResult.AsT1;
+        _diagnosticContext.Set($"OrderRaised", true);
 
         var orderEvent = _orderToOrderCreatedEventMapper.Map(order);
         var @event = _orderEventToEventMapper.Map(orderEvent);

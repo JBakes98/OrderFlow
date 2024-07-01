@@ -15,6 +15,7 @@ public static class LoggingExtensions
             .CreateLogger();
 
         builder.Host.UseSerilog();
+        builder.Services.AddSerilog();
 
         Log.Logger.Information("Application starting...");
 

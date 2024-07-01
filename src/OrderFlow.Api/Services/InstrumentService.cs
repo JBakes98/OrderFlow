@@ -2,15 +2,19 @@ using Ardalis.GuardClauses;
 using OneOf;
 using OrderFlow.Models;
 using OrderFlow.Repositories;
+using Serilog;
 
 namespace OrderFlow.Services;
 
 public class InstrumentService : IInstrumentService
 {
     private readonly IRepository<Instrument> _repository;
+    private readonly IDiagnosticContext _diagnosticContext;
 
-    public InstrumentService(IRepository<Instrument> repository)
+    public InstrumentService(IRepository<Instrument> repository,
+        IDiagnosticContext diagnosticContext)
     {
+        _diagnosticContext = Guard.Against.Null(diagnosticContext);
         _repository = Guard.Against.Null(repository);
     }
 
@@ -21,7 +25,9 @@ public class InstrumentService : IInstrumentService
         if (result.IsT1)
             return result.AsT1;
 
-        return result.AsT0;
+        var instrument = result.AsT0;
+        _diagnosticContext.Set($"Instrument", instrument.Ticker);
+        return instrument;
     }
 
     public async Task<OneOf<IEnumerable<Instrument>, Error>> RetrieveInstruments()
