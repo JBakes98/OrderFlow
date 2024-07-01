@@ -45,7 +45,7 @@ resource "aws_cognito_user_pool_client" "client" {
     "${aws_cognito_resource_server.resource_server.identifier}/read:data",
     "${aws_cognito_resource_server.resource_server.identifier}/write:data"
   ]
-  supported_identity_providers         = ["COGNITO"]
+  supported_identity_providers = ["COGNITO"]
 
   callback_urls = ["https://google.com"]
   logout_urls   = ["https://bbc.com"]
