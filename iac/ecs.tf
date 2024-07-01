@@ -38,7 +38,7 @@ resource "aws_ecs_service" "orderflow_api" {
 
   load_balancer {
     target_group_arn = aws_alb_target_group.app.id
-    container_name   = "orderflow-app"
+    container_name   = "orderflow-api"
     container_port   = 80
   }
 
