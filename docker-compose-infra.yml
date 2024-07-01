@@ -1,8 +1,16 @@
 ﻿services:
   localstack:
-    container_name: "localstack-main"
+    container_name: "localstack"
     image: localstack/localstack
     ports:
       - "4566:4566"
     environment:
-      - DYNAMODB_SHARE_DB=1  
+      - DYNAMODB_SHARE_DB=1
+  
+  seq:
+    container_name: "seq"
+    image: datalust/seq
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5431:80"
