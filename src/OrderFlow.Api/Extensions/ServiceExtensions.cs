@@ -1,9 +1,8 @@
-using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
 using OrderFlow.Contracts.Requests;
 using OrderFlow.Events;
 using OrderFlow.Mappers.Events;
 using OrderFlow.Mappers.Request;
+using OrderFlow.Mappers.Response.AlphaVantage;
 using OrderFlow.Models;
 using OrderFlow.Repositories;
 using OrderFlow.Services;
@@ -29,6 +28,9 @@ public static class ServiceExtensions
         services.AddSingleton<IMapper<Order, OrderCreatedEvent>, OrderToOrderCreatedEventMapper>();
         services.AddSingleton<IMapper<CreateInstrument, Instrument>, CreateInstrumentToInstrumentMapper>();
         services.AddSingleton<IMapper<BaseOrderEvent, Event>, OrderEventToEventMapper>();
+        services
+            .AddSingleton<IMapper<OrderFlow.Contracts.Responses.AlphaVantage.GlobalQuote, GlobalQuote>,
+                GlobalQuoteResponseToGlobalQuoteDomain>();
 
         services.AddSingleton<IHandler<CreateOrder, Order>, OrderCreateHandler>();
 
