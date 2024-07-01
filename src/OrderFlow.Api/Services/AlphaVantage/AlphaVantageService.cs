@@ -5,9 +5,9 @@ using Ardalis.GuardClauses;
 using Microsoft.Extensions.Options;
 using OneOf;
 using OrderFlow.Domain;
-using OrderFlow.Extensions;
 using OrderFlow.Models;
 using OrderFlow.Options;
+using GlobalQuote = OrderFlow.Contracts.Responses.AlphaVantage.GlobalQuote;
 
 namespace OrderFlow.Services.AlphaVantage;
 
@@ -15,14 +15,11 @@ public class AlphaVantageService : IAlphaVantageService
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly AlphaVantageOptions _options;
-    private readonly IMapper<Contracts.Responses.AlphaVantage.GlobalQuote, GlobalQuote> _globalQuoteMapper;
 
     public AlphaVantageService(
         IHttpClientFactory httpClientFactory,
-        IOptions<AlphaVantageOptions> options,
-        IMapper<Contracts.Responses.AlphaVantage.GlobalQuote, GlobalQuote> globalQuoteMapper)
+        IOptions<AlphaVantageOptions> options)
     {
-        _globalQuoteMapper = Guard.Against.Null(globalQuoteMapper);
         _options = Guard.Against.Null(options.Value);
         _httpClientFactory = Guard.Against.Null(httpClientFactory);
     }
@@ -30,19 +27,18 @@ public class AlphaVantageService : IAlphaVantageService
 
     public async Task<OneOf<GlobalQuote, Error>> GetStockQuote(string symbol)
     {
-        var client = _httpClientFactory.CreateClient();
-        client.BaseAddress = new Uri(_options.BasePath);
+        var client = _httpClientFactory.CreateClient(_options.ClientName);
 
         var response =
             await client.GetStringAsync(
                 $"query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={_options.ApiKey}");
 
         var jsonObject = JsonNode.Parse(response)?["Global Quote"];
-        var quoteResponse = jsonObject.Deserialize<Contracts.Responses.AlphaVantage.GlobalQuote>();
+        var quoteResponse = jsonObject.Deserialize<GlobalQuote>();
 
         if (quoteResponse == null)
             return new Error(HttpStatusCode.ServiceUnavailable, ErrorCodes.UnableToRetrieveCurrentInstrumentPrice);
 
-        return _globalQuoteMapper.Map(quoteResponse);
+        return quoteResponse;
     }
 }
