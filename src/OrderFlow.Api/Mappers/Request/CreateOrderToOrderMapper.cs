@@ -9,9 +9,7 @@ public class CreateOrderToOrderMapper : IMapper<CreateOrder, Order>
     public Order Map(CreateOrder source)
     {
         return new Order(
-                instrumentId: source.InstrumentId.ToString(),
-                quantity: source.Quantity,
-                price: source.Price
-            );
+            instrumentId: source.InstrumentId.ToString(),
+            quantity: source.Quantity);
     }
 }
