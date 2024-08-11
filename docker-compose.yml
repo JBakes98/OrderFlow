@@ -1,6 +1,12 @@
 ﻿services:
   orderflow:
-    image: orderflow
+    container_name: orderflow-api
     build:
       context: .
-      dockerfile: src/OrderFlow/Dockerfile
+      dockerfile: ./src/OrderFlow.Api/Dockerfile
+    
+    ports:
+      - "8080:8080"
+    
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Test
