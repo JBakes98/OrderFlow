@@ -1,4 +1,7 @@
 using System.Net;
+using Amazon.S3;
+using Amazon.S3.Model;
+using Amazon.S3.Util;
 using Ardalis.GuardClauses;
 using OneOf;
 using OrderFlow.Domain;
@@ -18,13 +21,16 @@ public class OrderService : IOrderService
     private readonly IMapper<Order, OrderCreatedEvent> _orderToOrderCreatedEventMapper;
     private readonly IMapper<BaseOrderEvent, Event> _orderEventToEventMapper;
     private readonly IDiagnosticContext _diagnosticContext;
+    private readonly IAmazonS3 _s3;
 
     public OrderService(IRepository<Order> repository,
         IEnqueueService enqueueService,
         IMapper<Order, OrderCreatedEvent> orderToOrderCreatedEventMapper,
         IMapper<BaseOrderEvent, Event> orderEventToEventMapper,
-        IDiagnosticContext diagnosticContext)
+        IDiagnosticContext diagnosticContext,
+        IAmazonS3 s3)
     {
+        _s3 = Guard.Against.Null(s3);
         _diagnosticContext = Guard.Against.Null(diagnosticContext);
         _orderEventToEventMapper = Guard.Against.Null(orderEventToEventMapper);
         _orderToOrderCreatedEventMapper = Guard.Against.Null(orderToOrderCreatedEventMapper);
@@ -71,5 +77,35 @@ public class OrderService : IOrderService
             return new Error(HttpStatusCode.InternalServerError, ErrorCodes.EventCouldNotBePublished);
 
         return order;
+    }
+
+    public async Task<Error> ProcessOrderHistory(IFormFile orderFile)
+    {
+        var bucketExist = await AmazonS3Util.DoesS3BucketExistV2Async(_s3, "orderflow-bucket");
+
+        if (!bucketExist)
+            return new Error(HttpStatusCode.InternalServerError, ErrorCodes.SpecifiedBucketDoesNotExist);
+
+        await using var stream = orderFile.OpenReadStream();
+
+        var request = new PutObjectRequest
+        {
+            BucketName = "orderflow-bucket",
+            Key = $"orderform-{DateTime.Now:O}",
+            InputStream = stream,
+            AutoCloseStream = true,
+            ContentType = orderFile.ContentType
+        };
+
+        try
+        {
+            await _s3.PutObjectAsync(request);
+        }
+        catch (AmazonS3Exception e)
+        {
+            return new Error(HttpStatusCode.InternalServerError, ErrorCodes.OrderFileUploadFailed);
+        }
+
+        return null!;
     }
 }
