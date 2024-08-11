@@ -11,8 +11,10 @@
     <ItemGroup>
         <PackageReference Include="Amazon.AspNetCore.Identity.Cognito" Version="3.0.2"/>
         <PackageReference Include="Ardalis.GuardClauses" Version="4.5.0" />
+        <PackageReference Include="AWSSDK.Core" Version="3.7.400.4"/>
         <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.302.17" />
         <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.300" />
+        <PackageReference Include="AWSSDK.S3" Version="3.7.400.2"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
         <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.6.2"/>
