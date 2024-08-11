@@ -1,6 +1,6 @@
 resource "aws_sqs_queue" "orderflow_events_queue" {
-  name = "orderflow-events-queue"
-  max_message_size = 2048
+  name                      = "orderflow-events-queue"
+  max_message_size          = 2048
   message_retention_seconds = 86400
 }
 
@@ -9,8 +9,8 @@ resource "aws_sqs_queue" "orderflow_events_queue_deadletter" {
 }
 
 resource "aws_sqs_queue" "orderflow_history_queue" {
-  name = "orderflow-history-queue"
-  max_message_size = 2048
+  name                      = "orderflow-history-queue"
+  max_message_size          = 2048
   message_retention_seconds = 86400
 }
 
