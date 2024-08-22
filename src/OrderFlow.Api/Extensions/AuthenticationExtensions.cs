@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using OrderFlow.Options;
 
 namespace OrderFlow.Extensions;
 
@@ -10,11 +11,10 @@ public static class AuthenticationExtensions
     {
         services.AddCognitoIdentity();
 
-        var cognitoAppClientId = configuration["Cognito:AppClientId"];
-        var cognitoUserPoolId = configuration["Cognito:UserPoolId"];
-        var cognitoRegion = configuration["Cognito:Region"];
+        var cognitoConfig = configuration.GetSection("Cognito").Get<CognitoOptions>();
 
-        var validIssuer = $"https://cognito-idp.{cognitoRegion}.amazonaws.com/{cognitoUserPoolId}";
+        var cognitoAppClientId = cognitoConfig?.AppClientId;
+        var validIssuer = $"https://cognito-idp.{cognitoConfig?.Region}.amazonaws.com/{cognitoConfig?.UserPoolId}";
         var validAudience = cognitoAppClientId;
 
         services.AddAuthentication(options =>
@@ -25,9 +25,10 @@ public static class AuthenticationExtensions
             .AddJwtBearer(options =>
             {
                 options.Authority = validIssuer;
+                options.RequireHttpsMetadata = cognitoConfig!.RequireHttpsMetadata;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = configuration["Cognito:Authority"],
+                    ValidIssuer = cognitoConfig.Authority,
                     ValidateIssuerSigningKey = true,
                     ValidateIssuer = true,
                     ValidateLifetime = true,
@@ -35,9 +36,9 @@ public static class AuthenticationExtensions
                     AudienceValidator = (audiences, securityToken, validationParameters) =>
                     {
                         var castedToken = securityToken as JsonWebToken;
-                        var clientId = castedToken?.GetPayloadValue<string>("client_id")?.ToString();
+                        var clientId = castedToken?.GetPayloadValue<string>("client_id");
 
-                        return validAudience.Equals(clientId);
+                        return validAudience!.Equals(clientId);
                     }
                 };
             });
