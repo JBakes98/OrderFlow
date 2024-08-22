@@ -2,9 +2,10 @@ using OrderFlow.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.RegisterLogging(builder.Configuration);
+
 builder.Services.RegisterAwsServices(builder.Configuration);
 builder.Services.RegisterServices(builder.Configuration);
-builder.RegisterLogging(builder.Configuration);
 builder.Services.RegisterAuthentication(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.RegisterSwaggerServices();
