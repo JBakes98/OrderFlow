@@ -6,7 +6,6 @@
       - "4566:4566"
     environment:
       - LOCALSTACK_AUTH_TOKEN="ls-CesAdave-vOQa-mEfO-6046-DebO68668892"
-      - DYNAMODB_SHARE_DB=1
   
   seq:
     container_name: "seq"
