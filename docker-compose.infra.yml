@@ -5,6 +5,7 @@
     ports:
       - "4566:4566"
     environment:
+      - DYNAMODB_SHARE_DB=1
       - LOCALSTACK_AUTH_TOKEN="ls-CesAdave-vOQa-mEfO-6046-DebO68668892"
   
   seq:
