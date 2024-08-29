@@ -24,7 +24,7 @@ public static class AuthenticationExtensions
             })
             .AddJwtBearer(options =>
             {
-                options.Authority = validIssuer;
+                options.Authority = cognitoConfig?.Authority;
                 options.RequireHttpsMetadata = cognitoConfig!.RequireHttpsMetadata;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
