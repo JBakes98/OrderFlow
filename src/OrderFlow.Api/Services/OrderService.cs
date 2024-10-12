@@ -84,7 +84,12 @@ public class OrderService : IOrderService
         var bucketExist = await AmazonS3Util.DoesS3BucketExistV2Async(_s3, "orderflow-bucket");
 
         if (!bucketExist)
+        {
+            _diagnosticContext.Set("BucketExist", false);
             return new Error(HttpStatusCode.InternalServerError, ErrorCodes.SpecifiedBucketDoesNotExist);
+        }
+
+        _diagnosticContext.Set("BucketExist", true);
 
         await using var stream = orderFile.OpenReadStream();
 
@@ -103,6 +108,7 @@ public class OrderService : IOrderService
         }
         catch (AmazonS3Exception e)
         {
+            _diagnosticContext.Set("S3UploadError", e);
             return new Error(HttpStatusCode.InternalServerError, ErrorCodes.OrderFileUploadFailed);
         }
 
