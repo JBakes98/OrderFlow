@@ -3,7 +3,7 @@ name: Build and Push to ECR
 on:
   push:
     tags:
-      - 'v*'
+      - '*'
 
 env:
   AWS_REGION: ${{ vars.AWS_REGION}}

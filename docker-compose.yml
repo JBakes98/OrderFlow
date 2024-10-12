@@ -1,6 +1,23 @@
 ﻿services:
   orderflow:
-    image: orderflow
+    container_name: orderflow-api
     build:
       context: .
-      dockerfile: src/OrderFlow/Dockerfile
+      dockerfile: ./src/OrderFlow.Api/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Test
+      - AWS_ACCESS_KEY_ID=XX
+      - AWS_SECRET_ACCESS_KEY=XX
+      - AWS_REGION=eu-west-2
+    networks:
+      - orderflow-network
+
+networks:
+  orderflow-network:
+    name: orderflow-network
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.0.0/24
