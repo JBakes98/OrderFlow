@@ -1,15 +1,24 @@
 using OrderFlow.Extensions;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.RegisterLogging(builder.Configuration);
+var configBuilder = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", false, false)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, false)
+    .AddEnvironmentVariables("ORDERFLOW_");
 
-builder.Services.RegisterAwsServices(builder.Configuration);
-builder.Services.RegisterServices(builder.Configuration);
-builder.Services.RegisterAuthentication(builder.Configuration);
+var config = configBuilder.Build();
+
+builder.RegisterLogging(config);
+
+builder.Services.RegisterAwsServices(config);
+builder.Services.RegisterServices(config);
+builder.Services.RegisterAuthentication(config);
 builder.Services.AddControllers();
 builder.Services.RegisterSwaggerServices();
-builder.Services.RegisterAlphaVantage(builder.Configuration);
+builder.Services.RegisterAlphaVantage(config);
 
 var app = builder.Build();
 
@@ -25,5 +34,6 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.UseSerilogRequestLogging();
 
 app.Run();
