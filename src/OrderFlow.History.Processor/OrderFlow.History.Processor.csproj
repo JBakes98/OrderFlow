@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+        <AWSProjectType>Lambda</AWSProjectType>
+        <!-- This property makes the build directory similar to a publish directory and helps the AWS .NET Lambda Mock Test Tool find project dependencies. -->
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <!-- Generate ready to run images during publishing to improve cold start time. -->
+        <PublishReadyToRun>true</PublishReadyToRun>
+        <RootNamespace>OrderFlowHistoryFunction</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Amazon.Lambda.Core" Version="2.2.0"/>
+        <PackageReference Include="Amazon.Lambda.S3Events" Version="3.1.0"/>
+        <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.4.1"/>
+        <PackageReference Include="Ardalis.GuardClauses" Version="4.6.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
+        <PackageReference Include="Serilog" Version="4.0.1"/>
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0"/>
+        <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.2"/>
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0"/>
+        <PackageReference Include="Serilog.Sinks.Seq" Version="8.0.0"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Reference Include="Microsoft.Extensions.Configuration">
+            <HintPath>..\..\..\..\..\..\..\usr\local\share\dotnet\shared\Microsoft.AspNetCore.App\8.0.4\Microsoft.Extensions.Configuration.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.Extensions.Configuration.Abstractions">
+            <HintPath>..\..\..\..\..\..\..\usr\local\share\dotnet\shared\Microsoft.AspNetCore.App\8.0.4\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+            <HintPath>..\..\..\..\..\..\..\usr\local\share\dotnet\shared\Microsoft.AspNetCore.App\8.0.4\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="appsettings.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+</Project>

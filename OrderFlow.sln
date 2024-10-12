@@ -14,7 +14,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderFlow.Extensions", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderFlow.Api.Unit.Tests", "test\OrderFlow.Api.Unit.Tests\OrderFlow.Api.Unit.Tests.csproj", "{030DB41C-FFB6-4022-B1A2-FDEEF1C3EA96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderFlowHistoryFunction", "src\OrderFlowHistoryFunction\OrderFlowHistoryFunction.csproj", "{3C5FC075-DEAA-4DF1-9D36-4EB738EE1A16}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderFlow.History.Processor", "src\OrderFlow.History.Processor\OrderFlow.History.Processor.csproj", "{3C5FC075-DEAA-4DF1-9D36-4EB738EE1A16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderFlow.Events.Publisher", "src\OrderFlow.Events.Publisher\OrderFlow.Events.Publisher.csproj", "{D41CF7BA-64B3-4F70-B3E9-A90B2435DE9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
