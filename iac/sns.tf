@@ -22,3 +22,7 @@ resource "aws_sns_topic" "orderflow_history_topic" {
   name   = "orderflow-s3-order-history-topic"
   policy = data.aws_iam_policy_document.orderflow_history_topic_policy.json
 }
+
+resource "aws_sns_topic" "orderflow_events_topic" {
+  name = "orderflow-events-topic"
+}
