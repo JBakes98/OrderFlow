@@ -50,7 +50,7 @@ resource "aws_ecs_cluster" "orderflow_api_cluster" {
 resource "aws_security_group" "orderflow_api_sg" {
   name        = "orderflow-api-sg"
   description = "Allow inbound traffic for ECS service"
-  vpc_id      = "vpc-123456"  # Replace with your VPC ID
+  vpc_id      = aws_vpc.orderflow_api_vpc.id  
 
   ingress {
     from_port   = 80
@@ -76,7 +76,7 @@ resource "aws_ecs_service" "orderflow_api_service" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets         = ["subnet-123456", "subnet-654321"]  # Replace with your subnet IDs
+    subnets         = [aws_subnet.orderflow_api_public_subnet.id]
     security_groups = [aws_security_group.orderflow_api_sg.id]
     assign_public_ip = true
   }
@@ -98,7 +98,7 @@ resource "aws_lb" "my_lb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.orderflow_api_sg.id]
-  subnets            = ["subnet-123456", "subnet-654321"]
+  subnets            = [aws_subnet.orderflow_api_public_subnet.id]
 }
 
 # (Optional) Target Group for ECS Service
@@ -106,7 +106,7 @@ resource "aws_lb_target_group" "orderflow_api_group" {
   name        = "orderflow-api-targets"
   port        = 80
   protocol    = "HTTP"
-  vpc_id      = "vpc-123456"  # Replace with your VPC ID
+  vpc_id      = aws_vpc.orderflow_api_vpc.id
   target_type = "ip"
 }
 
