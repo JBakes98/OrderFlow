@@ -1,4 +1,4 @@
-resource "aws_vpc" "orderflow_api_vpc" {
+/*resource "aws_vpc" "orderflow_api_vpc" {
   cidr_block = "10.0.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
@@ -58,4 +58,4 @@ output "vpc_id" {
 
 output "subnet_id" {
   value = aws_subnet.orderflow_api_public_subnet.id
-}
+}*/

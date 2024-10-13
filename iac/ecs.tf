@@ -1,4 +1,4 @@
-resource "aws_iam_role" "ecs_task_execution_role" {
+/*resource "aws_iam_role" "ecs_task_execution_role" {
   name = "ecsTaskExecutionRole"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -19,7 +19,7 @@ resource "aws_iam_role" "ecs_task_execution_role" {
 }
 
 resource "aws_ecs_task_definition" "orderflow_api_task" {
-  family                   = "my-fargate-task"
+  family                   = "orderflow-api-fargate-task"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"     # Cheap option: 0.25 vCPU
@@ -93,7 +93,7 @@ resource "aws_ecs_service" "orderflow_api_service" {
 }
 
 # (Optional) Application Load Balancer (ALB)
-resource "aws_lb" "my_lb" {
+resource "aws_lb" "orderflow_api_lb" {
   name               = "orderflow-api-lb"
   internal           = false
   load_balancer_type = "application"
@@ -112,7 +112,7 @@ resource "aws_lb_target_group" "orderflow_api_group" {
 
 # (Optional) Listener for ALB
 resource "aws_lb_listener" "orderflow_api_lb_listener" {
-  load_balancer_arn = aws_lb.my_lb.arn
+  load_balancer_arn = aws_lb.orderflow_api_lb.arn
   port              = 80
   protocol          = "HTTP"
 
@@ -120,4 +120,4 @@ resource "aws_lb_listener" "orderflow_api_lb_listener" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.orderflow_api_group.arn
   }
-}
+}*/
