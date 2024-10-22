@@ -14,6 +14,7 @@ var config = configBuilder.Build();
 builder.RegisterLogging(config);
 
 builder.Services.RegisterAwsServices(config);
+builder.Services.RegisterPostgres(config);
 builder.Services.RegisterServices(config);
 builder.Services.RegisterAuthentication(config);
 builder.Services.AddControllers();
