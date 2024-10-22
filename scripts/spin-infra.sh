@@ -1,4 +1,5 @@
 #!/bin/zsh
+cd ../
 
 # Start docker engine
 open -a Docker
