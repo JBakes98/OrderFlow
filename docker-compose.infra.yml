@@ -13,16 +13,6 @@
     networks:
       - orderflow-network
   
-  seq:
-    container_name: "seq"
-    image: datalust/seq
-    environment:
-      - ACCEPT_EULA=Y
-    ports:
-      - "5431:80"
-    networks:
-      - orderflow-network
-
 networks:
   orderflow-network:
     name: orderflow-network
