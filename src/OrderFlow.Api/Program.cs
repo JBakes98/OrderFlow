@@ -17,6 +17,7 @@ builder.Services.RegisterAwsServices(config);
 builder.Services.RegisterServices(config);
 builder.Services.RegisterAuthentication(config);
 builder.Services.AddControllers();
+builder.Services.RegisterCors(config);
 builder.Services.RegisterSwaggerServices();
 builder.Services.RegisterAlphaVantage(config);
 
@@ -29,6 +30,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("OrderflowDashboard");
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
