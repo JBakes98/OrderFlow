@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using OrderFlow.Models;
+using OrderFlow.Data.DbContext;
 
 namespace OrderFlow.Extensions;
 
