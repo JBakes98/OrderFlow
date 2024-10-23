@@ -1,6 +1,4 @@
-using Amazon.DynamoDBv2.DataModel;
-
-namespace OrderFlow.Models;
+namespace OrderFlow.Data.Entities;
 
 public class Instrument
 {
