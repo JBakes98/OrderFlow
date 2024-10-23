@@ -1,9 +1,11 @@
 using OrderFlow.Contracts.Requests;
+using OrderFlow.Data.Repositories;
+using OrderFlow.Data.Repositories.Interfaces;
+using OrderFlow.Domain.Models;
 using OrderFlow.Events;
 using OrderFlow.Mappers.Events;
 using OrderFlow.Mappers.Request;
 using OrderFlow.Mappers.Response.AlphaVantage;
-using OrderFlow.Models;
 using OrderFlow.Repositories;
 using OrderFlow.Services;
 using OrderFlow.Services.Handlers;
@@ -14,7 +16,7 @@ public static class ServiceExtensions
 {
     public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<IRepository<Order>, OrderRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IRepository<Event>, OrderEventsRepository>();
         services.AddScoped<IRepository<Instrument>, InstrumentRepository>();
 
