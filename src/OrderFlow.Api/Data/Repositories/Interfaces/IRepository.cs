@@ -1,7 +1,7 @@
 using OneOf;
-using OrderFlow.Models;
+using OrderFlow.Domain.Models;
 
-namespace OrderFlow.Repositories;
+namespace OrderFlow.Data.Repositories.Interfaces;
 
 public interface IRepository<T> : IDisposable
 {

@@ -2,9 +2,9 @@ using System.Net;
 using Amazon.DynamoDBv2.DataModel;
 using AutoFixture.Xunit2;
 using Moq;
+using OrderFlow.Data.Repositories;
 using OrderFlow.Domain;
-using OrderFlow.Models;
-using OrderFlow.Repositories;
+using OrderFlow.Domain.Models;
 
 namespace OrderFlow.Api.Unit.Tests.Repositories;
 

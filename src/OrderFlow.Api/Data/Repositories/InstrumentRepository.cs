@@ -2,12 +2,14 @@ using System.Net;
 using Ardalis.GuardClauses;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
+using OrderFlow.Data.DbContext;
+using OrderFlow.Data.Repositories.Interfaces;
 using OrderFlow.Domain;
-using OrderFlow.Models;
+using OrderFlow.Domain.Models;
 
-namespace OrderFlow.Repositories;
+namespace OrderFlow.Data.Repositories;
 
-public class InstrumentRepository : IRepository<Instrument>
+public class InstrumentRepository : IRepository<Instrument>, IInstrumentRepository
 {
     private readonly OrderflowDbContext _context;
 
