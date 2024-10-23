@@ -3,6 +3,8 @@ using OrderFlow.Data.Repositories;
 using OrderFlow.Data.Repositories.Interfaces;
 using OrderFlow.Domain.Models;
 using OrderFlow.Events;
+using OrderFlow.Mappers.Data;
+using OrderFlow.Mappers.Domain;
 using OrderFlow.Mappers.Events;
 using OrderFlow.Mappers.Request;
 using OrderFlow.Mappers.Response.AlphaVantage;
@@ -28,7 +30,13 @@ public static class ServiceExtensions
 
         services.AddScoped<IMapper<CreateOrder, Order>, CreateOrderToOrderMapper>();
         services.AddScoped<IMapper<Order, OrderCreatedEvent>, OrderToOrderCreatedEventMapper>();
+        services.AddScoped<IMapper<Order, Data.Entities.Order>, OrderDomainToOrderDataMapper>();
+        services.AddScoped<IMapper<Data.Entities.Order, Order>, OrderDataToOrderDomainMapper>();
+
         services.AddScoped<IMapper<CreateInstrument, Instrument>, CreateInstrumentToInstrumentMapper>();
+        services.AddScoped<IMapper<Instrument, Data.Entities.Instrument>, InstrumentDomainToInstrumentDataMapper>();
+        services.AddScoped<IMapper<Data.Entities.Instrument, Instrument>, InstrumentDataToInstrumentDomainMapper>();
+
         services.AddScoped<IMapper<BaseOrderEvent, Event>, OrderEventToEventMapper>();
         services
             .AddScoped<IMapper<OrderFlow.Contracts.Responses.AlphaVantage.GlobalQuote, GlobalQuote>,
