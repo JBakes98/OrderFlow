@@ -1,5 +1,5 @@
 using OneOf;
-using OrderFlow.Models;
+using OrderFlow.Domain.Models;
 
 namespace OrderFlow.Services;
 

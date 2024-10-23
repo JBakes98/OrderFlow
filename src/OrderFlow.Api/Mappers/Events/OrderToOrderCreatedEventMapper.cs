@@ -1,6 +1,6 @@
+using OrderFlow.Domain.Models;
 using OrderFlow.Events;
 using OrderFlow.Extensions;
-using OrderFlow.Models;
 
 namespace OrderFlow.Mappers.Events;
 

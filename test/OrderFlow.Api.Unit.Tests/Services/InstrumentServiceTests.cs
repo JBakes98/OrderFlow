@@ -1,9 +1,9 @@
 using System.Net;
 using AutoFixture.Xunit2;
 using Moq;
+using OrderFlow.Data.Repositories.Interfaces;
 using OrderFlow.Domain;
-using OrderFlow.Models;
-using OrderFlow.Repositories;
+using OrderFlow.Domain.Models;
 using OrderFlow.Services;
 
 namespace OrderFlow.Api.Unit.Tests.Services;

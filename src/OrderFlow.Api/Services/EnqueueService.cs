@@ -1,6 +1,6 @@
 using Ardalis.GuardClauses;
+using OrderFlow.Data.Repositories.Interfaces;
 using OrderFlow.Events;
-using OrderFlow.Repositories;
 using Serilog;
 
 namespace OrderFlow.Services;

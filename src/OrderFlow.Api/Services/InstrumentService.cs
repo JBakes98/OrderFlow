@@ -1,7 +1,7 @@
 using Ardalis.GuardClauses;
 using OneOf;
-using OrderFlow.Models;
-using OrderFlow.Repositories;
+using OrderFlow.Data.Repositories.Interfaces;
+using OrderFlow.Domain.Models;
 using Serilog;
 
 namespace OrderFlow.Services;

@@ -1,6 +1,6 @@
 using OrderFlow.Contracts.Requests;
+using OrderFlow.Domain.Models;
 using OrderFlow.Extensions;
-using OrderFlow.Models;
 
 namespace OrderFlow.Mappers.Request;
 

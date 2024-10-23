@@ -4,13 +4,13 @@ using Amazon.S3.Model;
 using Amazon.S3.Util;
 using Ardalis.GuardClauses;
 using OneOf;
+using OrderFlow.Data.Repositories.Interfaces;
 using OrderFlow.Domain;
 using OrderFlow.Events;
 using OrderFlow.Extensions;
-using OrderFlow.Models;
-using OrderFlow.Repositories;
+using OrderFlow.Domain.Models;
 using Serilog;
-using Error = OrderFlow.Models.Error;
+using Error = OrderFlow.Domain.Models.Error;
 
 namespace OrderFlow.Services;
 
@@ -57,6 +57,11 @@ public class OrderService : IOrderService
             return result.AsT1;
 
         return result.AsT0.ToList();
+    }
+
+    public Task<OneOf<IEnumerable<Order>, Error>> RetrieveInstrumentOrders(Guid instrumentId)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task<OneOf<Order, Error>> CreateOrder(Order order)

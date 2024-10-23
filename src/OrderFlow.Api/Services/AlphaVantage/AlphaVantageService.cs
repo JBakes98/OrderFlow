@@ -5,7 +5,7 @@ using Ardalis.GuardClauses;
 using Microsoft.Extensions.Options;
 using OneOf;
 using OrderFlow.Domain;
-using OrderFlow.Models;
+using OrderFlow.Domain.Models;
 using OrderFlow.Options;
 using Serilog;
 using GlobalQuote = OrderFlow.Contracts.Responses.AlphaVantage.GlobalQuote;

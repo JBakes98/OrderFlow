@@ -2,7 +2,7 @@ using Ardalis.GuardClauses;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OrderFlow.Contracts.Requests;
-using OrderFlow.Models;
+using OrderFlow.Domain.Models;
 using OrderFlow.Services;
 using OrderFlow.Services.Handlers;
 
