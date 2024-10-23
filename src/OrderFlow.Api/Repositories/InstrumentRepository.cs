@@ -32,9 +32,10 @@ public class InstrumentRepository : IRepository<Instrument>
     {
         var instrument = await _context.Instruments.FindAsync(id);
 
-        return instrument == null
-            ? new Error(HttpStatusCode.NotFound, ErrorCodes.InstrumentNotFound)
-            : instrument;
+        if (instrument == null)
+            return new Error(HttpStatusCode.NotFound, ErrorCodes.InstrumentNotFound);
+
+        return instrument;
     }
 
     public async Task<OneOf<Instrument, Error>> InsertAsync(Instrument source, CancellationToken cancellationToken)
