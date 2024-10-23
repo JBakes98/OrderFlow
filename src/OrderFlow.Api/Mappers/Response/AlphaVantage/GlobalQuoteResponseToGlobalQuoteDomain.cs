@@ -3,11 +3,11 @@ using OrderFlow.Extensions;
 
 namespace OrderFlow.Mappers.Response.AlphaVantage;
 
-public class GlobalQuoteResponseToGlobalQuoteDomain : IMapper<GlobalQuote, Domain.Models.GlobalQuote>
+public class GlobalQuoteResponseToGlobalQuoteDomain : IMapper<GlobalQuote, OrderFlow.Domain.Models.GlobalQuote>
 {
-    public Domain.Models.GlobalQuote Map(GlobalQuote source)
+    public OrderFlow.Domain.Models.GlobalQuote Map(GlobalQuote source)
     {
-        return new Domain.Models.GlobalQuote
+        return new OrderFlow.Domain.Models.GlobalQuote
         {
             Symbol = source.Symbol,
             Change = double.Parse(source.Change),
