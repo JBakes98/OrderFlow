@@ -2,18 +2,27 @@ namespace OrderFlow.Domain.Models;
 
 public class Order
 {
-    public Order(string instrumentId, int quantity)
+    public Order(
+        string id,
+        int quantity,
+        string instrumentId,
+        double price,
+        DateTime orderDate
+    )
     {
-        InstrumentId = instrumentId;
+        Id = id;
         Quantity = quantity;
+        InstrumentId = instrumentId;
+        Price = price;
+        OrderDate = orderDate;
     }
 
-    public string Id { get; set; } = Guid.NewGuid().ToString();
-    public int Quantity { get; set; }
-    public string InstrumentId { get; set; }
+    public string Id { get; } = Guid.NewGuid().ToString();
+    public int Quantity { get; }
+    public string InstrumentId { get; }
     public double Price { get; private set; }
-    public DateTime OrderDate { get; set; } = DateTime.Now.ToUniversalTime();
-    public double OrderValue { get; set; }
+    public DateTime OrderDate { get; } = DateTime.Now.ToUniversalTime();
+    public double OrderValue { get; private set; }
 
     public void SetPrice(double price)
     {

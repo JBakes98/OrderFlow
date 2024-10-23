@@ -1,25 +1,15 @@
 namespace OrderFlow.Data.Entities;
 
-public class Order
+public class Order(
+    string id,
+    int quantity,
+    string instrumentId,
+    double price,
+    DateTime orderDate)
 {
-    public Order(string instrumentId, int quantity)
-    {
-        InstrumentId = instrumentId;
-        Quantity = quantity;
-    }
-
-    public string Id { get; set; } = Guid.NewGuid().ToString();
-    public int Quantity { get; set; }
-    public string InstrumentId { get; set; }
-    public double Price { get; private set; }
-    public DateTime OrderDate { get; set; } = DateTime.Now.ToUniversalTime();
-    public double OrderValue { get; set; }
-
-    public void SetPrice(double price)
-    {
-        Price = price;
-        SetValue();
-    }
-
-    private void SetValue() => OrderValue = Price * Quantity;
+    public string Id { get; } = id;
+    public int Quantity { get; } = quantity;
+    public string InstrumentId { get; } = instrumentId;
+    public double Price { get; } = price;
+    public DateTime OrderDate { get; } = orderDate;
 }
