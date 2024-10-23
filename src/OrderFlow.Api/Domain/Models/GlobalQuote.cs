@@ -1,4 +1,4 @@
-namespace OrderFlow.Models;
+namespace OrderFlow.Domain.Models;
 
 public class GlobalQuote
 {

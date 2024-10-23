@@ -1,13 +1,12 @@
 using System.Net;
 
-namespace OrderFlow.Models;
+namespace OrderFlow.Domain.Models;
 
 public class Error
 {
     public Error(HttpStatusCode errorType, string errorCode)
         : this(errorType, new[] { errorCode })
     {
-
     }
 
     public Error(HttpStatusCode errorType, IEnumerable<string> errorCodes)
