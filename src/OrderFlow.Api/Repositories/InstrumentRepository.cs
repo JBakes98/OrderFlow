@@ -1,6 +1,6 @@
 using System.Net;
-using Amazon.DynamoDBv2.DataModel;
 using Ardalis.GuardClauses;
+using Microsoft.EntityFrameworkCore;
 using OneOf;
 using OrderFlow.Domain;
 using OrderFlow.Models;
@@ -9,9 +9,9 @@ namespace OrderFlow.Repositories;
 
 public class InstrumentRepository : IRepository<Instrument>
 {
-    private readonly IDynamoDBContext _context;
+    private readonly OrderflowDbContext _context;
 
-    public InstrumentRepository(IDynamoDBContext context)
+    public InstrumentRepository(OrderflowDbContext context)
     {
         _context = Guard.Against.Null(context);
     }
@@ -23,25 +23,24 @@ public class InstrumentRepository : IRepository<Instrument>
 
     public async Task<OneOf<IEnumerable<Instrument>, Error>> QueryAsync()
     {
-        var conditions = new List<ScanCondition>();
-        var results = await _context.ScanAsync<Instrument>(conditions).GetRemainingAsync();
+        var instruments = await _context.Instruments.ToListAsync();
 
-        return results;
+        return instruments;
     }
 
     public async Task<OneOf<Instrument, Error>> GetByIdAsync(string id)
     {
-        var result = await _context.LoadAsync<Instrument>(id);
+        var instrument = await _context.Instruments.FindAsync(id);
 
-        if (result == null)
-            return new Error(HttpStatusCode.NotFound, ErrorCodes.InstrumentNotFound);
-
-        return result;
+        return instrument == null
+            ? new Error(HttpStatusCode.NotFound, ErrorCodes.InstrumentNotFound)
+            : instrument;
     }
 
     public async Task<OneOf<Instrument, Error>> InsertAsync(Instrument source, CancellationToken cancellationToken)
     {
-        await _context.SaveAsync(source, cancellationToken);
+        var result = await _context.AddAsync(source, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
 
         return source;
     }
