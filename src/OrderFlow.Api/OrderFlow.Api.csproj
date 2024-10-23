@@ -53,4 +53,8 @@
         <Compile Remove="Models\Exchange.cs"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Folder Include="Mappers\Data\"/>
+    </ItemGroup>
+
 </Project>
