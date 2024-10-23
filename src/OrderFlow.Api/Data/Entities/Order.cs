@@ -1,4 +1,4 @@
-namespace OrderFlow.Models;
+namespace OrderFlow.Data.Entities;
 
 public class Order
 {

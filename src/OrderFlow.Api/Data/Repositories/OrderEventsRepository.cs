@@ -7,7 +7,6 @@ using OrderFlow.Data.Repositories;
 using OrderFlow.Data.Repositories.Interfaces;
 using OrderFlow.Domain.Models;
 using OrderFlow.Events;
-using OrderFlow.Models;
 
 namespace OrderFlow.Repositories;
 

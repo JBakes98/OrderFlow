@@ -5,8 +5,6 @@ using Moq;
 using OrderFlow.Data.Repositories;
 using OrderFlow.Domain;
 using OrderFlow.Domain.Models;
-using OrderFlow.Models;
-using OrderFlow.Repositories;
 
 namespace OrderFlow.Api.Unit.Tests.Repositories;
 

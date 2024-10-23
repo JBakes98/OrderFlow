@@ -1,5 +1,5 @@
+using OrderFlow.Domain.Models;
 using OrderFlow.Mappers.Events;
-using OrderFlow.Models;
 
 namespace OrderFlow.Api.Unit.Tests.Mappers;
 
