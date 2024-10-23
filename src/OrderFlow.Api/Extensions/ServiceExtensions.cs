@@ -14,29 +14,29 @@ public static class ServiceExtensions
 {
     public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddTransient<IRepository<Order>, OrderRepository>();
-        services.AddTransient<IRepository<Event>, OrderEventsRepository>();
-        services.AddTransient<IRepository<Instrument>, InstrumentRepository>();
+        services.AddScoped<IRepository<Order>, OrderRepository>();
+        services.AddScoped<IRepository<Event>, OrderEventsRepository>();
+        services.AddScoped<IRepository<Instrument>, InstrumentRepository>();
 
-        services.AddSingleton<IHandler<CreateOrder, Order>, OrderCreateHandler>();
-        services.AddSingleton<IHandler<string, Order>, OrderGetHandler>();
+        services.AddScoped<IHandler<CreateOrder, Order>, OrderCreateHandler>();
+        services.AddScoped<IHandler<string, Order>, OrderGetHandler>();
 
-        services.AddSingleton<IHandler<CreateInstrument, Instrument>, InstrumentCreateHandler>();
-        services.AddSingleton<IHandler<string, Instrument>, InstrumentGetHandler>();
+        services.AddScoped<IHandler<CreateInstrument, Instrument>, InstrumentCreateHandler>();
+        services.AddScoped<IHandler<string, Instrument>, InstrumentGetHandler>();
 
-        services.AddSingleton<IMapper<CreateOrder, Order>, CreateOrderToOrderMapper>();
-        services.AddSingleton<IMapper<Order, OrderCreatedEvent>, OrderToOrderCreatedEventMapper>();
-        services.AddSingleton<IMapper<CreateInstrument, Instrument>, CreateInstrumentToInstrumentMapper>();
-        services.AddSingleton<IMapper<BaseOrderEvent, Event>, OrderEventToEventMapper>();
+        services.AddScoped<IMapper<CreateOrder, Order>, CreateOrderToOrderMapper>();
+        services.AddScoped<IMapper<Order, OrderCreatedEvent>, OrderToOrderCreatedEventMapper>();
+        services.AddScoped<IMapper<CreateInstrument, Instrument>, CreateInstrumentToInstrumentMapper>();
+        services.AddScoped<IMapper<BaseOrderEvent, Event>, OrderEventToEventMapper>();
         services
-            .AddSingleton<IMapper<OrderFlow.Contracts.Responses.AlphaVantage.GlobalQuote, GlobalQuote>,
+            .AddScoped<IMapper<OrderFlow.Contracts.Responses.AlphaVantage.GlobalQuote, GlobalQuote>,
                 GlobalQuoteResponseToGlobalQuoteDomain>();
 
-        services.AddSingleton<IHandler<CreateOrder, Order>, OrderCreateHandler>();
+        services.AddScoped<IHandler<CreateOrder, Order>, OrderCreateHandler>();
 
-        services.AddSingleton<IEnqueueService, EnqueueService>();
+        services.AddScoped<IEnqueueService, EnqueueService>();
 
-        services.AddSingleton<IInstrumentService, InstrumentService>();
-        services.AddSingleton<IOrderService, OrderService>();
+        services.AddScoped<IInstrumentService, InstrumentService>();
+        services.AddScoped<IOrderService, OrderService>();
     }
 }
