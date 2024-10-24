@@ -3,11 +3,11 @@ using OrderFlow.Extensions;
 
 namespace OrderFlow.Mappers.Data;
 
-public class OrderDomainToOrderDataMapper : IMapper<OrderFlow.Domain.Models.Order, Order>
+public class OrderDomainToOrderDataMapper : IMapper<OrderFlow.Domain.Models.Order, OrderEntity>
 {
-    public Order Map(OrderFlow.Domain.Models.Order source)
+    public OrderEntity Map(OrderFlow.Domain.Models.Order source)
     {
-        return new Order(
+        return new OrderEntity(
             source.Id,
             source.Quantity,
             source.InstrumentId,

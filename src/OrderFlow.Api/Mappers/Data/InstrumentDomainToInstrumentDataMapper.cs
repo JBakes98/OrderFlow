@@ -3,11 +3,11 @@ using OrderFlow.Extensions;
 
 namespace OrderFlow.Mappers.Data;
 
-public class InstrumentDomainToInstrumentDataMapper : IMapper<OrderFlow.Domain.Models.Instrument, Instrument>
+public class InstrumentDomainToInstrumentDataMapper : IMapper<OrderFlow.Domain.Models.Instrument, InstrumentEntity>
 {
-    public Instrument Map(OrderFlow.Domain.Models.Instrument source)
+    public InstrumentEntity Map(OrderFlow.Domain.Models.Instrument source)
     {
-        return new Instrument(
+        return new InstrumentEntity(
             source.Id,
             source.Ticker,
             source.Name,
