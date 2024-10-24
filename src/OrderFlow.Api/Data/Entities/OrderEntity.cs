@@ -1,6 +1,6 @@
 namespace OrderFlow.Data.Entities;
 
-public class Order(
+public class OrderEntity(
     string id,
     int quantity,
     string instrumentId,

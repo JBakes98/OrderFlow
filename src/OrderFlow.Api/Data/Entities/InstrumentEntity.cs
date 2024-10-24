@@ -1,6 +1,6 @@
 namespace OrderFlow.Data.Entities;
 
-public class Instrument(
+public class InstrumentEntity(
     string id,
     string ticker,
     string name,
