@@ -1,10 +1,24 @@
 namespace OrderFlow.Domain.Models;
 
-public class Instrument(string ticker, string name, string sector, string exchange)
+public class Instrument
 {
-    public string Id { get; } = Guid.NewGuid().ToString();
-    public string Ticker { get; } = ticker;
-    public string Name { get; } = name;
-    public string Sector { get; } = sector;
-    public string Exchange { get; } = exchange;
+    public Instrument(
+        string id,
+        string ticker,
+        string name,
+        string sector,
+        string exchange)
+    {
+        Id = id;
+        Ticker = ticker;
+        Name = name;
+        Sector = sector;
+        Exchange = exchange;
+    }
+
+    public string Id { get; }
+    public string Ticker { get; }
+    public string Name { get; }
+    public string Sector { get; }
+    public string Exchange { get; }
 }

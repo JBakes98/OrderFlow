@@ -17,11 +17,11 @@ public class Order
         OrderDate = orderDate;
     }
 
-    public string Id { get; } = Guid.NewGuid().ToString();
+    public string Id { get; }
     public int Quantity { get; }
     public string InstrumentId { get; }
     public double Price { get; private set; }
-    public DateTime OrderDate { get; } = DateTime.Now.ToUniversalTime();
+    public DateTime OrderDate { get; }
     public double OrderValue { get; private set; }
 
     public void SetPrice(double price)
