@@ -3,13 +3,14 @@ using Ardalis.GuardClauses;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using OrderFlow.Data.DbContext;
+using OrderFlow.Data.Entities;
 using OrderFlow.Data.Repositories.Interfaces;
 using OrderFlow.Domain;
 using OrderFlow.Domain.Models;
 
 namespace OrderFlow.Data.Repositories;
 
-public class InstrumentRepository : IRepository<Instrument>, IInstrumentRepository
+public class InstrumentRepository : IInstrumentRepository
 {
     private readonly OrderflowDbContext _context;
 
@@ -23,14 +24,14 @@ public class InstrumentRepository : IRepository<Instrument>, IInstrumentReposito
         _context.Dispose();
     }
 
-    public async Task<OneOf<IEnumerable<Instrument>, Error>> QueryAsync()
+    public async Task<OneOf<IEnumerable<InstrumentEntity>, Error>> QueryAsync()
     {
         var instruments = await _context.Instruments.ToListAsync();
 
         return instruments;
     }
 
-    public async Task<OneOf<Instrument, Error>> GetByIdAsync(string id)
+    public async Task<OneOf<InstrumentEntity, Error>> GetByIdAsync(string id)
     {
         var instrument = await _context.Instruments.FindAsync(id);
 
@@ -40,7 +41,8 @@ public class InstrumentRepository : IRepository<Instrument>, IInstrumentReposito
         return instrument;
     }
 
-    public async Task<OneOf<Instrument, Error>> InsertAsync(Instrument source, CancellationToken cancellationToken)
+    public async Task<OneOf<InstrumentEntity, Error>> InsertAsync(InstrumentEntity source,
+        CancellationToken cancellationToken)
     {
         var result = await _context.AddAsync(source, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
@@ -48,12 +50,12 @@ public class InstrumentRepository : IRepository<Instrument>, IInstrumentReposito
         return source;
     }
 
-    public Task DeleteAsync(Instrument source)
+    public Task DeleteAsync(InstrumentEntity source)
     {
         throw new NotImplementedException();
     }
 
-    public Task UpdateAsync(Instrument source)
+    public Task UpdateAsync(InstrumentEntity source)
     {
         throw new NotImplementedException();
     }

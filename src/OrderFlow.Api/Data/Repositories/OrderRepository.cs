@@ -3,6 +3,7 @@ using Ardalis.GuardClauses;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using OrderFlow.Data.DbContext;
+using OrderFlow.Data.Entities;
 using OrderFlow.Data.Repositories.Interfaces;
 using OrderFlow.Domain;
 using OrderFlow.Domain.Models;
@@ -23,13 +24,13 @@ public class OrderRepository : IOrderRepository
         _context.Dispose();
     }
 
-    public async Task<OneOf<IEnumerable<Order>, Error>> QueryAsync()
+    public async Task<OneOf<IEnumerable<OrderEntity>, Error>> QueryAsync()
     {
         var orders = await _context.Orders.ToListAsync();
         return orders;
     }
 
-    public async Task<OneOf<IEnumerable<Order>, Error>> GetInstrumentOrders(Guid instrumentId)
+    public async Task<OneOf<IEnumerable<OrderEntity>, Error>> GetInstrumentOrders(Guid instrumentId)
     {
         var orders = await _context.Orders
             .Where(x => x.InstrumentId.Equals(instrumentId))
@@ -38,7 +39,7 @@ public class OrderRepository : IOrderRepository
         return orders;
     }
 
-    public async Task<OneOf<Order, Error>> GetByIdAsync(string id)
+    public async Task<OneOf<OrderEntity, Error>> GetByIdAsync(string id)
     {
         var order = await _context.Orders.FindAsync(id);
 
@@ -48,7 +49,7 @@ public class OrderRepository : IOrderRepository
         return order;
     }
 
-    public async Task<OneOf<Order, Error>> InsertAsync(Order source, CancellationToken cancellationToken)
+    public async Task<OneOf<OrderEntity, Error>> InsertAsync(OrderEntity source, CancellationToken cancellationToken)
     {
         var result = await _context.AddAsync(source, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
@@ -56,12 +57,12 @@ public class OrderRepository : IOrderRepository
         return source;
     }
 
-    public Task DeleteAsync(Order source)
+    public Task DeleteAsync(OrderEntity source)
     {
         throw new NotImplementedException();
     }
 
-    public Task UpdateAsync(Order source)
+    public Task UpdateAsync(OrderEntity source)
     {
         throw new NotImplementedException();
     }
