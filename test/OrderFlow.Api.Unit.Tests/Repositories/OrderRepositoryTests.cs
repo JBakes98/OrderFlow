@@ -2,6 +2,7 @@ using System.Net;
 using Amazon.DynamoDBv2.DataModel;
 using AutoFixture.Xunit2;
 using Moq;
+using OrderFlow.Data.Entities;
 using OrderFlow.Data.Repositories;
 using OrderFlow.Domain;
 using OrderFlow.Domain.Models;
@@ -12,18 +13,18 @@ public class OrderRepositoryTests
 {
     [Theory, AutoMoqData]
     public async void Repository_GetByIdAsync_Should_ReturnObject(
-        Order order,
+        OrderEntity orderEntity,
         [Frozen] Mock<IDynamoDBContext> mockContext,
         OrderRepository sut)
     {
-        mockContext.Setup(x => x.LoadAsync<Order>(order.Id, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(order)
+        mockContext.Setup(x => x.LoadAsync<OrderEntity>(orderEntity.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(orderEntity)
             .Verifiable();
 
-        var result = await sut.GetByIdAsync(order.Id);
+        var result = await sut.GetByIdAsync(orderEntity.Id);
 
         var resultOrder = result.AsT0;
-        Assert.Equal(order, resultOrder);
+        Assert.Equal(orderEntity, resultOrder);
         mockContext.Verify();
     }
 
@@ -33,8 +34,8 @@ public class OrderRepositoryTests
         string id,
         OrderRepository sut)
     {
-        mockContext.Setup(x => x.LoadAsync<Order>(id, It.IsAny<CancellationToken>()))!
-            .ReturnsAsync(null as Order)
+        mockContext.Setup(x => x.LoadAsync<OrderEntity>(id, It.IsAny<CancellationToken>()))!
+            .ReturnsAsync(null as OrderEntity)
             .Verifiable();
 
         var expected = new Error(HttpStatusCode.NotFound, ErrorCodes.OrderNotFound);
@@ -48,12 +49,12 @@ public class OrderRepositoryTests
 
     [Theory, AutoMoqData]
     public async void Repository_QueryAsync_Should_ReturnObjects(
-        List<Order> orders,
+        List<OrderEntity> orders,
         [Frozen] Mock<IDynamoDBContext> mockContext,
         OrderRepository sut)
     {
         mockContext.Setup(
-                x => x.ScanAsync<Order>(It.IsAny<List<ScanCondition>>(), It.IsAny<DynamoDBOperationConfig>())
+                x => x.ScanAsync<OrderEntity>(It.IsAny<List<ScanCondition>>(), It.IsAny<DynamoDBOperationConfig>())
                     .GetRemainingAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(orders)
             .Verifiable();
@@ -66,12 +67,12 @@ public class OrderRepositoryTests
 
     [Theory, AutoMoqData]
     public async void Repository_QueryAsync_Should_ReturnError(
-        List<Order> orders,
+        List<OrderEntity> orders,
         [Frozen] Mock<IDynamoDBContext> mockContext,
         OrderRepository sut)
     {
         mockContext.Setup(
-                x => x.ScanAsync<Order>(It.IsAny<List<ScanCondition>>(), It.IsAny<DynamoDBOperationConfig>())
+                x => x.ScanAsync<OrderEntity>(It.IsAny<List<ScanCondition>>(), It.IsAny<DynamoDBOperationConfig>())
                     .GetRemainingAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(orders)
             .Verifiable();

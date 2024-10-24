@@ -2,6 +2,7 @@ using System.Net;
 using Amazon.DynamoDBv2.DataModel;
 using AutoFixture.Xunit2;
 using Moq;
+using OrderFlow.Data.Entities;
 using OrderFlow.Data.Repositories;
 using OrderFlow.Domain;
 using OrderFlow.Domain.Models;
@@ -12,11 +13,11 @@ public class InstrumentRepositoryTests
 {
     [Theory, AutoMoqData]
     public async void Repository_GetByIdAsync_Should_ReturnObject(
-        Instrument instrument,
+        InstrumentEntity instrument,
         [Frozen] Mock<IDynamoDBContext> mockContext,
         InstrumentRepository sut)
     {
-        mockContext.Setup(x => x.LoadAsync<Instrument>(instrument.Id, It.IsAny<CancellationToken>()))
+        mockContext.Setup(x => x.LoadAsync<InstrumentEntity>(instrument.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(instrument)
             .Verifiable();
 
