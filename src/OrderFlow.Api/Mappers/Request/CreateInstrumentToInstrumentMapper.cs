@@ -9,6 +9,7 @@ public class CreateInstrumentToInstrumentMapper : IMapper<CreateInstrument, Inst
     public Instrument Map(CreateInstrument source)
     {
         return new Instrument(
+            id: Guid.NewGuid().ToString(),
             ticker: source.Ticker,
             name: source.Name,
             sector: source.Sector,
