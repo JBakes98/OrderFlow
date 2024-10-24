@@ -1,4 +1,5 @@
 using OrderFlow.Contracts.Requests;
+using OrderFlow.Data.Entities;
 using OrderFlow.Data.Repositories;
 using OrderFlow.Data.Repositories.Interfaces;
 using OrderFlow.Domain.Models;
@@ -18,9 +19,12 @@ public static class ServiceExtensions
 {
     public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IRepository<Event>, OrderEventsRepository>();
-        services.AddScoped<IRepository<Instrument>, InstrumentRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IInstrumentRepository, InstrumentRepository>();
+
+        services.AddScoped<IInstrumentService, InstrumentService>();
+        services.AddScoped<IOrderService, OrderService>();
 
         services.AddScoped<IHandler<CreateOrder, Order>, OrderCreateHandler>();
         services.AddScoped<IHandler<string, Order>, OrderGetHandler>();
@@ -30,23 +34,18 @@ public static class ServiceExtensions
 
         services.AddScoped<IMapper<CreateOrder, Order>, CreateOrderToOrderMapper>();
         services.AddScoped<IMapper<Order, OrderCreatedEvent>, OrderToOrderCreatedEventMapper>();
-        services.AddScoped<IMapper<Order, Data.Entities.Order>, OrderDomainToOrderDataMapper>();
-        services.AddScoped<IMapper<Data.Entities.Order, Order>, OrderDataToOrderDomainMapper>();
+        services.AddScoped<IMapper<Order, OrderEntity>, OrderDomainToOrderDataMapper>();
+        services.AddScoped<IMapper<OrderEntity, Order>, OrderDataToOrderDomainMapper>();
 
         services.AddScoped<IMapper<CreateInstrument, Instrument>, CreateInstrumentToInstrumentMapper>();
-        services.AddScoped<IMapper<Instrument, Data.Entities.Instrument>, InstrumentDomainToInstrumentDataMapper>();
-        services.AddScoped<IMapper<Data.Entities.Instrument, Instrument>, InstrumentDataToInstrumentDomainMapper>();
+        services.AddScoped<IMapper<Instrument, InstrumentEntity>, InstrumentDomainToInstrumentDataMapper>();
+        services.AddScoped<IMapper<InstrumentEntity, Instrument>, InstrumentDataToInstrumentDomainMapper>();
 
         services.AddScoped<IMapper<BaseOrderEvent, Event>, OrderEventToEventMapper>();
         services
             .AddScoped<IMapper<OrderFlow.Contracts.Responses.AlphaVantage.GlobalQuote, GlobalQuote>,
-                GlobalQuoteResponseToGlobalQuoteDomain>();
-
-        services.AddScoped<IHandler<CreateOrder, Order>, OrderCreateHandler>();
+                GlobalQuoteResponseToGlobalQuoteDomainMapper>();
 
         services.AddScoped<IEnqueueService, EnqueueService>();
-
-        services.AddScoped<IInstrumentService, InstrumentService>();
-        services.AddScoped<IOrderService, OrderService>();
     }
 }
