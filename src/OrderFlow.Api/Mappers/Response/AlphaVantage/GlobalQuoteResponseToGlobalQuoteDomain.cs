@@ -3,7 +3,7 @@ using OrderFlow.Extensions;
 
 namespace OrderFlow.Mappers.Response.AlphaVantage;
 
-public class GlobalQuoteResponseToGlobalQuoteDomain : IMapper<GlobalQuote, OrderFlow.Domain.Models.GlobalQuote>
+public class GlobalQuoteResponseToGlobalQuoteDomainMapper : IMapper<GlobalQuote, OrderFlow.Domain.Models.GlobalQuote>
 {
     public OrderFlow.Domain.Models.GlobalQuote Map(GlobalQuote source)
     {
