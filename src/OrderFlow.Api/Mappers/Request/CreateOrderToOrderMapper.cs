@@ -12,7 +12,7 @@ public class CreateOrderToOrderMapper : IMapper<CreateOrder, Order>
             Guid.NewGuid().ToString(),
             source.Quantity,
             source.InstrumentId.ToString(),
-            0,
+            source.Price,
             DateTime.Now.ToUniversalTime());
     }
 }
