@@ -2,6 +2,7 @@ using System.Net;
 using Amazon.DynamoDBv2.DataModel;
 using AutoFixture.Xunit2;
 using Moq;
+using OrderFlow.Api.Unit.Tests.Customizations;
 using OrderFlow.Data.Entities;
 using OrderFlow.Data.Repositories;
 using OrderFlow.Domain;
