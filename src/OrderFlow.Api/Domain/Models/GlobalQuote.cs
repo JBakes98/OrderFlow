@@ -2,12 +2,12 @@ namespace OrderFlow.Domain.Models;
 
 public class GlobalQuote
 {
-    public string Symbol { get; set; }
-    public double Open { get; set; }
-    public double High { get; set; }
-    public double Low { get; set; }
-    public double Price { get; set; }
-    public int Volume { get; set; }
-    public double Change { get; set; }
-    public string ChangePerc { get; set; }
+    public string Symbol { get; init; }
+    public double Open { get; init; }
+    public double High { get; init; }
+    public double Low { get; init; }
+    public double Price { get; init; }
+    public int Volume { get; init; }
+    public double Change { get; init; }
+    public string ChangePerc { get; init; }
 }
