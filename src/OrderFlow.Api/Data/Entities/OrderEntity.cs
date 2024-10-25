@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OrderFlow.Data.Entities;
 
@@ -22,9 +23,14 @@ public class OrderEntity
         OrderDate = orderDate;
     }
 
-    [Key] public string Id { get; private set; }
+    [Key] [MaxLength(36)] public string Id { get; private set; }
     public int Quantity { get; private set; }
+
+    [MaxLength(36)]
+    [ForeignKey("Instrument")]
     public string InstrumentId { get; private set; }
+
+    public InstrumentEntity Instrument { get; set; }
     public double Price { get; private set; }
     public DateTime OrderDate { get; private set; }
 }

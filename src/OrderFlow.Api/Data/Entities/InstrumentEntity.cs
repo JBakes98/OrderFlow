@@ -23,8 +23,9 @@ public class InstrumentEntity
     }
 
     [Key] public string Id { get; private set; }
-    public string Ticker { get; private set; }
-    public string Name { get; private set; }
-    public string Sector { get; private set; }
-    public string Exchange { get; private set; }
+    [MaxLength(5)] public string Ticker { get; private set; }
+    [MaxLength(256)] public string Name { get; private set; }
+    [MaxLength(256)] public string Sector { get; private set; }
+    [MaxLength(256)] public string Exchange { get; private set; }
+    public ICollection<OrderEntity> Orders { get; set; }
 }
