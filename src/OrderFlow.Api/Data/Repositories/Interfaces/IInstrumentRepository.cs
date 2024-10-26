@@ -1,7 +1,7 @@
-using OrderFlow.Data.Entities;
+using OrderFlow.Domain.Models;
 
 namespace OrderFlow.Data.Repositories.Interfaces;
 
-public interface IInstrumentRepository : IRepository<InstrumentEntity>
+public interface IInstrumentRepository : IRepository<Instrument>
 {
 }
