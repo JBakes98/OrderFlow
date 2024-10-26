@@ -7,15 +7,22 @@ using OrderFlow.Data.Entities;
 using OrderFlow.Data.Repositories.Interfaces;
 using OrderFlow.Domain;
 using OrderFlow.Domain.Models;
+using OrderFlow.Extensions;
 
 namespace OrderFlow.Data.Repositories;
 
 public class OrderRepository : IOrderRepository
 {
     private readonly OrderflowDbContext _context;
+    private readonly IMapper<Order, OrderEntity> _orderDomainToEntityMapper;
+    private readonly IMapper<OrderEntity, Order> _orderEntityToDomainMapper;
 
-    public OrderRepository(OrderflowDbContext context)
+    public OrderRepository(OrderflowDbContext context,
+        IMapper<Order, OrderEntity> orderDomainToEntityMapper,
+        IMapper<OrderEntity, Order> orderEntityToDomainMapper)
     {
+        _orderEntityToDomainMapper = Guard.Against.Null(orderEntityToDomainMapper);
+        _orderDomainToEntityMapper = Guard.Against.Null(orderDomainToEntityMapper);
         _context = Guard.Against.Null(context);
     }
 
@@ -24,45 +31,53 @@ public class OrderRepository : IOrderRepository
         _context.Dispose();
     }
 
-    public async Task<OneOf<IEnumerable<OrderEntity>, Error>> QueryAsync()
+    public async Task<OneOf<IEnumerable<Order>, Error>> QueryAsync()
     {
-        var orders = await _context.Orders.ToListAsync();
+        var ordersResult = await _context.Orders.ToListAsync();
+        var orders = ordersResult.Select(x => _orderEntityToDomainMapper.Map(x)).ToList();
+
         return orders;
     }
 
-    public async Task<OneOf<IEnumerable<OrderEntity>, Error>> GetInstrumentOrders(Guid instrumentId)
+    public async Task<OneOf<IEnumerable<Order>, Error>> GetInstrumentOrders(string instrumentId)
     {
-        var orders = await _context.Orders
+        var ordersResult = await _context.Orders
             .Where(x => x.InstrumentId.Equals(instrumentId))
             .ToListAsync();
 
+        var orders = ordersResult.Select(x => _orderEntityToDomainMapper.Map(x)).ToList();
+
         return orders;
     }
 
-    public async Task<OneOf<OrderEntity, Error>> GetByIdAsync(string id)
+    public async Task<OneOf<Order, Error>> GetByIdAsync(string id)
     {
-        var order = await _context.Orders.FindAsync(id);
+        var orderResult = await _context.Orders.FindAsync(id);
 
-        if (order == null)
+        if (orderResult == null)
             return new Error(HttpStatusCode.NotFound, ErrorCodes.OrderNotFound);
+
+        var order = _orderEntityToDomainMapper.Map(orderResult);
 
         return order;
     }
 
-    public async Task<OneOf<OrderEntity, Error>> InsertAsync(OrderEntity source, CancellationToken cancellationToken)
+    public async Task<OneOf<Order, Error>> InsertAsync(Order source, CancellationToken cancellationToken)
     {
-        var result = await _context.AddAsync(source, cancellationToken);
+        var orderEntity = _orderDomainToEntityMapper.Map(source);
+
+        var result = await _context.AddAsync(orderEntity, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
         return source;
     }
 
-    public Task DeleteAsync(OrderEntity source)
+    public Task DeleteAsync(Order source)
     {
         throw new NotImplementedException();
     }
 
-    public Task UpdateAsync(OrderEntity source)
+    public Task UpdateAsync(Order source)
     {
         throw new NotImplementedException();
     }
