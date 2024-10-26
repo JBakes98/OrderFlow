@@ -1,7 +1,6 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
-using OrderFlow.Data.Entities;
 
 namespace OrderFlow.Api.Unit.Tests.Customizations;
 
@@ -20,12 +19,8 @@ public class AutoMoqDataAttribute : AutoDataAttribute
         fixture
             .Customize(new OrderEntityCustomization())
             .Customize(new InstrumentEntityCustomization())
-            .Customize(new GlobalQuoteResponseCustomization());
-
-        // fixture.Customize<OrderEntity>(c => c
-        //     .Without(x => x.Instrument));
-        // fixture.Customize<InstrumentEntity>(c => c
-        //     .Without(x => x.Orders));
+            .Customize(new GlobalQuoteResponseCustomization())
+            .Customize(new AutoMoqCustomization());
 
         return fixture;
     })
