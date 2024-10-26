@@ -4,7 +4,6 @@ using Amazon.S3.Model;
 using Amazon.S3.Util;
 using Ardalis.GuardClauses;
 using OneOf;
-using OrderFlow.Data.Entities;
 using OrderFlow.Data.Repositories.Interfaces;
 using OrderFlow.Domain;
 using OrderFlow.Events;
@@ -21,8 +20,6 @@ public class OrderService : IOrderService
     private readonly IEnqueueService _enqueueService;
     private readonly IMapper<Order, OrderCreatedEvent> _orderToOrderCreatedEventMapper;
     private readonly IMapper<BaseOrderEvent, Event> _orderEventToEventMapper;
-    private readonly IMapper<OrderEntity, Order> _orderEntityToDomainMapper;
-    private readonly IMapper<Order, OrderEntity> _orderDomainToEntityMapper;
 
     private readonly IDiagnosticContext _diagnosticContext;
     private readonly IAmazonS3 _s3;
@@ -33,12 +30,8 @@ public class OrderService : IOrderService
         IMapper<Order, OrderCreatedEvent> orderToOrderCreatedEventMapper,
         IMapper<BaseOrderEvent, Event> orderEventToEventMapper,
         IDiagnosticContext diagnosticContext,
-        IAmazonS3 s3,
-        IMapper<OrderEntity, Order> orderEntityToDomainMapper,
-        IMapper<Order, OrderEntity> orderDomainToEntityMapper)
+        IAmazonS3 s3)
     {
-        _orderEntityToDomainMapper = Guard.Against.Null(orderEntityToDomainMapper);
-        _orderDomainToEntityMapper = Guard.Against.Null(orderDomainToEntityMapper);
         _s3 = Guard.Against.Null(s3);
         _diagnosticContext = Guard.Against.Null(diagnosticContext);
         _orderEventToEventMapper = Guard.Against.Null(orderEventToEventMapper);
@@ -55,7 +48,7 @@ public class OrderService : IOrderService
         if (result.IsT1)
             return result.AsT1;
 
-        return _orderEntityToDomainMapper.Map(result.AsT0);
+        return result.AsT0;
     }
 
     public async Task<OneOf<IEnumerable<Order>, Error>> RetrieveOrders()
@@ -65,21 +58,24 @@ public class OrderService : IOrderService
         if (result.IsT1)
             return result.AsT1;
 
-        var orders = result.AsT0.Select(x => _orderEntityToDomainMapper.Map(x)).ToList();
+        var orders = result.AsT0;
 
-        return orders;
+        return result;
     }
 
-    public Task<OneOf<IEnumerable<Order>, Error>> RetrieveInstrumentOrders(Guid instrumentId)
+    public async Task<OneOf<IEnumerable<Order>, Error>> RetrieveInstrumentOrders(string instrumentId)
     {
-        throw new NotImplementedException();
+        var result = await _repository.GetInstrumentOrders(instrumentId);
+
+        if (result.IsT1)
+            return result.AsT1;
+
+        return result;
     }
 
     public async Task<OneOf<Order, Error>> CreateOrder(Order order)
     {
-        var orderEntity = _orderDomainToEntityMapper.Map(order);
-
-        var saveResult = await _repository.InsertAsync(orderEntity, default);
+        var saveResult = await _repository.InsertAsync(order, default);
         _diagnosticContext.Set($"OrderEntity", order, true);
 
         if (saveResult.IsT1)
