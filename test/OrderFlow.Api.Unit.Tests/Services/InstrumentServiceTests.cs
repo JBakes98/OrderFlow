@@ -13,7 +13,7 @@ public class InstrumentServiceTests
 {
     [Theory, AutoMoqData]
     public async void Should_RetrieveInstrument_If_Present(
-        [Frozen] Mock<IRepository<Instrument>> mockRepository,
+        [Frozen] Mock<IInstrumentRepository> mockRepository,
         Instrument instrument,
         InstrumentService sut)
     {
@@ -32,14 +32,14 @@ public class InstrumentServiceTests
 
     [Theory, AutoMoqData]
     public async void Should_ReturnError_If_InstrumentNotFound(
-        [Frozen] Mock<IRepository<Instrument>> mockRepository,
+        [Frozen] Mock<IInstrumentRepository> mockRepository,
         InstrumentService sut,
         string id)
     {
         var expectedError = new Error(HttpStatusCode.UnprocessableEntity, ErrorCodes.InstrumentNotFound);
 
         mockRepository.Setup(x =>
-                x.GetByIdAsync(It.IsAny<string>()))
+                x.GetByIdAsync(id))
             .ReturnsAsync(expectedError)
             .Verifiable();
 
@@ -53,7 +53,7 @@ public class InstrumentServiceTests
 
     [Theory, AutoMoqData]
     public async void Should_ReturnInstruments(
-        [Frozen] Mock<IRepository<Instrument>> mockRepository,
+        [Frozen] Mock<IInstrumentRepository> mockRepository,
         InstrumentService sut,
         List<Instrument> instruments)
     {
@@ -64,12 +64,13 @@ public class InstrumentServiceTests
         var result = await sut.RetrieveInstruments();
 
         Assert.True(result.IsT0);
+
         mockRepository.Verify();
     }
 
     [Theory, AutoMoqData]
     public async void Should_ReturnError_IfQuery_Fails(
-        [Frozen] Mock<IRepository<Instrument>> mockRepository,
+        [Frozen] Mock<IInstrumentRepository> mockRepository,
         InstrumentService sut)
     {
         var expectedError = new Error(HttpStatusCode.Conflict, ErrorCodes.InstrumentNotFound);
@@ -86,7 +87,7 @@ public class InstrumentServiceTests
 
     [Theory, AutoMoqData]
     public async void Should_CreateInstrument_And_SaveTo_Repo(
-        [Frozen] Mock<IRepository<Instrument>> mockRepository,
+        [Frozen] Mock<IInstrumentRepository> mockRepository,
         Instrument instrument,
         InstrumentService sut)
     {
@@ -100,27 +101,26 @@ public class InstrumentServiceTests
         var createdInstrument = result.AsT0;
 
         Assert.Equal(instrument, createdInstrument);
+
         mockRepository.Verify();
     }
 
     [Theory, AutoMoqData]
-    public async void Should_ReturnError_If_Repo_Fails(
-        [Frozen] Mock<IRepository<Instrument>> mockRepository,
+    public async void Should_ReturnError_If_Repo_Insert_Fails(
+        [Frozen] Mock<IInstrumentRepository> mockRepository,
         Instrument instrument,
+        Error error,
         InstrumentService sut)
     {
-        var expectedError = new Error(HttpStatusCode.InternalServerError, ErrorCodes.InstrumentCouldNotBeCreated);
-
         mockRepository.Setup(x =>
                 x.InsertAsync(instrument, default))
-            .ReturnsAsync(expectedError)
+            .ReturnsAsync(error)
             .Verifiable();
 
         var result = await sut.CreateInstrument(instrument);
 
-        var error = result.AsT1;
+        Assert.Equal(error, result.AsT1);
 
-        Assert.Equal(expectedError, error);
         mockRepository.Verify();
     }
 }
