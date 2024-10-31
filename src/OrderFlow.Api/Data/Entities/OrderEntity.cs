@@ -14,19 +14,22 @@ public class OrderEntity
         int quantity,
         string instrumentId,
         double price,
+        double value,
         DateTime orderDate)
     {
         Id = id;
         Quantity = quantity;
         InstrumentId = instrumentId;
         Price = price;
-        OrderDate = orderDate;
+        Value = value;
+        Date = orderDate;
     }
 
     [Key] [MaxLength(36)] public string Id { get; private set; }
     public int Quantity { get; private set; }
     public double Price { get; private set; }
-    public DateTime OrderDate { get; private set; }
+    public double Value { get; private set; }
+    public DateTime Date { get; private set; }
 
     [MaxLength(36)]
     [ForeignKey("Instrument")]
