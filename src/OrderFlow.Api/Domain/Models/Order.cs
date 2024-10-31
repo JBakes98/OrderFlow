@@ -14,15 +14,16 @@ public class Order
         Quantity = quantity;
         InstrumentId = instrumentId;
         Price = price;
-        OrderDate = orderDate;
+        Value = price * quantity;
+        Date = orderDate;
     }
 
     public string Id { get; }
     public int Quantity { get; }
     public string InstrumentId { get; }
     public double Price { get; private set; }
-    public DateTime OrderDate { get; }
-    public double OrderValue { get; private set; }
+    public DateTime Date { get; }
+    public double Value { get; private set; }
 
     public void SetPrice(double price)
     {
@@ -30,5 +31,5 @@ public class Order
         SetValue();
     }
 
-    private void SetValue() => OrderValue = Price * Quantity;
+    private void SetValue() => Value = Price * Quantity;
 }
