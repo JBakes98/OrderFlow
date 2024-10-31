@@ -12,6 +12,7 @@ public class OrderDomainToOrderDataMapper : IMapper<OrderFlow.Domain.Models.Orde
             source.Quantity,
             source.InstrumentId,
             source.Price,
-            source.OrderDate);
+            source.Value,
+            source.Date);
     }
 }
