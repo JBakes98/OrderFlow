@@ -8,6 +8,8 @@ public class OrderflowDbContext(DbContextOptions<OrderflowDbContext> options)
 {
     public DbSet<InstrumentEntity> Instruments { get; set; }
     public DbSet<OrderEntity> Orders { get; set; }
+    public DbSet<OutboxEvent> Events { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
