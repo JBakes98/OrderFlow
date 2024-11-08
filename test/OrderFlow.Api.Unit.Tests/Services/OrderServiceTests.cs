@@ -88,104 +88,57 @@ public class OrderServiceTests
     [Theory, AutoMoqData]
     public async void Should_CreateOrder_And_SaveTo_Repo(
         [Frozen] Mock<IOrderRepository> mockRepository,
-        [Frozen] Mock<IMapper<Order, OrderCreatedEvent>> mockOrderToOrderCreatedEventMapper,
-        [Frozen] Mock<IMapper<BaseOrderEvent, Event>> mockOrderEventToEventMapper,
-        [Frozen] Mock<IEnqueueService> mockEnqueueService,
+        [Frozen] Mock<IMapper<Order, OrderRaisedEvent>> mockOrderToOrderRaisedEventMapper,
         Order order,
-        OrderCreatedEvent orderCreatedEvent,
-        Event @event,
+        OrderRaisedEvent @event,
         OrderService sut)
     {
-        mockRepository.Setup(x =>
-                x.InsertAsync(order, default))
-            .ReturnsAsync(order)
-            .Verifiable();
-
-        mockOrderToOrderCreatedEventMapper.Setup(x => x.Map(order))
-            .Returns(orderCreatedEvent)
-            .Verifiable();
-
-        mockOrderEventToEventMapper.Setup(x => x.Map(orderCreatedEvent))
+        mockOrderToOrderRaisedEventMapper
+            .Setup(x => x.Map(order))
             .Returns(@event)
             .Verifiable();
 
-        mockEnqueueService.Setup(x => x.PublishEvent(@event))
-            .ReturnsAsync(true)
+        mockRepository.Setup(x =>
+                x.InsertAsync(order, @event))
+            .ReturnsAsync((Error?)null)
             .Verifiable();
 
         var result = await sut.CreateOrder(order);
 
-        var createdOrder = result.AsT0;
-
-        Assert.Equal(order, createdOrder);
+        Assert.True(result.IsT0);
+        Assert.Equal(order, result.AsT0);
 
         mockRepository.Verify();
-        mockOrderToOrderCreatedEventMapper.Verify();
-        mockOrderEventToEventMapper.Verify();
-        mockEnqueueService.Verify();
+        mockOrderToOrderRaisedEventMapper.Verify();
     }
 
     [Theory, AutoMoqData]
     public async void Should_ReturnError_If_Repo_Fails(
         [Frozen] Mock<IOrderRepository> mockRepository,
+        [Frozen] Mock<IMapper<Order, OrderRaisedEvent>> mockOrderToOrderRaisedEventMapper,
+        OrderRaisedEvent @event,
         Order order,
         OrderService sut)
     {
         var expectedError = new Error(HttpStatusCode.InternalServerError, ErrorCodes.OrderCouldNotBeCreated);
 
+        mockOrderToOrderRaisedEventMapper
+            .Setup(x => x.Map(order))
+            .Returns(@event)
+            .Verifiable();
+
         mockRepository.Setup(x =>
-                x.InsertAsync(order, default))
+                x.InsertAsync(order, @event))
             .ReturnsAsync(expectedError)
             .Verifiable();
 
         var result = await sut.CreateOrder(order);
 
-        var error = result.AsT1;
-
-        Assert.Equal(expectedError, error);
-        mockRepository.Verify();
-    }
-
-    [Theory, AutoMoqData]
-    public async void Should_ReturnError_If_EnqueueService_Fails_To_Publish(
-        [Frozen] Mock<IOrderRepository> mockRepository,
-        [Frozen] Mock<IMapper<Order, OrderCreatedEvent>> mockOrderToOrderCreatedEventMapper,
-        [Frozen] Mock<IMapper<BaseOrderEvent, Event>> mockOrderEventToEventMapper,
-        [Frozen] Mock<IEnqueueService> mockEnqueueService,
-        Order order,
-        OrderCreatedEvent orderCreatedEvent,
-        Event @event,
-        OrderService sut)
-    {
-        mockRepository.Setup(x =>
-                x.InsertAsync(order, default))
-            .ReturnsAsync(order)
-            .Verifiable();
-
-        mockOrderToOrderCreatedEventMapper.Setup(x => x.Map(order))
-            .Returns(orderCreatedEvent)
-            .Verifiable();
-
-        mockOrderEventToEventMapper.Setup(x => x.Map(orderCreatedEvent))
-            .Returns(@event)
-            .Verifiable();
-
-        mockEnqueueService.Setup(x => x.PublishEvent(@event))
-            .ReturnsAsync(false)
-            .Verifiable();
-
-        var expectedError = new Error(HttpStatusCode.InternalServerError, ErrorCodes.EventCouldNotBePublished);
-
-        var result = await sut.CreateOrder(order);
-
-        var error = result.AsT1;
-
-        Assert.Equivalent(expectedError, error);
+        Assert.True(result.IsT1);
+        Assert.Equal(expectedError, result.AsT1);
 
         mockRepository.Verify();
-        mockOrderToOrderCreatedEventMapper.Verify();
-        mockOrderEventToEventMapper.Verify();
-        mockEnqueueService.Verify();
+        mockOrderToOrderRaisedEventMapper.Verify();
     }
 
     [Theory, AutoMoqData]
