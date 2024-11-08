@@ -13,10 +13,9 @@ public class EventMapperFactoryTests
         var outboxEvent = sut.MapEvent(@event);
 
         Assert.NotNull(outboxEvent.Id);
-        Assert.NotNull(outboxEvent.Timestamp);
         Assert.NotNull(outboxEvent.Payload);
-        Assert.Equal(outboxEvent.EventType, nameof(InstrumentCreatedEvent));
-        Assert.Equal(outboxEvent.StreamId, @event.InstrumentId);
+        Assert.Equal(nameof(InstrumentCreatedEvent), outboxEvent.EventType);
+        Assert.Equal(@event.InstrumentId, outboxEvent.StreamId);
     }
 
     [Theory, AutoMoqData]
@@ -27,9 +26,8 @@ public class EventMapperFactoryTests
         var outboxEvent = sut.MapEvent(@event);
 
         Assert.NotNull(outboxEvent.Id);
-        Assert.NotNull(outboxEvent.Timestamp);
         Assert.NotNull(outboxEvent.Payload);
-        Assert.Equal(outboxEvent.EventType, nameof(OrderRaisedEvent));
-        Assert.Equal(outboxEvent.StreamId, @event.OrderId);
+        Assert.Equal(nameof(OrderRaisedEvent), outboxEvent.EventType);
+        Assert.Equal(@event.OrderId, outboxEvent.StreamId);
     }
 }
