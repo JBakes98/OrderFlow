@@ -5,6 +5,8 @@ using OrderFlow.Api.Unit.Tests.Customizations;
 using OrderFlow.Data.Repositories.Interfaces;
 using OrderFlow.Domain;
 using OrderFlow.Domain.Models;
+using OrderFlow.Events;
+using OrderFlow.Extensions;
 using OrderFlow.Services;
 
 namespace OrderFlow.Api.Unit.Tests.Services;
@@ -88,12 +90,19 @@ public class InstrumentServiceTests
     [Theory, AutoMoqData]
     public async void Should_CreateInstrument_And_SaveTo_Repo(
         [Frozen] Mock<IInstrumentRepository> mockRepository,
+        [Frozen] Mock<IMapper<Instrument, InstrumentCreatedEvent>> instrumentToInstrumentCreatedEventMapperMock,
         Instrument instrument,
+        InstrumentCreatedEvent @event,
         InstrumentService sut)
     {
-        mockRepository.Setup(x =>
-                x.InsertAsync(instrument, default))
-            .ReturnsAsync(instrument)
+        instrumentToInstrumentCreatedEventMapperMock
+            .Setup(x => x.Map(instrument))
+            .Returns(@event)
+            .Verifiable();
+
+        mockRepository
+            .Setup(x => x.InsertAsync(instrument, @event))
+            .ReturnsAsync((Error?)null)
             .Verifiable();
 
         var result = await sut.CreateInstrument(instrument);
@@ -103,17 +112,25 @@ public class InstrumentServiceTests
         Assert.Equal(instrument, createdInstrument);
 
         mockRepository.Verify();
+        instrumentToInstrumentCreatedEventMapperMock.Verify();
     }
 
     [Theory, AutoMoqData]
     public async void Should_ReturnError_If_Repo_Insert_Fails(
         [Frozen] Mock<IInstrumentRepository> mockRepository,
+        [Frozen] Mock<IMapper<Instrument, InstrumentCreatedEvent>> instrumentToInstrumentCreatedEventMapperMock,
         Instrument instrument,
+        InstrumentCreatedEvent @event,
         Error error,
         InstrumentService sut)
     {
+        instrumentToInstrumentCreatedEventMapperMock
+            .Setup(x => x.Map(instrument))
+            .Returns(@event)
+            .Verifiable();
+
         mockRepository.Setup(x =>
-                x.InsertAsync(instrument, default))
+                x.InsertAsync(instrument, @event))
             .ReturnsAsync(error)
             .Verifiable();
 
@@ -122,5 +139,6 @@ public class InstrumentServiceTests
         Assert.Equal(error, result.AsT1);
 
         mockRepository.Verify();
+        instrumentToInstrumentCreatedEventMapperMock.Verify();
     }
 }

@@ -2,6 +2,8 @@ using Ardalis.GuardClauses;
 using OneOf;
 using OrderFlow.Data.Repositories.Interfaces;
 using OrderFlow.Domain.Models;
+using OrderFlow.Events;
+using OrderFlow.Extensions;
 using Serilog;
 
 namespace OrderFlow.Services;
@@ -9,12 +11,15 @@ namespace OrderFlow.Services;
 public class InstrumentService : IInstrumentService
 {
     private readonly IInstrumentRepository _repository;
+    private readonly IMapper<Instrument, InstrumentCreatedEvent> _instrumentToInstrumentCreatedEvent;
     private readonly IDiagnosticContext _diagnosticContext;
 
     public InstrumentService(
         IInstrumentRepository repository,
-        IDiagnosticContext diagnosticContext)
+        IDiagnosticContext diagnosticContext,
+        IMapper<Instrument, InstrumentCreatedEvent> instrumentToInstrumentCreatedEvent)
     {
+        _instrumentToInstrumentCreatedEvent = Guard.Against.Null(instrumentToInstrumentCreatedEvent);
         _diagnosticContext = Guard.Against.Null(diagnosticContext);
         _repository = Guard.Against.Null(repository);
     }
@@ -47,13 +52,13 @@ public class InstrumentService : IInstrumentService
 
     public async Task<OneOf<Instrument, Error>> CreateInstrument(Instrument source)
     {
-        var result = await _repository.InsertAsync(source, default);
+        var @event = _instrumentToInstrumentCreatedEvent.Map(source);
 
-        if (result.IsT1)
-            return result.AsT1;
+        var error = await _repository.InsertAsync(source, @event);
 
-        var instrument = result.AsT0;
+        if (error != null)
+            return error;
 
-        return instrument;
+        return source;
     }
 }
