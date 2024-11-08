@@ -1,21 +1,36 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace OrderFlow.Data.Entities;
 
-[Table("OutboxEvents")]
 public class OutboxEvent
 {
-    [Key] public Guid Id { get; }
-    public string StreamId { get; }
-    public string EventType { get; }
-    public DateTime Timestamp { get; }
+    [Key]
+    [Column(TypeName = "varchar")]
+    [MaxLength(36)]
+    public string Id { get; private set; }
+
+    [Column(TypeName = "varchar")]
+    [MaxLength(36)]
+    public string StreamId { get; private set; }
+
+    [Column(TypeName = "varchar")]
+    [MaxLength(50)]
+    public string EventType { get; private set; }
+
+    [Column(TypeName = "timestamp with time zone")]
+    public DateTime Timestamp { get; private set; }
 
     [Column(TypeName = "jsonb")] public string Payload { get; private set; }
 
+    public OutboxEvent()
+    {
+    }
+
     public OutboxEvent(
-        Guid id,
+        string id,
         string streamId,
         string eventType,
         DateTime timestamp)
