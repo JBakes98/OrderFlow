@@ -1,6 +1,6 @@
 namespace OrderFlow.Events;
 
-public class OrderRaisedEvent : BaseDomainEvent
+public class OrderRaisedEvent : IEvent
 {
     public string OrderId { get; }
     public string InstrumentId { get; }
@@ -10,15 +10,12 @@ public class OrderRaisedEvent : BaseDomainEvent
     public string Status { get; }
 
     public OrderRaisedEvent(
-        string streamId,
-        string eventType,
         string orderId,
         string instrumentId,
         int quantity,
         double price,
         double value,
         string status)
-        : base(streamId, eventType)
     {
         OrderId = orderId;
         InstrumentId = instrumentId;
