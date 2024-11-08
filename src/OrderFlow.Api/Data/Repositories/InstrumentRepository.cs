@@ -7,7 +7,10 @@ using OrderFlow.Data.Entities;
 using OrderFlow.Data.Repositories.Interfaces;
 using OrderFlow.Domain;
 using OrderFlow.Domain.Models;
+using OrderFlow.Events;
 using OrderFlow.Extensions;
+using Serilog;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace OrderFlow.Data.Repositories;
 
@@ -16,19 +19,24 @@ public class InstrumentRepository : IInstrumentRepository
     private readonly OrderflowDbContext _context;
     private readonly IMapper<Instrument, InstrumentEntity> _instrumentDomainToDataMapper;
     private readonly IMapper<InstrumentEntity, Instrument> _instrumentDataToDomainMapper;
+    private readonly IEventMapperFactory _eventMapperFactory;
+    private readonly ILogger _logger;
+    private readonly IDiagnosticContext _diagnosticContext;
+
 
     public InstrumentRepository(OrderflowDbContext context,
         IMapper<Instrument, InstrumentEntity> instrumentDomainToDataMapper,
-        IMapper<InstrumentEntity, Instrument> instrumentDataToDomainMapper)
+        IMapper<InstrumentEntity, Instrument> instrumentDataToDomainMapper,
+        IEventMapperFactory eventMapperFactory,
+        ILogger logger,
+        IDiagnosticContext diagnosticContext)
     {
+        _logger = Guard.Against.Null(logger);
+        _diagnosticContext = Guard.Against.Null(diagnosticContext);
+        _eventMapperFactory = Guard.Against.Null(eventMapperFactory);
         _instrumentDataToDomainMapper = Guard.Against.Null(instrumentDataToDomainMapper);
         _instrumentDomainToDataMapper = Guard.Against.Null(instrumentDomainToDataMapper);
         _context = Guard.Against.Null(context);
-    }
-
-    public void Dispose()
-    {
-        _context.Dispose();
     }
 
     public async Task<OneOf<IEnumerable<Instrument>, Error>> QueryAsync()
@@ -54,23 +62,34 @@ public class InstrumentRepository : IInstrumentRepository
         return instrument;
     }
 
-    public async Task<OneOf<Instrument, Error>> InsertAsync(Instrument source,
-        CancellationToken cancellationToken)
+    public async Task<Error?> InsertAsync(Instrument source, InstrumentCreatedEvent @event)
     {
-        var instrumentEntity = _instrumentDomainToDataMapper.Map(source);
+        var outboxEvent = _eventMapperFactory.MapEvent(@event);
+        var entity = _instrumentDomainToDataMapper.Map(source);
 
-        var result = await _context.AddAsync(instrumentEntity, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            _context.Set<InstrumentEntity>().Add(entity);
+            _context.Set<OutboxEvent>().Add(outboxEvent);
 
-        return source;
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            return null;
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+
+            _diagnosticContext.Set("Instrument.Error", "Failed to create instrument");
+            _logger.LogError($"Failed to create instrument: {e}");
+
+            return new Error(HttpStatusCode.InternalServerError, ErrorCodes.InstrumentCouldNotBeCreated);
+        }
     }
 
-    public Task DeleteAsync(Instrument source)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task UpdateAsync(Instrument source)
+    public Task<Error?> UpdateAsync(Instrument source)
     {
         throw new NotImplementedException();
     }
