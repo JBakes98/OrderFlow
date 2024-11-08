@@ -27,5 +27,5 @@ public class InstrumentEntity
     [MaxLength(256)] public string Name { get; private set; }
     [MaxLength(256)] public string Sector { get; private set; }
     [MaxLength(256)] public string Exchange { get; private set; }
-    public ICollection<OrderEntity> Orders { get; set; }
+    public ICollection<OrderEntity>? Orders { get; set; }
 }
