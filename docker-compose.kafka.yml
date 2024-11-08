@@ -1,0 +1,33 @@
+﻿services:
+  zookeeper:
+    container_name: "zookeeper"
+    image: quay.io/debezium/zookeeper
+    ports:
+      - 3888:3888
+      - 2888:2888
+      - 2181:2181
+    depends_on:
+      - localstack
+    networks:
+      - orderflow-network
+  
+  kafka:
+    container_name: "kafka"
+    image: quay.io/debezium/kafka
+    links:
+      - zookeeper:zookeeper
+    ports:
+      - 9092:9092
+    networks:
+      - orderflow-network
+    depends_on:
+      - localstack
+      - zookeeper
+
+networks:
+  orderflow-network:
+    name: orderflow-network
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.0.0/24
