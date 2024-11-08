@@ -7,7 +7,10 @@ using OrderFlow.Data.Entities;
 using OrderFlow.Data.Repositories.Interfaces;
 using OrderFlow.Domain;
 using OrderFlow.Domain.Models;
+using OrderFlow.Events;
 using OrderFlow.Extensions;
+using Serilog;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace OrderFlow.Data.Repositories;
 
@@ -16,38 +19,38 @@ public class OrderRepository : IOrderRepository
     private readonly OrderflowDbContext _context;
     private readonly IMapper<Order, OrderEntity> _orderDomainToEntityMapper;
     private readonly IMapper<OrderEntity, Order> _orderEntityToDomainMapper;
+    private readonly IEventMapperFactory _eventMapperFactory;
+    private readonly ILogger _logger;
+    private readonly IDiagnosticContext _diagnosticContext;
 
     public OrderRepository(OrderflowDbContext context,
         IMapper<Order, OrderEntity> orderDomainToEntityMapper,
-        IMapper<OrderEntity, Order> orderEntityToDomainMapper)
+        IMapper<OrderEntity, Order> orderEntityToDomainMapper,
+        IEventMapperFactory eventMapperFactory,
+        ILogger logger,
+        IDiagnosticContext diagnosticContext)
     {
+        _logger = Guard.Against.Null(logger);
+        _diagnosticContext = Guard.Against.Null(diagnosticContext);
+        _eventMapperFactory = Guard.Against.Null(eventMapperFactory);
         _orderEntityToDomainMapper = Guard.Against.Null(orderEntityToDomainMapper);
         _orderDomainToEntityMapper = Guard.Against.Null(orderDomainToEntityMapper);
         _context = Guard.Against.Null(context);
     }
 
-    public void Dispose()
-    {
-        _context.Dispose();
-    }
-
     public async Task<OneOf<IEnumerable<Order>, Error>> QueryAsync()
     {
-        var ordersResult = await _context.Orders.ToListAsync();
-        var orders = ordersResult.Select(x => _orderEntityToDomainMapper.Map(x)).ToList();
+        try
+        {
+            var ordersResult = await _context.Orders.ToListAsync();
+            var orders = ordersResult.Select(x => _orderEntityToDomainMapper.Map(x)).ToList();
 
-        return orders;
-    }
-
-    public async Task<OneOf<IEnumerable<Order>, Error>> GetInstrumentOrders(string instrumentId)
-    {
-        var ordersResult = await _context.Orders
-            .Where(x => x.InstrumentId.Equals(instrumentId))
-            .ToListAsync();
-
-        var orders = ordersResult.Select(x => _orderEntityToDomainMapper.Map(x)).ToList();
-
-        return orders;
+            return orders;
+        }
+        catch (Exception e)
+        {
+            return new Error(HttpStatusCode.InternalServerError, ErrorCodes.OrderNotFound);
+        }
     }
 
     public async Task<OneOf<Order, Error>> GetByIdAsync(string id)
@@ -62,22 +65,45 @@ public class OrderRepository : IOrderRepository
         return order;
     }
 
-    public async Task<OneOf<Order, Error>> InsertAsync(Order source, CancellationToken cancellationToken)
+    public async Task<OneOf<IEnumerable<Order>, Error>> GetInstrumentOrders(string instrumentId)
     {
-        var orderEntity = _orderDomainToEntityMapper.Map(source);
+        var ordersResult = await _context.Orders
+            .Where(x => x.InstrumentId.Equals(instrumentId))
+            .ToListAsync();
 
-        var result = await _context.AddAsync(orderEntity, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        var orders = ordersResult.Select(x => _orderEntityToDomainMapper.Map(x)).ToList();
 
-        return source;
+        return orders;
     }
 
-    public Task DeleteAsync(Order source)
+    public async Task<Error?> InsertAsync(Order order, OrderRaisedEvent @event)
     {
-        throw new NotImplementedException();
+        var outboxEvent = _eventMapperFactory.MapEvent(@event);
+        var entity = _orderDomainToEntityMapper.Map(order);
+
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            _context.Set<OrderEntity>().Add(entity);
+            _context.Set<OutboxEvent>().Add(outboxEvent);
+
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            return null;
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+
+            _diagnosticContext.Set("Order.Error", "Failed to raise order");
+            _logger.LogError($"Failed to raise order: {e}");
+
+            return new Error(HttpStatusCode.InternalServerError, ErrorCodes.OrderCouldNotBeCreated);
+        }
     }
 
-    public Task UpdateAsync(Order source)
+    public Task<Error?> UpdateAsync(Order source)
     {
         throw new NotImplementedException();
     }
