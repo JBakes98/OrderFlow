@@ -13,19 +13,16 @@ namespace OrderFlow.Controllers;
 public class InstrumentController : ControllerBase
 {
     private readonly IHandler<CreateInstrument, Instrument> _createHandler;
-    private readonly IHandler<string, Instrument> _getInstrumentHandler;
     private readonly IInstrumentService _instrumentService;
     private readonly IOrderService _orderService;
 
     public InstrumentController(
         IHandler<CreateInstrument, Instrument> createHandler,
-        IHandler<string, Instrument> getInstrumentHandler,
         IInstrumentService instrumentService,
         IOrderService orderService)
     {
         _orderService = Guard.Against.Null(orderService);
         _createHandler = Guard.Against.Null(createHandler);
-        _getInstrumentHandler = Guard.Against.Null(getInstrumentHandler);
         _instrumentService = Guard.Against.Null(instrumentService);
     }
 
@@ -45,9 +42,9 @@ public class InstrumentController : ControllerBase
     // GET api/<InstrumentController>/5
     [HttpGet("{id}")]
     // [Authorize]
-    public async Task<IActionResult> GetInstrument([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetInstrument([FromRoute] Guid id)
     {
-        var result = await _getInstrumentHandler.HandleAsync(id.ToString(), cancellationToken);
+        var result = await _instrumentService.RetrieveInstrument(id.ToString());
 
         return GetInstrumentResponse(result);
     }
