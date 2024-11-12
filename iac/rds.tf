@@ -15,6 +15,7 @@ resource "aws_db_instance" "orderflow_postgres_instance" {
 
   # DB subnet group settings
   db_subnet_group_name = aws_db_subnet_group.db_subnet_group.name
+  
 
   # Backup settings
   backup_retention_period = 7  # Retain backups for 7 days
@@ -28,6 +29,23 @@ resource "aws_db_instance" "orderflow_postgres_instance" {
 
   # Monitoring settings (optional)
   monitoring_interval = 60  # CloudWatch enhanced monitoring interval (seconds)
+  
+  parameter_group_name = aws_db_parameter_group.orderflow_postgres_pg.name
+  apply_immediately = true
+}
+
+resource "aws_db_parameter_group" "orderflow_postgres_pg" {
+  name = "orderflow-rds-pg"
+  family = "postgres13"
+  
+  parameter {
+    name  = "rds.logical_replication"
+    value = "1"
+  }
+  parameter {
+    name  = "wal_level"
+    value = "logical"
+  }
 }
 
 # Create security group for the RDS instance
@@ -52,7 +70,7 @@ resource "aws_security_group" "db_sg" {
 
 # Create a DB subnet group
 resource "aws_db_subnet_group" "db_subnet_group" {
-  name       = "my-postgres-subnet-group"
+  name       = "orderflow-postgres-subnet-group"
   subnet_ids = [aws_subnet.private_subnet_az1.id, aws_subnet.private_subnet_az2.id]
 
   tags = {
