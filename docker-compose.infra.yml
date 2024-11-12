@@ -14,6 +14,62 @@
     networks:
       - orderflow-network
   
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    ports:
+      - 2181:2181
+      - 2888:2888
+      - 3888:3888
+    networks:
+      - orderflow-network
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    ports:
+      - 9092:9092
+    links:
+      - zookeeper
+    environment:
+      ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_BROKER_ID: 1
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - orderflow-network
+
+  connect:
+    image: debezium/connect:3.0.0.Final
+    ports:
+      - 8083:8083
+    links:
+      - kafka
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: "1"
+      CONFIG_STORAGE_TOPIC: "connect_configs"
+      OFFSET_STORAGE_TOPIC: "connect_offsets"
+      STATUS_STORAGE_TOPIC: "connect_status"
+      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_REST_ADVERTISED_HOST_NAME: "connect"
+      CONNECT_PLUGIN_PATH: "/kafka/connect"
+      CONNECT_LOG4J_ROOT_LOGLEVEL: "INFO"
+      CONNECT_DEBEZIUM_SOURCE_CONNECTOR_CLASS: "io.debezium.connector.postgresql.PostgresConnector"
+      CONNECT_DEBEZIUM_DATABASE_SERVER_NAME: "testdb"
+      CONNECT_DEBEZIUM_DATABASE_HOSTNAME: "postgres"
+      CONNECT_DEBEZIUM_DATABASE_PORT: "5432"
+      CONNECT_DEBEZIUM_DATABASE_USER: "testuser"
+      CONNECT_DEBEZIUM_DATABASE_PASSWORD: "testpass"
+      CONNECT_DEBEZIUM_DATABASE_DBNAME: "testdb"
+      CONNECT_DEBEZIUM_PLUGIN_NAME: "pgoutput"
+    depends_on:
+      - localstack
+      - kafka
+    networks:
+      - orderflow-network
+  
 networks:
   orderflow-network:
     name: orderflow-network
