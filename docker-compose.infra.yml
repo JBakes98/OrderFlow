@@ -6,8 +6,8 @@
       - "4566:4566"
       - "4510-4559:4510-4559"
     environment:
-      - DYNAMODB_SHARE_DB=1
-      - LOCALSTACK_AUTH_TOKEN="ls-CesAdave-vOQa-mEfO-6046-DebO68668892"
+      DYNAMODB_SHARE_DB: 1
+      LOCALSTACK_AUTH_TOKEN: "ls-CesAdave-vOQa-mEfO-6046-DebO68668892"
     volumes:
       - "/var/lib/localstack:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
