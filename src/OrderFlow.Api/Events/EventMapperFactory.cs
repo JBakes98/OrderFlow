@@ -2,7 +2,7 @@ using OrderFlow.Data.Entities;
 
 namespace OrderFlow.Events;
 
-public abstract class EventMapperFactory : IEventMapperFactory
+public class EventMapperFactory : IEventMapperFactory
 {
     public OutboxEvent MapEvent<T>(T @event) where T : IEvent
     {
