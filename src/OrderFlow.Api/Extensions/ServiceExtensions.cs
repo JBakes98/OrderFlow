@@ -18,19 +18,17 @@ public static class ServiceExtensions
 {
     public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddScoped<IEventMapperFactory, EventMapperFactory>();
+
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IInstrumentRepository, InstrumentRepository>();
-
-        services.AddScoped<IEventMapperFactory, EventMapperFactory>();
 
         services.AddScoped<IInstrumentService, InstrumentService>();
         services.AddScoped<IOrderService, OrderService>();
 
         services.AddScoped<IHandler<CreateOrder, Order>, OrderCreateHandler>();
-        services.AddScoped<IHandler<string, Order>, OrderGetHandler>();
 
         services.AddScoped<IHandler<CreateInstrument, Instrument>, InstrumentCreateHandler>();
-        services.AddScoped<IHandler<string, Instrument>, InstrumentGetHandler>();
 
         services.AddScoped<IMapper<CreateOrder, Order>, CreateOrderToOrderMapper>();
         services.AddScoped<IMapper<Order, OrderEntity>, OrderDomainToOrderDataMapper>();
