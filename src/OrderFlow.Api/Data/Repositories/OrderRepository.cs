@@ -20,17 +20,14 @@ public class OrderRepository : IOrderRepository
     private readonly IMapper<Order, OrderEntity> _orderDomainToEntityMapper;
     private readonly IMapper<OrderEntity, Order> _orderEntityToDomainMapper;
     private readonly IEventMapperFactory _eventMapperFactory;
-    private readonly ILogger _logger;
     private readonly IDiagnosticContext _diagnosticContext;
 
     public OrderRepository(OrderflowDbContext context,
         IMapper<Order, OrderEntity> orderDomainToEntityMapper,
         IMapper<OrderEntity, Order> orderEntityToDomainMapper,
         IEventMapperFactory eventMapperFactory,
-        ILogger logger,
         IDiagnosticContext diagnosticContext)
     {
-        _logger = Guard.Against.Null(logger);
         _diagnosticContext = Guard.Against.Null(diagnosticContext);
         _eventMapperFactory = Guard.Against.Null(eventMapperFactory);
         _orderEntityToDomainMapper = Guard.Against.Null(orderEntityToDomainMapper);
@@ -97,7 +94,6 @@ public class OrderRepository : IOrderRepository
             await transaction.RollbackAsync();
 
             _diagnosticContext.Set("Order.Error", "Failed to raise order");
-            _logger.LogError($"Failed to raise order: {e}");
 
             return new Error(HttpStatusCode.InternalServerError, ErrorCodes.OrderCouldNotBeCreated);
         }

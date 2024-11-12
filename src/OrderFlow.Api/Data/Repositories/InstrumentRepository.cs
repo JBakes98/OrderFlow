@@ -20,7 +20,6 @@ public class InstrumentRepository : IInstrumentRepository
     private readonly IMapper<Instrument, InstrumentEntity> _instrumentDomainToDataMapper;
     private readonly IMapper<InstrumentEntity, Instrument> _instrumentDataToDomainMapper;
     private readonly IEventMapperFactory _eventMapperFactory;
-    private readonly ILogger _logger;
     private readonly IDiagnosticContext _diagnosticContext;
 
 
@@ -28,10 +27,8 @@ public class InstrumentRepository : IInstrumentRepository
         IMapper<Instrument, InstrumentEntity> instrumentDomainToDataMapper,
         IMapper<InstrumentEntity, Instrument> instrumentDataToDomainMapper,
         IEventMapperFactory eventMapperFactory,
-        ILogger logger,
         IDiagnosticContext diagnosticContext)
     {
-        _logger = Guard.Against.Null(logger);
         _diagnosticContext = Guard.Against.Null(diagnosticContext);
         _eventMapperFactory = Guard.Against.Null(eventMapperFactory);
         _instrumentDataToDomainMapper = Guard.Against.Null(instrumentDataToDomainMapper);
@@ -83,7 +80,6 @@ public class InstrumentRepository : IInstrumentRepository
             await transaction.RollbackAsync();
 
             _diagnosticContext.Set("Instrument.Error", "Failed to create instrument");
-            _logger.LogError($"Failed to create instrument: {e}");
 
             return new Error(HttpStatusCode.InternalServerError, ErrorCodes.InstrumentCouldNotBeCreated);
         }
