@@ -15,57 +15,74 @@
       - orderflow-network
   
   zookeeper:
+    container_name: "zookeeper"
     image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
     ports:
       - 2181:2181
-      - 2888:2888
-      - 3888:3888
     networks:
       - orderflow-network
 
   kafka:
+    container_name: "kafka"
     image: confluentinc/cp-kafka:latest
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_JMX_PORT: 9991
     ports:
       - 9092:9092
-    links:
+    depends_on:
       - zookeeper
-    environment:
-      ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_BROKER_ID: 1
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
       - orderflow-network
-
-  connect:
+  
+  debezium:
+    container_name: "debezium"
     image: debezium/connect:3.0.0.Final
-    ports:
-      - 8083:8083
-    links:
-      - kafka
     environment:
       BOOTSTRAP_SERVERS: kafka:9092
-      GROUP_ID: "1"
+      GROUP_ID: 1
       CONFIG_STORAGE_TOPIC: "connect_configs"
       OFFSET_STORAGE_TOPIC: "connect_offsets"
-      STATUS_STORAGE_TOPIC: "connect_status"
-      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      
+      CONNECT_DEBEZIUM_SOURCE_CONNECTOR_CLASS: "io.debezium.connector.postgresql.PostgresConnector"
+      CONNECT_DEBEZIUM_PLUGIN_NAME: "pgoutput"
       CONNECT_REST_ADVERTISED_HOST_NAME: "connect"
       CONNECT_PLUGIN_PATH: "/kafka/connect"
-      CONNECT_LOG4J_ROOT_LOGLEVEL: "INFO"
-      CONNECT_DEBEZIUM_SOURCE_CONNECTOR_CLASS: "io.debezium.connector.postgresql.PostgresConnector"
-      CONNECT_DEBEZIUM_DATABASE_SERVER_NAME: "testdb"
-      CONNECT_DEBEZIUM_DATABASE_HOSTNAME: "postgres"
-      CONNECT_DEBEZIUM_DATABASE_PORT: "5432"
-      CONNECT_DEBEZIUM_DATABASE_USER: "testuser"
-      CONNECT_DEBEZIUM_DATABASE_PASSWORD: "testpass"
-      CONNECT_DEBEZIUM_DATABASE_DBNAME: "testdb"
-      CONNECT_DEBEZIUM_PLUGIN_NAME: "pgoutput"
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      
+      CONNECT_DEBEZIUM_DATABASE_SERVER_NAME: "localhost"
+      CONNECT_DEBEZIUM_DATABASE_HOSTNAME: "localhost"
+      CONNECT_DEBEZIUM_DATABASE_PORT: "4510"
+      CONNECT_DEBEZIUM_DATABASE_USER: "admin"
+      CONNECT_DEBEZIUM_DATABASE_PASSWORD: "supersecretpassword"
+      CONNECT_DEBEZIUM_DATABASE_DBNAME: "orderflow"
+      CONNECT_TABLE_INCLUDE_LIST: "public.Events"
     depends_on:
+      - kafka
       - localstack
+    ports:
+      - "8083:8083"
+    networks:
+      - orderflow-network
+  
+  schema-registry:
+    container_name: schema-registry
+    image: confluentinc/cp-schema-registry:latest
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka:9092
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081, http://localhost:8081
+    ports:
+      - 8081:8081
+    depends_on:
+      - zookeeper
       - kafka
     networks:
       - orderflow-network
