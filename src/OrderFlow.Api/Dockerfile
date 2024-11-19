@@ -4,6 +4,8 @@ WORKDIR /src
 
 # Copy the project file and restore dependencies
 COPY ["src/OrderFlow.Api/OrderFlow.Api.csproj", "OrderFlow.Api/"]
+COPY ["src/OrderFlow.Contracts/OrderFlow.Contracts.csproj", "OrderFlow.Contracts/"]
+COPY ["src/OrderFlow.Extensions/OrderFlow.Extensions.csproj", "OrderFlow.Extensions/"]
 RUN dotnet restore "OrderFlow.Api/OrderFlow.Api.csproj"
 
 # Copy the rest of the source code

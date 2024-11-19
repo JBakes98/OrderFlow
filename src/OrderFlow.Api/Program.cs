@@ -14,6 +14,7 @@ var config = configBuilder.Build();
 builder.RegisterLogging(config);
 
 builder.Services.RegisterAwsServices(config);
+builder.Services.RegisterPostgres(config);
 builder.Services.RegisterServices(config);
 builder.Services.RegisterAuthentication(config);
 builder.Services.AddControllers();
@@ -24,11 +25,11 @@ builder.Services.RegisterAlphaVantage(config);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+/*if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+}*/
 
 app.UseCors("OrderflowDashboard");
 app.UseHttpsRedirection();

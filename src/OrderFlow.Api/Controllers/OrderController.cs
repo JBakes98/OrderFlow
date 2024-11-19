@@ -2,7 +2,7 @@ using Ardalis.GuardClauses;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using OrderFlow.Contracts.Requests;
-using OrderFlow.Models;
+using OrderFlow.Domain.Models;
 using OrderFlow.Services;
 using OrderFlow.Services.Handlers;
 
@@ -13,16 +13,13 @@ namespace OrderFlow.Controllers;
 public class OrderController : ControllerBase
 {
     private readonly IHandler<CreateOrder, Order> _createHandler;
-    private readonly IHandler<string, Order> _getHandler;
     private readonly IOrderService _orderService;
 
     public OrderController(
         IHandler<CreateOrder, Order> createHandler,
-        IHandler<string, Order> getHandler,
         IOrderService orderService)
     {
         _createHandler = Guard.Against.Null(createHandler);
-        _getHandler = Guard.Against.Null(getHandler);
         _orderService = Guard.Against.Null(orderService);
     }
 
@@ -44,7 +41,7 @@ public class OrderController : ControllerBase
     // [Authorize]
     public async Task<IActionResult> GetOrder([FromRoute] Guid id, CancellationToken cancellationToken)
     {
-        var result = await _getHandler.HandleAsync(id.ToString(), cancellationToken);
+        var result = await _orderService.RetrieveOrder(id.ToString());
 
         return GetOrderResponse(result);
     }

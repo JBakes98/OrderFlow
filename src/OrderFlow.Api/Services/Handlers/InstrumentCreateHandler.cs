@@ -1,9 +1,8 @@
 using Ardalis.GuardClauses;
 using OneOf;
 using OrderFlow.Contracts.Requests;
+using OrderFlow.Domain.Models;
 using OrderFlow.Extensions;
-using OrderFlow.Models;
-using Instrument = OrderFlow.Models.Instrument;
 
 namespace OrderFlow.Services.Handlers;
 
@@ -20,7 +19,8 @@ public class InstrumentCreateHandler : IHandler<CreateInstrument, Instrument>
         _instrumentService = Guard.Against.Null(instrumentService);
     }
 
-    public async Task<OneOf<Instrument, Error>> HandleAsync(CreateInstrument request, CancellationToken cancellationToken)
+    public async Task<OneOf<Instrument, Error>> HandleAsync(CreateInstrument request,
+        CancellationToken cancellationToken)
     {
         var instrument = _createInstrumentToInstrumentMapper.Map(request);
 

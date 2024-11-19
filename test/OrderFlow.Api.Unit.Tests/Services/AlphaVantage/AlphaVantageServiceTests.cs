@@ -2,9 +2,7 @@ using System.Net;
 using AutoFixture.Xunit2;
 using Moq;
 using Moq.Protected;
-using OrderFlow.Contracts.Responses.AlphaVantage;
-using OrderFlow.Extensions;
-using OrderFlow.Options;
+using OrderFlow.Api.Unit.Tests.Customizations;
 using OrderFlow.Services.AlphaVantage;
 using HttpClient = System.Net.Http.HttpClient;
 

@@ -1,11 +1,13 @@
 using System.Net;
 using AutoFixture.Xunit2;
 using Moq;
+using OneOf;
+using OrderFlow.Api.Unit.Tests.Customizations;
+using OrderFlow.Data.Repositories.Interfaces;
 using OrderFlow.Domain;
+using OrderFlow.Domain.Models;
 using OrderFlow.Events;
 using OrderFlow.Extensions;
-using OrderFlow.Models;
-using OrderFlow.Repositories;
 using OrderFlow.Services;
 
 namespace OrderFlow.Api.Unit.Tests.Services;
@@ -14,7 +16,7 @@ public class OrderServiceTests
 {
     [Theory, AutoMoqData]
     public async void Should_RetrieveOrder_If_Present(
-        [Frozen] Mock<IRepository<Order>> mockRepository,
+        [Frozen] Mock<IOrderRepository> mockRepository,
         Order order,
         OrderService sut)
     {
@@ -33,28 +35,27 @@ public class OrderServiceTests
 
     [Theory, AutoMoqData]
     public async void Should_ReturnError_If_OrderNotFound(
-        [Frozen] Mock<IRepository<Order>> mockRepository,
+        [Frozen] Mock<IOrderRepository> mockRepository,
         OrderService sut,
-        string id)
+        string id,
+        Error error)
     {
-        var expectedError = new Error(HttpStatusCode.UnprocessableEntity, ErrorCodes.OrderNotFound);
-
         mockRepository.Setup(x =>
-                x.GetByIdAsync(It.IsAny<string>()))
-            .ReturnsAsync(expectedError)
+                x.GetByIdAsync(id))
+            .ReturnsAsync(error)
             .Verifiable();
 
         var result = await sut.RetrieveOrder(id);
 
         var retrievedError = result.AsT1;
 
-        Assert.Equal(expectedError, retrievedError);
+        Assert.Equal(error, retrievedError);
         mockRepository.Verify();
     }
 
     [Theory, AutoMoqData]
     public async void Should_ReturnOrders(
-        [Frozen] Mock<IRepository<Order>> mockRepository,
+        [Frozen] Mock<IOrderRepository> mockRepository,
         OrderService sut,
         List<Order> orders)
     {
@@ -70,13 +71,12 @@ public class OrderServiceTests
 
     [Theory, AutoMoqData]
     public async void Should_ReturnError_IfQuery_Fails(
-        [Frozen] Mock<IRepository<Order>> mockRepository,
+        [Frozen] Mock<IOrderRepository> mockRepository,
+        Error error,
         OrderService sut)
     {
-        var expectedError = new Error(HttpStatusCode.Conflict, ErrorCodes.OrderNotFound);
-
         mockRepository.Setup(x => x.QueryAsync())
-            .ReturnsAsync(expectedError)
+            .ReturnsAsync(error)
             .Verifiable();
 
         var result = await sut.RetrieveOrders();
@@ -87,104 +87,74 @@ public class OrderServiceTests
 
     [Theory, AutoMoqData]
     public async void Should_CreateOrder_And_SaveTo_Repo(
-        [Frozen] Mock<IRepository<Order>> mockRepository,
-        [Frozen] Mock<IMapper<Order, OrderCreatedEvent>> mockOrderToOrderCreatedEventMapper,
-        [Frozen] Mock<IMapper<BaseOrderEvent, Event>> mockOrderEventToEventMapper,
-        [Frozen] Mock<IEnqueueService> mockEnqueueService,
+        [Frozen] Mock<IOrderRepository> mockRepository,
+        [Frozen] Mock<IMapper<Order, OrderRaisedEvent>> mockOrderToOrderRaisedEventMapper,
         Order order,
-        OrderCreatedEvent orderCreatedEvent,
-        Event @event,
+        OrderRaisedEvent @event,
         OrderService sut)
     {
-        mockRepository.Setup(x =>
-                x.InsertAsync(order, default))
-            .ReturnsAsync(order)
-            .Verifiable();
-
-        mockOrderToOrderCreatedEventMapper.Setup(x => x.Map(order))
-            .Returns(orderCreatedEvent)
-            .Verifiable();
-
-        mockOrderEventToEventMapper.Setup(x => x.Map(orderCreatedEvent))
+        mockOrderToOrderRaisedEventMapper
+            .Setup(x => x.Map(order))
             .Returns(@event)
             .Verifiable();
 
-        mockEnqueueService.Setup(x => x.PublishEvent(@event))
-            .ReturnsAsync(true)
+        mockRepository.Setup(x =>
+                x.InsertAsync(order, @event))
+            .ReturnsAsync((Error?)null)
             .Verifiable();
 
         var result = await sut.CreateOrder(order);
 
-        var createdOrder = result.AsT0;
-
-        Assert.Equal(order, createdOrder);
+        Assert.True(result.IsT0);
+        Assert.Equal(order, result.AsT0);
 
         mockRepository.Verify();
-        mockOrderToOrderCreatedEventMapper.Verify();
-        mockOrderEventToEventMapper.Verify();
-        mockEnqueueService.Verify();
+        mockOrderToOrderRaisedEventMapper.Verify();
     }
 
     [Theory, AutoMoqData]
     public async void Should_ReturnError_If_Repo_Fails(
-        [Frozen] Mock<IRepository<Order>> mockRepository,
+        [Frozen] Mock<IOrderRepository> mockRepository,
+        [Frozen] Mock<IMapper<Order, OrderRaisedEvent>> mockOrderToOrderRaisedEventMapper,
+        OrderRaisedEvent @event,
         Order order,
         OrderService sut)
     {
         var expectedError = new Error(HttpStatusCode.InternalServerError, ErrorCodes.OrderCouldNotBeCreated);
 
+        mockOrderToOrderRaisedEventMapper
+            .Setup(x => x.Map(order))
+            .Returns(@event)
+            .Verifiable();
+
         mockRepository.Setup(x =>
-                x.InsertAsync(order, default))
+                x.InsertAsync(order, @event))
             .ReturnsAsync(expectedError)
             .Verifiable();
 
         var result = await sut.CreateOrder(order);
 
-        var error = result.AsT1;
+        Assert.True(result.IsT1);
+        Assert.Equal(expectedError, result.AsT1);
 
-        Assert.Equal(expectedError, error);
         mockRepository.Verify();
+        mockOrderToOrderRaisedEventMapper.Verify();
     }
 
     [Theory, AutoMoqData]
-    public async void Should_ReturnError_If_EnqueueService_Fails_To_Publish(
-        [Frozen] Mock<IRepository<Order>> mockRepository,
-        [Frozen] Mock<IMapper<Order, OrderCreatedEvent>> mockOrderToOrderCreatedEventMapper,
-        [Frozen] Mock<IMapper<BaseOrderEvent, Event>> mockOrderEventToEventMapper,
-        [Frozen] Mock<IEnqueueService> mockEnqueueService,
-        Order order,
-        OrderCreatedEvent orderCreatedEvent,
-        Event @event,
+    public async void Should_return_orders_for_a_specific_instrument(
+        [Frozen] Mock<IOrderRepository> mockRepository,
+        Instrument instrument,
+        List<Order> orders,
         OrderService sut)
     {
-        mockRepository.Setup(x =>
-                x.InsertAsync(order, default))
-            .ReturnsAsync(order)
+        mockRepository.Setup(x => x.GetInstrumentOrders(instrument.Id))
+            .ReturnsAsync(OneOf<IEnumerable<Order>, Error>.FromT0(orders))
             .Verifiable();
 
-        mockOrderToOrderCreatedEventMapper.Setup(x => x.Map(order))
-            .Returns(orderCreatedEvent)
-            .Verifiable();
+        var result = await sut.RetrieveInstrumentOrders(instrument.Id);
 
-        mockOrderEventToEventMapper.Setup(x => x.Map(orderCreatedEvent))
-            .Returns(@event)
-            .Verifiable();
-
-        mockEnqueueService.Setup(x => x.PublishEvent(@event))
-            .ReturnsAsync(false)
-            .Verifiable();
-
-        var expectedError = new Error(HttpStatusCode.InternalServerError, ErrorCodes.EventCouldNotBePublished);
-
-        var result = await sut.CreateOrder(order);
-
-        var error = result.AsT1;
-
-        Assert.Equivalent(expectedError, error);
-
+        Assert.Equal(orders, result.AsT0);
         mockRepository.Verify();
-        mockOrderToOrderCreatedEventMapper.Verify();
-        mockOrderEventToEventMapper.Verify();
-        mockEnqueueService.Verify();
     }
 }

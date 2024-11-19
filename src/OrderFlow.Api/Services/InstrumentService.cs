@@ -1,19 +1,25 @@
 using Ardalis.GuardClauses;
 using OneOf;
-using OrderFlow.Models;
-using OrderFlow.Repositories;
+using OrderFlow.Data.Repositories.Interfaces;
+using OrderFlow.Domain.Models;
+using OrderFlow.Events;
+using OrderFlow.Extensions;
 using Serilog;
 
 namespace OrderFlow.Services;
 
 public class InstrumentService : IInstrumentService
 {
-    private readonly IRepository<Instrument> _repository;
+    private readonly IInstrumentRepository _repository;
+    private readonly IMapper<Instrument, InstrumentCreatedEvent> _instrumentToInstrumentCreatedEvent;
     private readonly IDiagnosticContext _diagnosticContext;
 
-    public InstrumentService(IRepository<Instrument> repository,
-        IDiagnosticContext diagnosticContext)
+    public InstrumentService(
+        IInstrumentRepository repository,
+        IDiagnosticContext diagnosticContext,
+        IMapper<Instrument, InstrumentCreatedEvent> instrumentToInstrumentCreatedEvent)
     {
+        _instrumentToInstrumentCreatedEvent = Guard.Against.Null(instrumentToInstrumentCreatedEvent);
         _diagnosticContext = Guard.Against.Null(diagnosticContext);
         _repository = Guard.Against.Null(repository);
     }
@@ -26,7 +32,9 @@ public class InstrumentService : IInstrumentService
             return result.AsT1;
 
         var instrument = result.AsT0;
-        _diagnosticContext.Set($"Instrument", instrument.Ticker);
+
+        _diagnosticContext.Set($"InstrumentEntity", instrument.Ticker);
+
         return instrument;
     }
 
@@ -37,16 +45,20 @@ public class InstrumentService : IInstrumentService
         if (result.IsT1)
             return result.AsT1;
 
-        return result.AsT0.ToList();
+        var instruments = result.AsT0;
+
+        return result;
     }
 
-    public async Task<OneOf<Instrument, Error>> CreateInstrument(Instrument instrument)
+    public async Task<OneOf<Instrument, Error>> CreateInstrument(Instrument source)
     {
-        var result = await _repository.InsertAsync(instrument, default);
+        var @event = _instrumentToInstrumentCreatedEvent.Map(source);
 
-        if (result.IsT1)
-            return result.AsT1;
+        var error = await _repository.InsertAsync(source, @event);
 
-        return result.AsT0;
+        if (error != null)
+            return error;
+
+        return source;
     }
 }

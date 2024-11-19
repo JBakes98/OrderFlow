@@ -1,8 +1,8 @@
 using Ardalis.GuardClauses;
 using OneOf;
 using OrderFlow.Contracts.Requests;
+using OrderFlow.Domain.Models;
 using OrderFlow.Extensions;
-using OrderFlow.Models;
 using OrderFlow.Services.AlphaVantage;
 using Serilog;
 
