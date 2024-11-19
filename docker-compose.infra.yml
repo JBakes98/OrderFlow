@@ -1,13 +1,22 @@
 ﻿services:
   localstack:
-    container_name: "localstack"
+    container_name: localstack
     image: localstack/localstack-pro
     ports:
-      - "4566:4566"
-      - "4510-4559:4510-4559"
+      - 4566:4566
+      - 4510-4559:4510-4559
     environment:
       DYNAMODB_SHARE_DB: 1
       LOCALSTACK_AUTH_TOKEN: "ls-CesAdave-vOQa-mEfO-6046-DebO68668892"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4566/_localstack/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    depends_on:
+      kafka:
+        condition: service_healthy
     volumes:
       - "/var/lib/localstack:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
