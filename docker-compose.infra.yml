@@ -7,7 +7,7 @@
       - 4510-4559:4510-4559
     environment:
       DYNAMODB_SHARE_DB: 1
-      LOCALSTACK_AUTH_TOKEN: "random-secure-key"
+      LOCALSTACK_AUTH_TOKEN: "${LOCALSTACK_AUTH_TOKEN}"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:4566/_localstack/health" ]
       interval: 10s
