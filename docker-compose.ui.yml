@@ -4,7 +4,7 @@
     environment:
       - AWS_ACCESS_KEY_ID=X
       - AWS_SECRET_ACCESS_KEY=X
-      - AWS_REGION=eu-west-2
+      - AWS_REGION=eu-west-1
       - SQS_ENDPOINT_URL=http://localstack:4566
     ports:
       - "5768:8080"
