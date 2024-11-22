@@ -1,7 +1,7 @@
 using AutoFixture;
-using OrderFlow.Data.Entities;
+using Orderflow.Data.Entities;
 
-namespace OrderFlow.Api.Unit.Tests.Customizations;
+namespace Orderflow.Api.Unit.Tests.Customizations;
 
 public class OrderEntityCustomization : ICustomization
 {

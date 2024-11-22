@@ -1,8 +1,8 @@
-using OrderFlow.Api.Unit.Tests.Customizations;
-using OrderFlow.Data.Entities;
-using OrderFlow.Mappers.Domain;
+using Orderflow.Api.Unit.Tests.Customizations;
+using Orderflow.Data.Entities;
+using Orderflow.Mappers.Domain;
 
-namespace OrderFlow.Api.Unit.Tests.Mappers.Domain;
+namespace Orderflow.Api.Unit.Tests.Mappers.Domain;
 
 public class OrderDataToOrderDomainMapperTests
 {

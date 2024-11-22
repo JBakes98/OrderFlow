@@ -1,7 +1,7 @@
-using OrderFlow.Api.Unit.Tests.Customizations;
-using OrderFlow.Events;
+using Orderflow.Api.Unit.Tests.Customizations;
+using Orderflow.Events;
 
-namespace OrderFlow.Api.Unit.Tests.Events;
+namespace Orderflow.Api.Unit.Tests.Events;
 
 public class EventMapperFactoryTests
 {

@@ -1,8 +1,8 @@
-using OrderFlow.Api.Unit.Tests.Customizations;
-using OrderFlow.Contracts.Responses.AlphaVantage;
-using OrderFlow.Mappers.Response.AlphaVantage;
+using Orderflow.Api.Unit.Tests.Customizations;
+using Orderflow.Contracts.Responses.AlphaVantage;
+using Orderflow.Mappers.Response.AlphaVantage;
 
-namespace OrderFlow.Api.Unit.Tests.Mappers.Response.AlphaVantage;
+namespace Orderflow.Api.Unit.Tests.Mappers.Response.AlphaVantage;
 
 public class GlobalQuoteResponseToGlobalQuoteDomainMapperTests
 {

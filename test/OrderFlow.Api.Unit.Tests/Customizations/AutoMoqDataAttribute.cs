@@ -2,7 +2,7 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
 
-namespace OrderFlow.Api.Unit.Tests.Customizations;
+namespace Orderflow.Api.Unit.Tests.Customizations;
 
 public class AutoMoqDataAttribute : AutoDataAttribute
 {

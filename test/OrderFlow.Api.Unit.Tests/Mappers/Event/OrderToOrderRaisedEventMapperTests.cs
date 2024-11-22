@@ -1,8 +1,8 @@
-using OrderFlow.Api.Unit.Tests.Customizations;
-using OrderFlow.Domain.Models;
-using OrderFlow.Mappers.Events;
+using Orderflow.Api.Unit.Tests.Customizations;
+using Orderflow.Domain.Models;
+using Orderflow.Mappers.Events;
 
-namespace OrderFlow.Api.Unit.Tests.Mappers.Event;
+namespace Orderflow.Api.Unit.Tests.Mappers.Event;
 
 public class OrderToOrderRaisedEventMapperTests
 {

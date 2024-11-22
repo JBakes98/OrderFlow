@@ -1,8 +1,8 @@
-using OrderFlow.Api.Unit.Tests.Customizations;
-using OrderFlow.Contracts.Requests;
-using OrderFlow.Mappers.Request;
+using Orderflow.Api.Unit.Tests.Customizations;
+using Orderflow.Contracts.Requests;
+using Orderflow.Mappers.Request;
 
-namespace OrderFlow.Api.Unit.Tests.Mappers.Request;
+namespace Orderflow.Api.Unit.Tests.Mappers.Request;
 
 public class CreateInstrumentToInstrumentMapperTests
 {

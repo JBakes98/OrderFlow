@@ -1,8 +1,8 @@
 using System.Globalization;
 using AutoFixture;
-using OrderFlow.Contracts.Responses.AlphaVantage;
+using Orderflow.Contracts.Responses.AlphaVantage;
 
-namespace OrderFlow.Api.Unit.Tests.Customizations;
+namespace Orderflow.Api.Unit.Tests.Customizations;
 
 public class GlobalQuoteResponseCustomization : ICustomization
 {

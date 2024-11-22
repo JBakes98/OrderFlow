@@ -2,11 +2,11 @@ using System.Net;
 using AutoFixture.Xunit2;
 using Moq;
 using Moq.Protected;
-using OrderFlow.Api.Unit.Tests.Customizations;
-using OrderFlow.Services.AlphaVantage;
+using Orderflow.Api.Unit.Tests.Customizations;
+using Orderflow.Services.AlphaVantage;
 using HttpClient = System.Net.Http.HttpClient;
 
-namespace OrderFlow.Api.Unit.Tests.Services.AlphaVantage;
+namespace Orderflow.Api.Unit.Tests.Services.AlphaVantage;
 
 public class AlphaVantageServiceTests
 {

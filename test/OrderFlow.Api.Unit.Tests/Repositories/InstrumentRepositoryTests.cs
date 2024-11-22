@@ -2,13 +2,13 @@ using System.Net;
 using Amazon.DynamoDBv2.DataModel;
 using AutoFixture.Xunit2;
 using Moq;
-using OrderFlow.Api.Unit.Tests.Customizations;
-using OrderFlow.Data.Entities;
-using OrderFlow.Data.Repositories;
-using OrderFlow.Domain;
-using OrderFlow.Domain.Models;
+using Orderflow.Api.Unit.Tests.Customizations;
+using Orderflow.Data.Entities;
+using Orderflow.Data.Repositories;
+using Orderflow.Domain;
+using Orderflow.Domain.Models;
 
-namespace OrderFlow.Api.Unit.Tests.Repositories;
+namespace Orderflow.Api.Unit.Tests.Repositories;
 
 public class InstrumentRepositoryTests
 {

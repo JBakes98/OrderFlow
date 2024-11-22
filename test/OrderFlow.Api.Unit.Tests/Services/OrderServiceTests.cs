@@ -2,15 +2,15 @@ using System.Net;
 using AutoFixture.Xunit2;
 using Moq;
 using OneOf;
-using OrderFlow.Api.Unit.Tests.Customizations;
-using OrderFlow.Data.Repositories.Interfaces;
-using OrderFlow.Domain;
-using OrderFlow.Domain.Models;
-using OrderFlow.Events;
-using OrderFlow.Extensions;
-using OrderFlow.Services;
+using Orderflow.Api.Unit.Tests.Customizations;
+using Orderflow.Data.Repositories.Interfaces;
+using Orderflow.Domain;
+using Orderflow.Domain.Models;
+using Orderflow.Events;
+using Orderflow.Extensions;
+using Orderflow.Services;
 
-namespace OrderFlow.Api.Unit.Tests.Services;
+namespace Orderflow.Api.Unit.Tests.Services;
 
 public class OrderServiceTests
 {

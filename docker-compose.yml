@@ -3,7 +3,7 @@
     container_name: orderflow-api
     build:
       context: .
-      dockerfile: ./src/OrderFlow.Api/Dockerfile
+      dockerfile: ./src/Orderflow.Api/Dockerfile
     ports:
       - "8080:8080"
     environment:
