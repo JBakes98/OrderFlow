@@ -25,7 +25,7 @@ public class OrderEntity
         Date = orderDate;
     }
 
-    [Key] [MaxLength(36)] public string Id { get; private set; }
+    [Key][MaxLength(36)] public string Id { get; private set; }
     public int Quantity { get; private set; }
     public double Price { get; private set; }
     public double Value { get; private set; }
