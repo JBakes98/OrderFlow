@@ -1,6 +1,6 @@
-# OrderFlow
+# Orderflow
 
-OrderFlow is a personal project designed for experimenting with various technology offerings to understand their capabilities.
+Orderflow is a personal project designed for experimenting with various technology offerings to understand their capabilities.
 
 ## Technologies Used
 

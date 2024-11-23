@@ -1,0 +1,13 @@
+using AutoFixture;
+using Orderflow.Data.Entities;
+
+namespace Orderflow.Api.Unit.Tests.Customizations;
+
+public class InstrumentEntityCustomization : ICustomization
+{
+    public void Customize(IFixture fixture)
+    {
+        fixture.Customize<InstrumentEntity>(c => c
+            .Without(x => x.Orders));
+    }
+}

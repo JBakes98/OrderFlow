@@ -25,5 +25,3 @@ dotnet ef database update
 # Run Debezium connector setup
 cd ../../scripts/
 curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json" -d @../config/debezium.json
-
-./seed-data

@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{960C3CA4-4D4B-47D0-BAC3-5E4577FDB856}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+		docker-compose.infra.yml = docker-compose.infra.yml
+		docker-compose.ui.yml = docker-compose.ui.yml
+		docker-compose.logging.yml = docker-compose.logging.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orderflow.Api", "src\Orderflow.Api\Orderflow.Api.csproj", "{38813860-FF7B-499C-AFF5-07C1F3EAFBDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orderflow.Contracts", "src\Orderflow.Contracts\Orderflow.Contracts.csproj", "{6B22DB0E-82E2-4F99-A31B-CCF56EFE930A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orderflow.Extensions", "src\Orderflow.Extensions\Orderflow.Extensions.csproj", "{C2CF3F43-8BD2-48D7-9003-6C7F927B4244}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orderflow.Api.Unit.Tests", "test\Orderflow.Api.Unit.Tests\Orderflow.Api.Unit.Tests.csproj", "{030DB41C-FFB6-4022-B1A2-FDEEF1C3EA96}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{38813860-FF7B-499C-AFF5-07C1F3EAFBDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38813860-FF7B-499C-AFF5-07C1F3EAFBDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38813860-FF7B-499C-AFF5-07C1F3EAFBDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38813860-FF7B-499C-AFF5-07C1F3EAFBDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B22DB0E-82E2-4F99-A31B-CCF56EFE930A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B22DB0E-82E2-4F99-A31B-CCF56EFE930A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B22DB0E-82E2-4F99-A31B-CCF56EFE930A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B22DB0E-82E2-4F99-A31B-CCF56EFE930A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2CF3F43-8BD2-48D7-9003-6C7F927B4244}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2CF3F43-8BD2-48D7-9003-6C7F927B4244}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2CF3F43-8BD2-48D7-9003-6C7F927B4244}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2CF3F43-8BD2-48D7-9003-6C7F927B4244}.Release|Any CPU.Build.0 = Release|Any CPU
+		{030DB41C-FFB6-4022-B1A2-FDEEF1C3EA96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{030DB41C-FFB6-4022-B1A2-FDEEF1C3EA96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{030DB41C-FFB6-4022-B1A2-FDEEF1C3EA96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{030DB41C-FFB6-4022-B1A2-FDEEF1C3EA96}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
