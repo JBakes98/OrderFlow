@@ -12,7 +12,7 @@ using Orderflow.Mappers.Request;
 using Orderflow.Mappers.Response;
 using Orderflow.Mappers.Response.AlphaVantage;
 using Orderflow.Services;
-using GlobalQuote = Orderflow.Contracts.Responses.AlphaVantage.GlobalQuote;
+using Orderflow.Services.AlphaVantage.Api.Responses;
 
 namespace Orderflow.Extensions;
 
@@ -41,7 +41,7 @@ public static class ServiceExtensions
         services.AddScoped<IMapper<Instrument, InstrumentCreatedEvent>, InstrumentToInstrumentCreatedEventMapper>();
 
         services
-            .AddScoped<IMapper<GlobalQuote, Orderflow.Domain.Models.GlobalQuote>,
+            .AddScoped<IMapper<GetGlobalQuoteResponse, GlobalQuote>,
                 GlobalQuoteResponseToGlobalQuoteDomainMapper>();
     }
 }

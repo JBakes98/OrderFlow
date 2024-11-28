@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace Orderflow.Services.AlphaVantage.Api.Responses;
 
-public class GlobalQuote
+public class GetGlobalQuoteResponse
 {
     [JsonPropertyName("01. symbol")] public string Symbol { get; set; }
     [JsonPropertyName("02. open")] public string Open { get; set; }
