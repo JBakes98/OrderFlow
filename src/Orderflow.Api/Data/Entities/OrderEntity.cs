@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Orderflow.Contracts.Enums;
+using Orderflow.Domain.Models.Enums;
 
 namespace Orderflow.Data.Entities;
 

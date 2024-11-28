@@ -1,4 +1,4 @@
-using Orderflow.Contracts.Enums;
+using Orderflow.Domain.Models.Enums;
 
 namespace Orderflow.Domain.Models;
 

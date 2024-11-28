@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Orderflow.Contracts.Responses.AlphaVantage;
+namespace Orderflow.Services.AlphaVantage.Api.Responses;
 
 public class GlobalQuote
 {

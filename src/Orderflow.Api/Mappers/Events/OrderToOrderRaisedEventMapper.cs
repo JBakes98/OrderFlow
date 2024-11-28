@@ -1,5 +1,5 @@
-using Orderflow.Contracts.Enums;
 using Orderflow.Domain.Models;
+using Orderflow.Domain.Models.Enums;
 using Orderflow.Events;
 using Orderflow.Extensions;
 

@@ -66,15 +66,16 @@ public class OrderService : IOrderService
 
     public async Task<OneOf<Order, Error>> CreateOrder(Order order)
     {
-        _diagnosticContext.Set("OrderEntity", order, true);
-        _diagnosticContext.Set("OrderRaised", true);
-
         var orderEvent = _orderToOrderRaisedEventMapper.Map(order);
 
         var error = await _repository.InsertAsync(order, orderEvent);
 
         if (error != null)
             return error;
+
+        _diagnosticContext.Set("OrderEntity", order, true);
+        _diagnosticContext.Set("OrderEvent", orderEvent, true);
+        _diagnosticContext.Set("OrderPlaced", true);
 
         return order;
     }

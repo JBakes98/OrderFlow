@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using Orderflow.Contracts.Enums;
+using Orderflow.Domain.Models.Enums;
 
 namespace Orderflow.Api.Routes.Order.Models;
 

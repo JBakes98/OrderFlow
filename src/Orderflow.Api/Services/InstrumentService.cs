@@ -32,8 +32,7 @@ public class InstrumentService : IInstrumentService
             return result.AsT1;
 
         var instrument = result.AsT0;
-
-        _diagnosticContext.Set("InstrumentEntity", instrument.Ticker);
+        _diagnosticContext.Set("InstrumentEntity", instrument, true);
 
         return instrument;
     }
