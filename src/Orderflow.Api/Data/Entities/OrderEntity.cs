@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Orderflow.Contracts.Enums;
 
 namespace Orderflow.Data.Entities;
 
@@ -15,21 +16,27 @@ public class OrderEntity
         string instrumentId,
         double price,
         double value,
-        DateTime orderDate)
+        DateTime date,
+        OrderType type,
+        OrderStatus status)
     {
         Id = id;
         Quantity = quantity;
         InstrumentId = instrumentId;
         Price = price;
         Value = value;
-        Date = orderDate;
+        Date = date;
+        Type = type;
+        Status = status;
     }
 
-    [Key][MaxLength(36)] public string Id { get; private set; }
+    [Key] [MaxLength(36)] public string Id { get; private set; }
     public int Quantity { get; private set; }
     public double Price { get; private set; }
     public double Value { get; private set; }
     public DateTime Date { get; private set; }
+    public OrderType Type { get; private set; }
+    public OrderStatus Status { get; private set; }
 
     [MaxLength(36)]
     [ForeignKey("Instrument")]
