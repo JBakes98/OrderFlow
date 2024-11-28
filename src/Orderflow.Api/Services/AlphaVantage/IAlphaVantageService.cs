@@ -1,6 +1,5 @@
 using OneOf;
 using Orderflow.Domain.Models;
-using GlobalQuote = Orderflow.Contracts.Responses.AlphaVantage.GlobalQuote;
 
 namespace Orderflow.Services.AlphaVantage;
 
