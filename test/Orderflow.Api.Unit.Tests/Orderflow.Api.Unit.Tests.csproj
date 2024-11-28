@@ -31,7 +31,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\Orderflow.Api\Orderflow.Api.csproj"/>
-        <ProjectReference Include="..\..\src\Orderflow.Contracts\Orderflow.Contracts.csproj"/>
     </ItemGroup>
 
 </Project>
