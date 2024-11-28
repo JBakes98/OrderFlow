@@ -1,6 +1,6 @@
 using Orderflow.Api.Unit.Tests.Customizations;
-using Orderflow.Contracts.Responses.AlphaVantage;
 using Orderflow.Mappers.Response.AlphaVantage;
+using Orderflow.Services.AlphaVantage.Api.Responses;
 
 namespace Orderflow.Api.Unit.Tests.Mappers.Response.AlphaVantage;
 
@@ -8,7 +8,7 @@ public class GlobalQuoteResponseToGlobalQuoteDomainMapperTests
 {
     [Theory, AutoMoqData]
     public void Should_map_global_quote_response_to_domain_object(
-        GlobalQuote source,
+        GetGlobalQuoteResponse source,
         GlobalQuoteResponseToGlobalQuoteDomainMapper sut)
     {
         var result = sut.Map(source);

@@ -1,6 +1,6 @@
 using System.Globalization;
 using AutoFixture;
-using Orderflow.Contracts.Responses.AlphaVantage;
+using Orderflow.Services.AlphaVantage.Api.Responses;
 
 namespace Orderflow.Api.Unit.Tests.Customizations;
 
@@ -8,7 +8,7 @@ public class GlobalQuoteResponseCustomization : ICustomization
 {
     public void Customize(IFixture fixture)
     {
-        fixture.Register(() => new GlobalQuote
+        fixture.Register(() => new GetGlobalQuoteResponse
         {
             Symbol = fixture.Create<string>(),
             Open = fixture.Create<double>().ToString(CultureInfo.InvariantCulture),
