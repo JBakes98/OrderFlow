@@ -17,9 +17,16 @@ public class EventMapperFactory : IEventMapperFactory
                 outboxEvent.SetPayload(@event);
                 return outboxEvent;
 
-            case OrderRaisedEvent orderRaisedEvent:
+            case BuyOrderRaised orderRaisedEvent:
                 outboxEvent = new OutboxEvent(
-                    Guid.NewGuid().ToString(), orderRaisedEvent.OrderId, nameof(OrderRaisedEvent),
+                    Guid.NewGuid().ToString(), orderRaisedEvent.OrderId, nameof(BuyOrderRaised),
+                    DateTime.Now.ToUniversalTime());
+                outboxEvent.SetPayload(@event);
+                return outboxEvent;
+
+            case SellOrderRaised orderRaisedEvent:
+                outboxEvent = new OutboxEvent(
+                    Guid.NewGuid().ToString(), orderRaisedEvent.OrderId, nameof(SellOrderRaised),
                     DateTime.Now.ToUniversalTime());
                 outboxEvent.SetPayload(@event);
                 return outboxEvent;
