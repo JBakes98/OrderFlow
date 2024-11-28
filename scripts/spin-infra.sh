@@ -5,7 +5,7 @@ cd ../
 open -a Docker
 sleep 5
 
-# Start Docker images
+# Start Docker images for infra and logging
 docker compose -f ./docker-compose.infra.yml -f ./docker-compose.logging.yml up -d --build
 
 # Spin up Localstack Iac
@@ -25,3 +25,6 @@ dotnet ef database update
 # Run Debezium connector setup
 cd ../../scripts/
 curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json" -d @../config/debezium.json
+
+cd ../
+docker compose -f ./docker-compose.yml up -d --build
