@@ -1,3 +1,5 @@
+using Orderflow.Contracts.Enums;
+
 namespace Orderflow.Domain.Models;
 
 public class Order
@@ -7,15 +9,16 @@ public class Order
         int quantity,
         string instrumentId,
         double price,
-        DateTime orderDate
-    )
+        DateTime date,
+        OrderType type)
     {
         Id = id;
         Quantity = quantity;
         InstrumentId = instrumentId;
         Price = price;
         Value = price * quantity;
-        Date = orderDate;
+        Date = date;
+        Type = type;
     }
 
     public string Id { get; }
@@ -23,6 +26,8 @@ public class Order
     public string InstrumentId { get; }
     public double Price { get; private set; }
     public DateTime Date { get; }
+    public OrderType Type { get; internal set; }
+    public OrderStatus Status { get; private set; } = OrderStatus.pending;
     public double Value { get; private set; }
 
     public void SetPrice(double price)
@@ -34,5 +39,10 @@ public class Order
     private void SetValue()
     {
         Value = Price * Quantity;
+    }
+
+    public void SetStatus(OrderStatus status)
+    {
+        Status = status;
     }
 }

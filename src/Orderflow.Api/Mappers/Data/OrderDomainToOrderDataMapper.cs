@@ -14,6 +14,8 @@ public class OrderDomainToOrderDataMapper : IMapper<Order, OrderEntity>
             source.InstrumentId,
             source.Price,
             source.Value,
-            source.Date);
+            source.Date,
+            source.Type,
+            source.Status);
     }
 }
