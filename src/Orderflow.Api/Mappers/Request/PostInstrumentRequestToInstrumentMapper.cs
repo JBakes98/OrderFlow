@@ -1,12 +1,13 @@
+using Orderflow.Api.Routes.Instrument.Models;
 using Orderflow.Contracts.Requests;
 using Orderflow.Domain.Models;
 using Orderflow.Extensions;
 
 namespace Orderflow.Mappers.Request;
 
-public class CreateInstrumentToInstrumentMapper : IMapper<CreateInstrument, Instrument>
+public class PostInstrumentRequestToInstrumentMapper : IMapper<PostInstrumentRequest, Instrument>
 {
-    public Instrument Map(CreateInstrument source)
+    public Instrument Map(PostInstrumentRequest source)
     {
         return new Instrument(
             Guid.NewGuid().ToString(),

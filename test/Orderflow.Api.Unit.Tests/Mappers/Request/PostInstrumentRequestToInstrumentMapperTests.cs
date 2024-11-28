@@ -1,15 +1,15 @@
+using Orderflow.Api.Routes.Instrument.Models;
 using Orderflow.Api.Unit.Tests.Customizations;
-using Orderflow.Contracts.Requests;
 using Orderflow.Mappers.Request;
 
 namespace Orderflow.Api.Unit.Tests.Mappers.Request;
 
-public class CreateInstrumentToInstrumentMapperTests
+public class PostInstrumentRequestToInstrumentMapperTests
 {
     [Theory, AutoMoqData]
     public void Should_map_create_request_to_domain_object(
-        CreateInstrument source,
-        CreateInstrumentToInstrumentMapper sut)
+        PostInstrumentRequest source,
+        PostInstrumentRequestToInstrumentMapper sut)
     {
         var result = sut.Map(source);
 
