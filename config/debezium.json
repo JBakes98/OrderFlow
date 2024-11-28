@@ -13,11 +13,12 @@
     "table.include.list": "public.Events",
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "key.converter": "org.apache.kafka.connect.json.JsonConverter",
-    "value.converter.schemas.enable": "true",
-    "key.converter.schemas.enable": "true",
+    "value.converter.schemas.enable": "false",
+    "key.converter.schemas.enable": "false",
     "transforms": "unwrap",
     "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",  
     "schema.history.internal.kafka.bootstrap.servers": "kafka:9092",
-    "schema.history.internal.kafka.topic": "schema-changes.inventory"
+    "schema.history.internal.kafka.topic": "schema-changes.inventory",
+    "schema.refresh.mode": "columns_diff_exclude_unchanged_toast"
   }
 }
