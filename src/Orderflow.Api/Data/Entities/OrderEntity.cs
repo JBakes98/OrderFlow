@@ -43,4 +43,9 @@ public class OrderEntity
     public string InstrumentId { get; private set; }
 
     public virtual InstrumentEntity Instrument { get; set; }
+
+    public void UpdateStatus(OrderStatus status)
+    {
+        Status = status;
+    }
 }
