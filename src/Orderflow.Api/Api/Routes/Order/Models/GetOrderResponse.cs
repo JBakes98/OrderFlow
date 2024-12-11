@@ -1,4 +1,3 @@
-using System.Text.Json.Serialization;
 using Orderflow.Domain.Models.Enums;
 
 namespace Orderflow.Api.Routes.Order.Models;
@@ -29,12 +28,7 @@ public class GetOrderResponse
     public string InstrumentId { get; }
     public double Price { get; }
     public DateTime Date { get; }
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public OrderType Type { get; }
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public OrderStatus Status { get; }
-
     public double Value { get; }
 }

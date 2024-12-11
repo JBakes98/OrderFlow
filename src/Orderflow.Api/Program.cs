@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Orderflow.Api.Authorization;
 using Orderflow.Api.Routes.Instrument;
 using Orderflow.Api.Routes.Order;
@@ -27,6 +28,11 @@ builder.Services.AddSwaggerGen(opt => opt.AddCustomSwaggerGenOptions());
 
 builder.Services.RegisterAuthentication(config);
 builder.Services.AddAuthorization(opt => { opt.AddAuthorizationPolicies(); });
+
+builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.AddProblemDetails();
 
