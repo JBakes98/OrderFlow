@@ -1,4 +1,4 @@
-namespace Orderflow.Extensions;
+namespace Orderflow.Mappers;
 
 public interface IMapper<in TSource, out TDestination>
 {
