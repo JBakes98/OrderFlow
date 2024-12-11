@@ -12,5 +12,7 @@ public static class OrderUserGroup
         group.MapGet("/", ListOrder.Handle);
 
         group.MapPost("/", PostOrder.Handle);
+
+        group.MapPut("/{id}", PutOrder.Handle);
     }
 }
