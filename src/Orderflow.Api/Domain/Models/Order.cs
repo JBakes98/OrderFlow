@@ -10,7 +10,8 @@ public class Order
         string instrumentId,
         double price,
         DateTime date,
-        OrderType type)
+        OrderType type,
+        OrderStatus status = OrderStatus.pending)
     {
         Id = id;
         Quantity = quantity;
@@ -19,6 +20,7 @@ public class Order
         Value = price * quantity;
         Date = date;
         Type = type;
+        Status = status;
     }
 
     public string Id { get; }
@@ -41,8 +43,18 @@ public class Order
         Value = Price * Quantity;
     }
 
-    public void SetStatus(OrderStatus status)
+    private List<OrderStatus> FinalStates = new List<OrderStatus>
     {
+        OrderStatus.cancelled,
+        OrderStatus.complete
+    };
+
+    public bool SetStatus(OrderStatus status)
+    {
+        if (FinalStates.Contains(Status))
+            return false;
+
         Status = status;
+        return true;
     }
 }
