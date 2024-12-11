@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 using OneOf;
 using Orderflow.Domain;
 using Orderflow.Domain.Models;
-using Orderflow.Extensions;
+using Orderflow.Mappers;
 using Orderflow.Options;
 using Orderflow.Services.AlphaVantage.Api.Responses;
 using Serilog;
