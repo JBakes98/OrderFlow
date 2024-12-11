@@ -1,6 +1,5 @@
 using Orderflow.Data.Entities;
 using Orderflow.Domain.Models;
-using Orderflow.Extensions;
 
 namespace Orderflow.Mappers.Domain;
 
@@ -14,6 +13,7 @@ public class OrderDataToOrderDomainMapper : IMapper<OrderEntity, Order>
             source.InstrumentId,
             source.Price,
             source.Date,
-            source.Type);
+            source.Type,
+            source.Status);
     }
 }
