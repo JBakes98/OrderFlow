@@ -3,7 +3,7 @@ using OneOf;
 using Orderflow.Data.Repositories.Interfaces;
 using Orderflow.Domain.Models;
 using Orderflow.Events;
-using Orderflow.Extensions;
+using Orderflow.Mappers;
 using Serilog;
 
 namespace Orderflow.Services;

@@ -6,7 +6,7 @@ using Orderflow.Data.Repositories.Interfaces;
 using Orderflow.Domain;
 using Orderflow.Domain.Models;
 using Orderflow.Events;
-using Orderflow.Extensions;
+using Orderflow.Mappers;
 using Orderflow.Services;
 
 namespace Orderflow.Api.Unit.Tests.Services;
