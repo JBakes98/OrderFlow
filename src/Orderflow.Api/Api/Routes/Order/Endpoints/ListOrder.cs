@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Orderflow.Api.Routes.Order.Models;
-using Orderflow.Extensions;
+using Orderflow.Mappers;
 using Orderflow.Services;
 
 namespace Orderflow.Api.Routes.Order.Endpoints;
