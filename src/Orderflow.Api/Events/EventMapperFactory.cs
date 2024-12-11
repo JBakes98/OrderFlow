@@ -12,27 +12,42 @@ public class EventMapperFactory : IEventMapperFactory
         {
             case InstrumentCreatedEvent instrumentCreatedEvent:
                 outboxEvent = new OutboxEvent(
-                    Guid.NewGuid().ToString(), instrumentCreatedEvent.InstrumentId, nameof(InstrumentCreatedEvent),
-                    DateTime.Now.ToUniversalTime());
-                outboxEvent.SetPayload(@event);
+                    id: Guid.NewGuid().ToString(),
+                    streamId: instrumentCreatedEvent.InstrumentId,
+                    eventType: nameof(InstrumentCreatedEvent),
+                    timestamp: DateTime.Now.ToUniversalTime());
+                outboxEvent.SetPayload(payload: @event);
                 return outboxEvent;
 
             case BuyOrderRaised orderRaisedEvent:
                 outboxEvent = new OutboxEvent(
-                    Guid.NewGuid().ToString(), orderRaisedEvent.OrderId, nameof(BuyOrderRaised),
-                    DateTime.Now.ToUniversalTime());
-                outboxEvent.SetPayload(@event);
+                    id: Guid.NewGuid().ToString(),
+                    streamId: orderRaisedEvent.OrderId,
+                    eventType: nameof(BuyOrderRaised),
+                    timestamp: DateTime.Now.ToUniversalTime());
+                outboxEvent.SetPayload(payload: @event);
                 return outboxEvent;
 
             case SellOrderRaised orderRaisedEvent:
                 outboxEvent = new OutboxEvent(
-                    Guid.NewGuid().ToString(), orderRaisedEvent.OrderId, nameof(SellOrderRaised),
-                    DateTime.Now.ToUniversalTime());
+                    id: Guid.NewGuid().ToString(),
+                    streamId: orderRaisedEvent.OrderId,
+                    eventType: nameof(SellOrderRaised),
+                    timestamp: DateTime.Now.ToUniversalTime());
+                outboxEvent.SetPayload(payload: @event);
+                return outboxEvent;
+
+            case OrderUpdateEvent orderUpdateEvent:
+                outboxEvent = new OutboxEvent(
+                    id: Guid.NewGuid().ToString(),
+                    streamId: orderUpdateEvent.OrderId,
+                    eventType: nameof(OrderUpdateEvent),
+                    timestamp: DateTime.Now.ToUniversalTime());
                 outboxEvent.SetPayload(@event);
                 return outboxEvent;
 
             default:
-                throw new ArgumentException($"Unsupported event type: {typeof(T).Name}");
+                throw new ArgumentException(message: $"Unsupported event type: {typeof(T).Name}");
         }
     }
 }
