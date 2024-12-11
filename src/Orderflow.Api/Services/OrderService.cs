@@ -6,9 +6,11 @@ using Ardalis.GuardClauses;
 using OneOf;
 using Orderflow.Data.Repositories.Interfaces;
 using Orderflow.Domain;
+using Orderflow.Domain.Commands;
 using Orderflow.Domain.Models;
 using Orderflow.Events;
-using Orderflow.Extensions;
+using Orderflow.Mappers;
+using Orderflow.Services.AlphaVantage;
 using Serilog;
 using Error = Orderflow.Domain.Models.Error;
 
@@ -18,15 +20,24 @@ public class OrderService : IOrderService
 {
     private readonly IDiagnosticContext _diagnosticContext;
     private readonly IMapper<Order, OrderRaisedEvent> _orderToOrderRaisedEventMapper;
+    private readonly IMapper<OrderUpdateCommand, OrderUpdateEvent> _orderUpdateCommandToOrderUpdateEventMapper;
     private readonly IOrderRepository _repository;
     private readonly IAmazonS3 _s3;
+    private readonly IAlphaVantageService _alphaVantageService;
+    private readonly IInstrumentService _instrumentService;
 
     public OrderService(
         IOrderRepository repository,
         IMapper<Order, OrderRaisedEvent> orderToOrderRaisedEventMapper,
         IDiagnosticContext diagnosticContext,
-        IAmazonS3 s3)
+        IAmazonS3 s3,
+        IMapper<OrderUpdateCommand, OrderUpdateEvent> orderUpdateCommandToOrderUpdateEventMapper,
+        IAlphaVantageService alphaVantageService,
+        IInstrumentService instrumentService)
     {
+        _instrumentService = Guard.Against.Null(instrumentService);
+        _alphaVantageService = Guard.Against.Null(alphaVantageService);
+        _orderUpdateCommandToOrderUpdateEventMapper = Guard.Against.Null(orderUpdateCommandToOrderUpdateEventMapper);
         _s3 = Guard.Against.Null(s3);
         _diagnosticContext = Guard.Against.Null(diagnosticContext);
         _orderToOrderRaisedEventMapper = Guard.Against.Null(orderToOrderRaisedEventMapper);
@@ -66,6 +77,16 @@ public class OrderService : IOrderService
 
     public async Task<OneOf<Order, Error>> CreateOrder(Order order)
     {
+        var instrumentResult = await _instrumentService.RetrieveInstrument(order.InstrumentId);
+        if (instrumentResult.TryPickT1(out var instrumentError, out var instrument))
+            return instrumentError;
+
+        var quoteResult = await _alphaVantageService.GetStockQuote(instrument.Ticker);
+        if (quoteResult.TryPickT1(out var quoteError, out var quote))
+            return quoteError;
+
+        order.SetPrice(quote.Price);
+
         var orderEvent = _orderToOrderRaisedEventMapper.Map(order);
 
         var error = await _repository.InsertAsync(order, orderEvent);
@@ -78,6 +99,23 @@ public class OrderService : IOrderService
         _diagnosticContext.Set("OrderPlaced", true);
 
         return order;
+    }
+
+    public async Task<OneOf<Order, Error>> UpdateOrder(OrderUpdateCommand command)
+    {
+        var repoResult = await _repository.GetByIdAsync(command.Id);
+
+        if (repoResult.TryPickT1(out var error, out var order))
+            return error;
+
+        if (!order.SetStatus(command.Status))
+            return new Error(HttpStatusCode.InternalServerError, ErrorCodes.OrderCouldNotBeUpdated);
+
+        var updateEvent = _orderUpdateCommandToOrderUpdateEventMapper.Map(command);
+
+        var updateResult = await _repository.UpdateAsync(order, updateEvent);
+
+        return updateResult != null ? repoResult : order;
     }
 
     public async Task<Error> ProcessOrderHistory(IFormFile orderFile)
