@@ -43,7 +43,7 @@ public class Order
         Value = Price * Quantity;
     }
 
-    private List<OrderStatus> FinalStates = new List<OrderStatus>
+    private readonly List<OrderStatus> _finalStates = new List<OrderStatus>
     {
         OrderStatus.cancelled,
         OrderStatus.complete
@@ -51,7 +51,7 @@ public class Order
 
     public bool SetStatus(OrderStatus status)
     {
-        if (FinalStates.Contains(Status))
+        if (_finalStates.Contains(Status))
             return false;
 
         Status = status;
