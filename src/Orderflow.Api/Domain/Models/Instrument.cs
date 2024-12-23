@@ -16,10 +16,6 @@ public class Instrument
         Exchange = exchange;
     }
 
-    public Instrument()
-    {
-    }
-
     public string Id { get; }
     public string Ticker { get; }
     public string Name { get; }

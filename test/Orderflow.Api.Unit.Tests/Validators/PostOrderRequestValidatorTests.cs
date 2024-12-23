@@ -34,7 +34,7 @@ public class PostOrderRequestValidatorTests
 
         Assert.False(condition: result.IsValid);
         Assert.Equal(expected: 2, actual: result.Errors.Count);
-        Assert.True(result.Errors.Select(x => x.ErrorMessage).ToList().Contains("InstrumentId invalid"));
-        Assert.True(result.Errors.Select(x => x.ErrorMessage).ToList().Contains("Quantity invalid"));
+        Assert.Contains("InstrumentId invalid", result.Errors.Select(x => x.ErrorMessage).ToList());
+        Assert.Contains("Quantity invalid", result.Errors.Select(x => x.ErrorMessage).ToList());
     }
 }

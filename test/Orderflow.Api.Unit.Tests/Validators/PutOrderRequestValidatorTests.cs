@@ -31,7 +31,7 @@ public class PutOrderRequestValidatorTests
         var result = _sut.Validate(request);
 
         Assert.False(result.IsValid);
-        Assert.Equal(1, result.Errors.Count);
+        Assert.Single(result.Errors);
         Assert.Equal("Id invalid", result.Errors?.FirstOrDefault()?.ErrorMessage);
     }
 }

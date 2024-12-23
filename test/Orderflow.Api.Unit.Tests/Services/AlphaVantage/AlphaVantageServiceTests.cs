@@ -11,7 +11,7 @@ namespace Orderflow.Api.Unit.Tests.Services.AlphaVantage;
 public class AlphaVantageServiceTests
 {
     [Theory, AutoMoqData]
-    public async void Should_Get_StockQuote_From_AlphaVantage(
+    public async Task Should_Get_StockQuote_From_AlphaVantage(
         [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
         [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
         AlphaVantageService sut

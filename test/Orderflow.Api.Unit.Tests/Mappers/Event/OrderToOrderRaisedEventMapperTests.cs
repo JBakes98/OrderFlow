@@ -10,7 +10,6 @@ public class OrderToOrderRaisedEventMapperTests
 {
     [Theory, AutoMoqData]
     public void Should_Map_BuyOrder_To_OrderCreatedEvent(
-        IFixture fixture,
         Order source,
         OrderToOrderRaisedEventMapper sut
     )

@@ -30,7 +30,7 @@ public class OrderEntity
         Status = status;
     }
 
-    [Key] [MaxLength(36)] public string Id { get; private set; }
+    [Key] [MaxLength(36)] public string Id { get; private set; } = null!;
     public int Quantity { get; private set; }
     public double Price { get; private set; }
     public double Value { get; private set; }
@@ -40,9 +40,9 @@ public class OrderEntity
 
     [MaxLength(36)]
     [ForeignKey("Instrument")]
-    public string InstrumentId { get; private set; }
+    public string InstrumentId { get; private set; } = null!;
 
-    public virtual InstrumentEntity Instrument { get; set; }
+    public virtual InstrumentEntity Instrument { get; init; } = null!;
 
     public void UpdateStatus(OrderStatus status)
     {
