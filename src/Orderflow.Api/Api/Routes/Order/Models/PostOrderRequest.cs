@@ -7,7 +7,7 @@ public class PostOrderRequest
     public PostOrderRequest(
         int quantity,
         string instrumentId,
-        OrderType type)
+        string type)
     {
         Quantity = quantity;
         InstrumentId = instrumentId;
@@ -16,5 +16,5 @@ public class PostOrderRequest
 
     public string InstrumentId { get; }
     public int Quantity { get; }
-    public OrderType Type { get; }
+    public string Type { get; }
 }
