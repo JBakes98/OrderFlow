@@ -10,23 +10,31 @@ public class PostOrderRequestValidator : AbstractValidator<PostOrderRequest>
     {
         RuleFor(x => x.InstrumentId)
             .NotEmpty()
-            .NotNull()
-            .WithMessage("InstrumentId required")
-            .Must(BeAValidGuid)
-            .WithMessage("InstrumentId invalid");
+            .WithMessage("InstrumentId required");
+
+        When(x => !string.IsNullOrEmpty(x.InstrumentId), () =>
+        {
+            RuleFor(x => x.InstrumentId)
+                .Must(BeAValidGuid)
+                .WithMessage("InstrumentId invalid");
+        });
 
         RuleFor(x => x.Quantity)
             .NotEmpty()
-            .NotNull()
             .WithMessage("Quantity required")
             .Must(BeAValidQuantity)
             .WithMessage("Quantity invalid");
 
         RuleFor(x => x.Type)
-            .NotNull()
-            .WithMessage("Type required")
-            .Must(i => Enum.IsDefined(typeof(OrderType), i))
-            .WithMessage("Type invalid");
+            .NotEmpty()
+            .WithMessage("Type required");
+
+        When(x => !string.IsNullOrEmpty(x.Type), () =>
+        {
+            RuleFor(x => x.Type)
+                .Must(i => Enum.IsDefined(typeof(OrderType), i))
+                .WithMessage("Type invalid");
+        });
     }
 
     private bool BeAValidGuid(string id)

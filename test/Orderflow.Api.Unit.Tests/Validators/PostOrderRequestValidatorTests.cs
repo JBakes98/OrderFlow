@@ -1,3 +1,4 @@
+using AutoFixture.Xunit2;
 using Orderflow.Api.Routes.Order.Models;
 using Orderflow.Domain.Models.Enums;
 using Orderflow.Validators;
@@ -37,5 +38,28 @@ public class PostOrderRequestValidatorTests
         Assert.Contains("InstrumentId invalid", result.Errors.Select(x => x.ErrorMessage).ToList());
         Assert.Contains("Quantity invalid", result.Errors.Select(x => x.ErrorMessage).ToList());
         Assert.Contains("Type invalid", result.Errors.Select(x => x.ErrorMessage).ToList());
+    }
+
+    [Theory]
+    [InlineAutoData(null, null, null)]
+    [InlineAutoData("", null, "")]
+    public void Should_return_invalid_for_invalid_types(
+        string type,
+        int quantity,
+        string instrument)
+    {
+        var request = new PostOrderRequest(
+            quantity: quantity,
+            instrumentId: instrument,
+            type: type);
+
+        var result = _sut.Validate(request);
+
+        Assert.False(condition: result.IsValid);
+        Assert.Equal(expected: 4, actual: result.Errors.Count);
+        Assert.Contains("Type required", result.Errors.Select(x => x.ErrorMessage).ToList());
+        Assert.Contains("InstrumentId required", result.Errors.Select(x => x.ErrorMessage).ToList());
+        Assert.Contains("Quantity required", result.Errors.Select(x => x.ErrorMessage).ToList());
+        Assert.Contains("Quantity invalid", result.Errors.Select(x => x.ErrorMessage).ToList());
     }
 }
