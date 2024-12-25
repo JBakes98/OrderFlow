@@ -1,5 +1,6 @@
 using Orderflow.Api.Routes.Order.Models;
 using Orderflow.Api.Unit.Tests.Customizations;
+using Orderflow.Domain.Models.Enums;
 using Orderflow.Mappers.Request;
 
 namespace Orderflow.Api.Unit.Tests.Mappers.Request;
@@ -13,8 +14,8 @@ public class PostOrderRequestToOrderMapperTests
     {
         var result = sut.Map(source);
 
-        Assert.Equal(source.InstrumentId.ToString(), result.InstrumentId);
-        Assert.Equal(source.Type, result.Type);
+        Assert.Equal(source.InstrumentId, result.InstrumentId);
+        Assert.Equal(Enum.Parse<OrderType>(source.Type), result.Type);
         Assert.Equal(source.Quantity, result.Quantity);
 
         Assert.NotNull(result.Id);

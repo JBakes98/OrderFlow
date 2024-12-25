@@ -1,5 +1,6 @@
 using Orderflow.Api.Routes.Order.Models;
 using Orderflow.Domain.Models;
+using Orderflow.Domain.Models.Enums;
 
 namespace Orderflow.Mappers.Request;
 
@@ -13,7 +14,7 @@ public class PostOrderRequestToOrderMapper : IMapper<PostOrderRequest, Order>
             source.InstrumentId,
             0,
             DateTime.Now.ToUniversalTime(),
-            source.Type);
+            Enum.Parse<OrderType>(source.Type));
 
         return order;
     }
