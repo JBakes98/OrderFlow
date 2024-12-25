@@ -10,7 +10,7 @@
     "database.dbname": "orderflow",
     "database.server.name": "localhost",
     "topic.prefix": "orderflow",
-    "table.include.list": "public.Events",
+    "table.include.list": "public.events",
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "key.converter": "org.apache.kafka.connect.json.JsonConverter",
     "value.converter.schemas.enable": "false",
