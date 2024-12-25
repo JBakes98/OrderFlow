@@ -1,5 +1,6 @@
 using FluentValidation;
 using Orderflow.Api.Routes.Order.Models;
+using Orderflow.Domain.Models.Enums;
 
 namespace Orderflow.Validators;
 
@@ -24,7 +25,7 @@ public class PostOrderRequestValidator : AbstractValidator<PostOrderRequest>
         RuleFor(x => x.Type)
             .NotNull()
             .WithMessage("Type required")
-            .IsInEnum()
+            .Must(i => Enum.IsDefined(typeof(OrderType), i))
             .WithMessage("Type invalid");
     }
 

@@ -14,7 +14,7 @@ public class PostOrderRequestValidatorTests
         var request = new PostOrderRequest(
             quantity: 20,
             instrumentId: Guid.NewGuid().ToString(),
-            type: OrderType.buy);
+            type: OrderType.buy.ToString());
 
         var result = _sut.Validate(request);
 
@@ -28,13 +28,14 @@ public class PostOrderRequestValidatorTests
         var request = new PostOrderRequest(
             quantity: -24,
             instrumentId: "invalid guid",
-            type: OrderType.buy);
+            type: "invalid type");
 
         var result = _sut.Validate(request);
 
         Assert.False(condition: result.IsValid);
-        Assert.Equal(expected: 2, actual: result.Errors.Count);
+        Assert.Equal(expected: 3, actual: result.Errors.Count);
         Assert.Contains("InstrumentId invalid", result.Errors.Select(x => x.ErrorMessage).ToList());
         Assert.Contains("Quantity invalid", result.Errors.Select(x => x.ErrorMessage).ToList());
+        Assert.Contains("Type invalid", result.Errors.Select(x => x.ErrorMessage).ToList());
     }
 }
