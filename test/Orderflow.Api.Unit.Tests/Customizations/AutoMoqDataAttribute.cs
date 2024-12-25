@@ -20,6 +20,7 @@ public class AutoMoqDataAttribute : AutoDataAttribute
             .Customize(new OrderEntityCustomization())
             .Customize(new InstrumentEntityCustomization())
             .Customize(new GlobalQuoteResponseCustomization())
+            .Customize(new PostOrderRequestCustomization())
             .Customize(new AutoMoqCustomization());
 
         return fixture;
