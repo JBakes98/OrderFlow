@@ -9,6 +9,7 @@ using Orderflow.Domain.Models;
 using Orderflow.Events;
 using Orderflow.Mappers;
 using Orderflow.Services;
+using Orderflow.Services.AlphaVantage;
 
 namespace Orderflow.Api.Unit.Tests.Services;
 
@@ -89,10 +90,24 @@ public class OrderServiceTests
     public async Task Should_CreateOrder_And_SaveTo_Repo(
         [Frozen] Mock<IOrderRepository> mockRepository,
         [Frozen] Mock<IMapper<Order, OrderRaisedEvent>> mockOrderToOrderRaisedEventMapper,
+        [Frozen] Mock<IInstrumentService> mockInstrumentService,
+        [Frozen] Mock<IAlphaVantageService> mockAlphaVantageService,
         Order order,
+        Instrument instrument,
+        GlobalQuote globalQuote,
         OrderRaisedEvent @event,
         OrderService sut)
     {
+        mockInstrumentService
+            .Setup(x => x.RetrieveInstrument(order.InstrumentId))
+            .ReturnsAsync(instrument)
+            .Verifiable();
+
+        mockAlphaVantageService
+            .Setup(x => x.GetStockQuote(instrument.Ticker))
+            .ReturnsAsync(globalQuote)
+            .Verifiable();
+
         mockOrderToOrderRaisedEventMapper
             .Setup(x => x.Map(order))
             .Returns(@event)
@@ -108,18 +123,90 @@ public class OrderServiceTests
         Assert.True(result.IsT0);
         Assert.Equal(order, result.AsT0);
 
+        mockInstrumentService.Verify();
+        mockAlphaVantageService.Verify();
         mockRepository.Verify();
         mockOrderToOrderRaisedEventMapper.Verify();
     }
 
     [Theory, AutoMoqData]
+    public async Task Should_ReturnError_If_Instrument_Not_Found(
+        [Frozen] Mock<IInstrumentService> mockInstrumentService,
+        OrderRaisedEvent @event,
+        Order order,
+        GlobalQuote globalQuote,
+        OrderService sut)
+    {
+        var expectedError = new Error(HttpStatusCode.NotFound, ErrorCodes.InstrumentNotFound);
+
+        mockInstrumentService
+            .Setup(x => x.RetrieveInstrument(order.InstrumentId))
+            .ReturnsAsync(expectedError)
+            .Verifiable();
+
+        var result = await sut.CreateOrder(order);
+
+        Assert.True(result.IsT1);
+        Assert.Equal(expectedError, result.AsT1);
+
+        mockInstrumentService.Verify();
+    }
+
+
+    [Theory, AutoMoqData]
+    public async Task? Should_ReturnError_If_AlphaVantage_Stock_Quote_Fails(
+        [Frozen] Mock<IInstrumentService> mockInstrumentService,
+        [Frozen] Mock<IAlphaVantageService> mockAlphaVantageService,
+        OrderRaisedEvent @event,
+        Order order,
+        Instrument instrument,
+        GlobalQuote globalQuote,
+        OrderService sut)
+    {
+        var expectedError = new Error(HttpStatusCode.InternalServerError,
+            ErrorCodes.UnableToRetrieveCurrentInstrumentPrice);
+
+        mockInstrumentService
+            .Setup(x => x.RetrieveInstrument(order.InstrumentId))
+            .ReturnsAsync(instrument)
+            .Verifiable();
+
+        mockAlphaVantageService
+            .Setup(x => x.GetStockQuote(instrument.Ticker))
+            .ReturnsAsync(expectedError)
+            .Verifiable();
+
+        var result = await sut.CreateOrder(order);
+
+        Assert.True(result.IsT1);
+        Assert.Equal(expectedError, result.AsT1);
+
+        mockInstrumentService.Verify();
+        mockAlphaVantageService.Verify();
+    }
+
+    [Theory, AutoMoqData]
     public async Task Should_ReturnError_If_Repo_Fails(
+        [Frozen] Mock<IInstrumentService> mockInstrumentService,
+        [Frozen] Mock<IAlphaVantageService> mockAlphaVantageService,
         [Frozen] Mock<IOrderRepository> mockRepository,
         [Frozen] Mock<IMapper<Order, OrderRaisedEvent>> mockOrderToOrderRaisedEventMapper,
         OrderRaisedEvent @event,
         Order order,
+        Instrument instrument,
+        GlobalQuote globalQuote,
         OrderService sut)
     {
+        mockInstrumentService
+            .Setup(x => x.RetrieveInstrument(order.InstrumentId))
+            .ReturnsAsync(instrument)
+            .Verifiable();
+
+        mockAlphaVantageService
+            .Setup(x => x.GetStockQuote(instrument.Ticker))
+            .ReturnsAsync(globalQuote)
+            .Verifiable();
+
         var expectedError = new Error(HttpStatusCode.InternalServerError, ErrorCodes.OrderCouldNotBeCreated);
 
         mockOrderToOrderRaisedEventMapper
@@ -137,6 +224,8 @@ public class OrderServiceTests
         Assert.True(result.IsT1);
         Assert.Equal(expectedError, result.AsT1);
 
+        mockInstrumentService.Verify();
+        mockAlphaVantageService.Verify();
         mockRepository.Verify();
         mockOrderToOrderRaisedEventMapper.Verify();
     }
