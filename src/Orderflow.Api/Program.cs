@@ -21,6 +21,7 @@ builder.RegisterLogging(config);
 builder.Services.RegisterAwsServices(config);
 builder.Services.RegisterPostgres(config);
 builder.Services.RegisterServices(config);
+builder.Services.RegisterValidators();
 builder.Services.RegisterAlphaVantage(config);
 
 builder.Services.AddEndpointsApiExplorer();
