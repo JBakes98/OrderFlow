@@ -1,5 +1,6 @@
 using Orderflow.Api.Routes.Order.Models;
 using Orderflow.Domain.Commands;
+using Orderflow.Domain.Models.Enums;
 
 namespace Orderflow.Mappers.Request;
 
@@ -9,7 +10,7 @@ public class PutOrderRequestToOrderUpdateCommandMapper : IMapper<PutOrderRequest
     {
         return new OrderUpdateCommand(
             id: source.Id,
-            status: source.Status
+            status: Enum.Parse<OrderStatus>(source.Status)
         );
     }
 }
