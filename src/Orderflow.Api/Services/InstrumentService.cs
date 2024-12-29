@@ -3,7 +3,7 @@ using OneOf;
 using Orderflow.Data.Repositories.Interfaces;
 using Orderflow.Domain.Models;
 using Orderflow.Events;
-using Orderflow.Extensions;
+using Orderflow.Mappers;
 using Serilog;
 
 namespace Orderflow.Services;
@@ -32,8 +32,7 @@ public class InstrumentService : IInstrumentService
             return result.AsT1;
 
         var instrument = result.AsT0;
-
-        _diagnosticContext.Set("InstrumentEntity", instrument.Ticker);
+        _diagnosticContext.Set("InstrumentEntity", instrument, true);
 
         return instrument;
     }

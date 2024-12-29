@@ -8,7 +8,7 @@ using Orderflow.Data.Repositories.Interfaces;
 using Orderflow.Domain;
 using Orderflow.Domain.Models;
 using Orderflow.Events;
-using Orderflow.Extensions;
+using Orderflow.Mappers;
 using Serilog;
 
 namespace Orderflow.Data.Repositories;
@@ -45,6 +45,7 @@ public class OrderRepository : IOrderRepository
         }
         catch (Exception e)
         {
+            _diagnosticContext.Set("Order.Error", $"Failed to raise Order: {e.Message}");
             return new Error(HttpStatusCode.InternalServerError, ErrorCodes.OrderNotFound);
         }
     }
@@ -91,15 +92,34 @@ public class OrderRepository : IOrderRepository
         catch (Exception e)
         {
             await transaction.RollbackAsync();
-
-            _diagnosticContext.Set("Order.Error", "Failed to raise order");
-
+            _diagnosticContext.Set("Order.Error", $"Failed to raise Order: {e.Message}");
             return new Error(HttpStatusCode.InternalServerError, ErrorCodes.OrderCouldNotBeCreated);
         }
     }
 
-    public Task<Error?> UpdateAsync(Order source)
+    public async Task<Error?> UpdateAsync(Order source, IEvent @event)
     {
-        throw new NotImplementedException();
+        var outboxEvent = _eventMapperFactory.MapEvent(@event);
+
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            var entity = await _context.Orders.FindAsync(source.Id);
+
+            entity?.UpdateStatus(source.Status);
+
+            _context.Set<OutboxEvent>().Add(outboxEvent);
+
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            return null;
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            _diagnosticContext.Set("Order.Error", $"Failed to update Order: {e.Message}");
+            return new Error(HttpStatusCode.InternalServerError, ErrorCodes.OrderCouldNotBeUpdated);
+        }
     }
 }

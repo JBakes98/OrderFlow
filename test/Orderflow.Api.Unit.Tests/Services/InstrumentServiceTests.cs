@@ -6,7 +6,7 @@ using Orderflow.Data.Repositories.Interfaces;
 using Orderflow.Domain;
 using Orderflow.Domain.Models;
 using Orderflow.Events;
-using Orderflow.Extensions;
+using Orderflow.Mappers;
 using Orderflow.Services;
 
 namespace Orderflow.Api.Unit.Tests.Services;
@@ -14,7 +14,7 @@ namespace Orderflow.Api.Unit.Tests.Services;
 public class InstrumentServiceTests
 {
     [Theory, AutoMoqData]
-    public async void Should_RetrieveInstrument_If_Present(
+    public async Task Should_RetrieveInstrument_If_Present(
         [Frozen] Mock<IInstrumentRepository> mockRepository,
         Instrument instrument,
         InstrumentService sut)
@@ -33,7 +33,7 @@ public class InstrumentServiceTests
     }
 
     [Theory, AutoMoqData]
-    public async void Should_ReturnError_If_InstrumentNotFound(
+    public async Task Should_ReturnError_If_InstrumentNotFound(
         [Frozen] Mock<IInstrumentRepository> mockRepository,
         InstrumentService sut,
         string id)
@@ -54,7 +54,7 @@ public class InstrumentServiceTests
     }
 
     [Theory, AutoMoqData]
-    public async void Should_ReturnInstruments(
+    public async Task Should_ReturnInstruments(
         [Frozen] Mock<IInstrumentRepository> mockRepository,
         InstrumentService sut,
         List<Instrument> instruments)
@@ -71,7 +71,7 @@ public class InstrumentServiceTests
     }
 
     [Theory, AutoMoqData]
-    public async void Should_ReturnError_IfQuery_Fails(
+    public async Task Should_ReturnError_IfQuery_Fails(
         [Frozen] Mock<IInstrumentRepository> mockRepository,
         InstrumentService sut)
     {
@@ -88,7 +88,7 @@ public class InstrumentServiceTests
     }
 
     [Theory, AutoMoqData]
-    public async void Should_CreateInstrument_And_SaveTo_Repo(
+    public async Task Should_CreateInstrument_And_SaveTo_Repo(
         [Frozen] Mock<IInstrumentRepository> mockRepository,
         [Frozen] Mock<IMapper<Instrument, InstrumentCreatedEvent>> instrumentToInstrumentCreatedEventMapperMock,
         Instrument instrument,
@@ -116,7 +116,7 @@ public class InstrumentServiceTests
     }
 
     [Theory, AutoMoqData]
-    public async void Should_ReturnError_If_Repo_Insert_Fails(
+    public async Task Should_ReturnError_If_Repo_Insert_Fails(
         [Frozen] Mock<IInstrumentRepository> mockRepository,
         [Frozen] Mock<IMapper<Instrument, InstrumentCreatedEvent>> instrumentToInstrumentCreatedEventMapperMock,
         Instrument instrument,

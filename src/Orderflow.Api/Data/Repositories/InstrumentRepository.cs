@@ -8,7 +8,7 @@ using Orderflow.Data.Repositories.Interfaces;
 using Orderflow.Domain;
 using Orderflow.Domain.Models;
 using Orderflow.Events;
-using Orderflow.Extensions;
+using Orderflow.Mappers;
 using Serilog;
 
 namespace Orderflow.Data.Repositories;
@@ -77,8 +77,7 @@ public class InstrumentRepository : IInstrumentRepository
         catch (Exception e)
         {
             await transaction.RollbackAsync();
-
-            _diagnosticContext.Set("Instrument.Error", "Failed to create instrument");
+            _diagnosticContext.Set("Instrument.Error", $"Failed to create instrument: {e.Message}");
 
             return new Error(HttpStatusCode.InternalServerError, ErrorCodes.InstrumentCouldNotBeCreated);
         }

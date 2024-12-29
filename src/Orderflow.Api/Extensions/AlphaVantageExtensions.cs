@@ -17,6 +17,6 @@ public static class AlphaVantageExtensions
             clientConfig.ClientName,
             client => { client.BaseAddress = new Uri(clientConfig.BasePath); });
 
-        serviceCollection.AddSingleton<IAlphaVantageService, AlphaVantageService>();
+        serviceCollection.AddScoped<IAlphaVantageService, AlphaVantageService>();
     }
 }

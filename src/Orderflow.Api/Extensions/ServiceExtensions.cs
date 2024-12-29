@@ -1,17 +1,20 @@
-using Orderflow.Contracts.Requests;
+using Orderflow.Api.Routes.Instrument.Models;
+using Orderflow.Api.Routes.Order.Models;
 using Orderflow.Data.Entities;
 using Orderflow.Data.Repositories;
 using Orderflow.Data.Repositories.Interfaces;
+using Orderflow.Domain.Commands;
 using Orderflow.Domain.Models;
 using Orderflow.Events;
+using Orderflow.Mappers;
 using Orderflow.Mappers.Data;
 using Orderflow.Mappers.Domain;
 using Orderflow.Mappers.Events;
 using Orderflow.Mappers.Request;
+using Orderflow.Mappers.Response;
 using Orderflow.Mappers.Response.AlphaVantage;
 using Orderflow.Services;
-using Orderflow.Services.Handlers;
-using GlobalQuote = Orderflow.Contracts.Responses.AlphaVantage.GlobalQuote;
+using Orderflow.Services.AlphaVantage.Api.Responses;
 
 namespace Orderflow.Extensions;
 
@@ -27,22 +30,22 @@ public static class ServiceExtensions
         services.AddScoped<IInstrumentService, InstrumentService>();
         services.AddScoped<IOrderService, OrderService>();
 
-        services.AddScoped<IHandler<CreateOrder, Order>, OrderCreateHandler>();
-
-        services.AddScoped<IHandler<CreateInstrument, Instrument>, InstrumentCreateHandler>();
-
-        services.AddScoped<IMapper<CreateOrder, Order>, CreateOrderToOrderMapper>();
+        services.AddScoped<IMapper<PostOrderRequest, Order>, PostOrderRequestToOrderMapper>();
+        services.AddScoped<IMapper<PutOrderRequest, OrderUpdateCommand>, PutOrderRequestToOrderUpdateCommandMapper>();
+        services.AddScoped<IMapper<Order, GetOrderResponse>, OrderToGetOrderResponseMapper>();
         services.AddScoped<IMapper<Order, OrderEntity>, OrderDomainToOrderDataMapper>();
         services.AddScoped<IMapper<OrderEntity, Order>, OrderDataToOrderDomainMapper>();
         services.AddScoped<IMapper<Order, OrderRaisedEvent>, OrderToOrderRaisedEventMapper>();
+        services.AddScoped<IMapper<OrderUpdateCommand, OrderUpdateEvent>, OrderUpdateToOrderUpdateEventMapper>();
 
-        services.AddScoped<IMapper<CreateInstrument, Instrument>, CreateInstrumentToInstrumentMapper>();
+        services.AddScoped<IMapper<PostInstrumentRequest, Instrument>, PostInstrumentRequestToInstrumentMapper>();
+        services.AddScoped<IMapper<Instrument, GetInstrumentResponse>, InstrumentToGetInstrumentResponseMapper>();
         services.AddScoped<IMapper<Instrument, InstrumentEntity>, InstrumentDomainToInstrumentDataMapper>();
         services.AddScoped<IMapper<InstrumentEntity, Instrument>, InstrumentDataToInstrumentDomainMapper>();
         services.AddScoped<IMapper<Instrument, InstrumentCreatedEvent>, InstrumentToInstrumentCreatedEventMapper>();
 
         services
-            .AddScoped<IMapper<GlobalQuote, Orderflow.Domain.Models.GlobalQuote>,
+            .AddScoped<IMapper<GetGlobalQuoteResponse, GlobalQuote>,
                 GlobalQuoteResponseToGlobalQuoteDomainMapper>();
     }
 }

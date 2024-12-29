@@ -6,24 +6,40 @@ using Microsoft.Extensions.Options;
 using OneOf;
 using Orderflow.Domain;
 using Orderflow.Domain.Models;
+using Orderflow.Mappers;
 using Orderflow.Options;
+using Orderflow.Services.AlphaVantage.Api.Responses;
 using Serilog;
-using GlobalQuote = Orderflow.Contracts.Responses.AlphaVantage.GlobalQuote;
 
 namespace Orderflow.Services.AlphaVantage;
 
 public class AlphaVantageService(
     IHttpClientFactory httpClientFactory,
     IOptions<AlphaVantageOptions> options,
-    IDiagnosticContext diagnosticContext)
+    IDiagnosticContext diagnosticContext,
+    IMapper<GetGlobalQuoteResponse, GlobalQuote> globalQuoteMapper)
     : IAlphaVantageService
 {
     private readonly IDiagnosticContext _diagnosticContext = Guard.Against.Null(diagnosticContext);
     private readonly IHttpClientFactory _httpClientFactory = Guard.Against.Null(httpClientFactory);
     private readonly AlphaVantageOptions _options = Guard.Against.Null(options.Value);
 
+    private readonly IMapper<GetGlobalQuoteResponse, GlobalQuote> _globalQuoteMapper =
+        Guard.Against.Null(globalQuoteMapper);
 
     public async Task<OneOf<GlobalQuote, Error>> GetStockQuote(string symbol)
+    {
+        var httpResponse = await SendHttpRequest(symbol);
+
+        if (httpResponse.TryPickT1(out var error, out var quote))
+            return error;
+
+        _diagnosticContext.Set("AlphaVantage:QuoteResponse", quote, true);
+
+        return _globalQuoteMapper.Map(quote);
+    }
+
+    private async Task<OneOf<GetGlobalQuoteResponse, Error>> SendHttpRequest(string symbol)
     {
         try
         {
@@ -34,7 +50,7 @@ public class AlphaVantageService(
                     $"query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={_options.ApiKey}");
 
             var jsonObject = JsonNode.Parse(response)?["Global Quote"];
-            var quoteResponse = jsonObject.Deserialize<GlobalQuote>();
+            var quoteResponse = jsonObject.Deserialize<GetGlobalQuoteResponse>();
 
             if (quoteResponse == null)
             {

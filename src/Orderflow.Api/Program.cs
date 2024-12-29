@@ -1,3 +1,8 @@
+using System.Text.Json.Serialization;
+using Orderflow.Api.Authorization;
+using Orderflow.Api.Routes.Instrument;
+using Orderflow.Api.Routes.Order;
+using Orderflow.Api.Swagger;
 using Orderflow.Extensions;
 using Serilog;
 
@@ -16,27 +21,38 @@ builder.RegisterLogging(config);
 builder.Services.RegisterAwsServices(config);
 builder.Services.RegisterPostgres(config);
 builder.Services.RegisterServices(config);
-builder.Services.RegisterAuthentication(config);
-builder.Services.AddControllers();
-builder.Services.RegisterCors(config);
-builder.Services.RegisterSwaggerServices();
+builder.Services.RegisterValidators();
 builder.Services.RegisterAlphaVantage(config);
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(opt => opt.AddCustomSwaggerGenOptions());
+
+builder.Services.RegisterAuthentication(config);
+builder.Services.AddAuthorization(opt => { opt.AddAuthorizationPolicies(); });
+
+builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
+builder.Services.AddProblemDetails();
+
+builder.Services.RegisterCors(config);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-/*if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}*/
-
 app.UseCors("OrderflowDashboard");
 app.UseHttpsRedirection();
-app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapControllers();
+app.UseExceptionHandler();
+
+app.UseSwagger();
+app.UseSwaggerUI(opt => opt.AddCustomSwaggerUIOptions(app.Environment.IsDevelopment()));
+
 app.UseSerilogRequestLogging();
+
+app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
+
+app.MapInstrumentUserGroup();
+app.MapOrderUserGroup();
 
 app.Run();
