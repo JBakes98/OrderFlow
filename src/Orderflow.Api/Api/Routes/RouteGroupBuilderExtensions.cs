@@ -29,7 +29,7 @@ public static class RouteGroupBuilderExtensions
         extraRequiredPolicies ??= [];
 
         var group = endpoints.MapGroup(prefix).WithGroupName(SwaggerConfiguration.Admin)
-            .RequireAuthorization([AuthorizationPolicy.Admin, ..extraRequiredPolicies]);
+            .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies]);
 
         if (groupTagName != null)
             group.WithTags(groupTagName);

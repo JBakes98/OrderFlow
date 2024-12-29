@@ -132,9 +132,7 @@ public class OrderServiceTests
     [Theory, AutoMoqData]
     public async Task Should_ReturnError_If_Instrument_Not_Found(
         [Frozen] Mock<IInstrumentService> mockInstrumentService,
-        OrderRaisedEvent @event,
         Order order,
-        GlobalQuote globalQuote,
         OrderService sut)
     {
         var expectedError = new Error(HttpStatusCode.NotFound, ErrorCodes.InstrumentNotFound);
@@ -157,10 +155,8 @@ public class OrderServiceTests
     public async Task? Should_ReturnError_If_AlphaVantage_Stock_Quote_Fails(
         [Frozen] Mock<IInstrumentService> mockInstrumentService,
         [Frozen] Mock<IAlphaVantageService> mockAlphaVantageService,
-        OrderRaisedEvent @event,
         Order order,
         Instrument instrument,
-        GlobalQuote globalQuote,
         OrderService sut)
     {
         var expectedError = new Error(HttpStatusCode.InternalServerError,
