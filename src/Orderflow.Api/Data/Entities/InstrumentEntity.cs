@@ -22,7 +22,7 @@ public class InstrumentEntity
         Exchange = exchange;
     }
 
-    [Key] [MaxLength(36)] public string Id { get; private set; } = null!;
+    [Key][MaxLength(36)] public string Id { get; private set; } = null!;
     [MaxLength(5)] public string Ticker { get; private set; } = null!;
     [MaxLength(256)] public string Name { get; private set; } = null!;
     [MaxLength(256)] public string Sector { get; private set; } = null!;
