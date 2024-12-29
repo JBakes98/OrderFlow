@@ -30,7 +30,7 @@ public class OrderEntity
         Status = status;
     }
 
-    [Key] [MaxLength(36)] public string Id { get; private set; } = null!;
+    [Key][MaxLength(36)] public string Id { get; private set; } = null!;
     public int Quantity { get; private set; }
     public double Price { get; private set; }
     public double Value { get; private set; }
