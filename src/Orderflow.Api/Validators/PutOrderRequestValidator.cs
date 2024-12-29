@@ -1,5 +1,6 @@
 using FluentValidation;
 using Orderflow.Api.Routes.Order.Models;
+using Orderflow.Domain.Models.Enums;
 
 namespace Orderflow.Validators;
 
@@ -9,17 +10,20 @@ public class PutOrderRequestValidator : AbstractValidator<PutOrderRequest>
     {
         RuleFor(x => x.Id)
             .NotEmpty()
-            .NotNull()
             .WithErrorCode("Id required")
             .Must(BeAValidGuid)
             .WithMessage("Id invalid");
 
         RuleFor(x => x.Status)
             .NotEmpty()
-            .NotNull()
-            .WithMessage("Status required")
-            .IsInEnum()
-            .WithMessage("Status invalid");
+            .WithMessage("Status required");
+
+        When(x => !string.IsNullOrEmpty(x.Status), () =>
+        {
+            RuleFor(x => x.Status)
+                .Must(i => Enum.IsDefined(typeof(OrderStatus), i))
+                .WithMessage("Status invalid");
+        });
     }
 
     private bool BeAValidGuid(string id)

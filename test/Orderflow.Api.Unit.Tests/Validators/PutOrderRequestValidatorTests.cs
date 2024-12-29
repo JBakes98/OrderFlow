@@ -13,7 +13,7 @@ public class PutOrderRequestValidatorTests
     {
         var request = new PutOrderRequest(
             Guid.NewGuid().ToString(),
-            OrderStatus.complete);
+            OrderStatus.complete.ToString());
 
         var result = _sut.Validate(request);
 
@@ -22,16 +22,17 @@ public class PutOrderRequestValidatorTests
     }
 
     [Fact]
-    public void Should_return_invalid_for_invalid_id_with_error()
+    public void Should_return_invalid_for_invalid_request()
     {
         var request = new PutOrderRequest(
             "wrong id",
-            OrderStatus.cancelled);
+            "invalid");
 
         var result = _sut.Validate(request);
 
         Assert.False(result.IsValid);
-        Assert.Single(result.Errors);
-        Assert.Equal("Id invalid", result.Errors?.FirstOrDefault()?.ErrorMessage);
+        Assert.Equal(2, result.Errors.Count);
+        Assert.Contains("Id invalid", result.Errors.Select(x => x.ErrorMessage).ToList());
+        Assert.Contains("Status invalid", result.Errors.Select(x => x.ErrorMessage).ToList());
     }
 }
