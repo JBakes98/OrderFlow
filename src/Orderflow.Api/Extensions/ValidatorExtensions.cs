@@ -9,5 +9,6 @@ public static class ValidatorExtensions
     public static void RegisterValidators(this IServiceCollection services)
     {
         services.AddScoped<IValidator<PostOrderRequest>, PostOrderRequestValidator>();
+        services.AddScoped<IValidator<PutOrderRequest>, PutOrderRequestValidator>();
     }
 }
