@@ -9,11 +9,11 @@ public class OrderToOrderRaisedEventMapper : IMapper<Order, OrderRaisedEvent>
 {
     public OrderRaisedEvent Map(Order source)
     {
-        return source.Type switch
+        return source.TradeSide switch
         {
-            OrderType.buy => new BuyOrderRaised(source.Id, source.InstrumentId, source.Quantity, source.Price,
+            TradeSide.buy => new BuyOrderRaised(source.Id, source.InstrumentId, source.InitialQuantity, source.Price,
                 source.Value, source.Status.ToString()),
-            OrderType.sell => new SellOrderRaised(source.Id, source.InstrumentId, source.Quantity, source.Price,
+            TradeSide.sell => new SellOrderRaised(source.Id, source.InstrumentId, source.InitialQuantity, source.Price,
                 source.Value, source.Status.ToString()),
             _ => throw new InvalidOperationException()
         };

@@ -15,8 +15,8 @@ public class PostOrderRequestToOrderMapperTests
         var result = sut.Map(source);
 
         Assert.Equal(source.InstrumentId, result.InstrumentId);
-        Assert.Equal(Enum.Parse<OrderType>(source.Type), result.Type);
-        Assert.Equal(source.Quantity, result.Quantity);
+        Assert.Equal(Enum.Parse<TradeSide>(source.Type), result.TradeSide);
+        Assert.Equal(source.Quantity, result.InitialQuantity);
 
         Assert.NotNull(result.Id);
     }

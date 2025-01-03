@@ -9,7 +9,7 @@ public class OrderDataToOrderDomainMapper : IMapper<OrderEntity, Order>
     {
         return new Order(
             source.Id,
-            source.Quantity,
+            source.InitialQuantity,
             source.InstrumentId,
             source.Price,
             source.Date,

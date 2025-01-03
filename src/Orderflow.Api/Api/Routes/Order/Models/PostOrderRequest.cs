@@ -1,5 +1,3 @@
-using Orderflow.Domain.Models.Enums;
-
 namespace Orderflow.Api.Routes.Order.Models;
 
 public class PostOrderRequest

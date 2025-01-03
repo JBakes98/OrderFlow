@@ -6,30 +6,32 @@ public class Order
 {
     public Order(
         string id,
-        int quantity,
+        int initialQuantity,
         string instrumentId,
         double price,
         DateTime date,
-        OrderType type,
+        TradeSide tradeSide,
         OrderStatus status = OrderStatus.pending)
     {
         Id = id;
-        Quantity = quantity;
+        InitialQuantity = initialQuantity;
+        RemainingQuantity = initialQuantity;
         InstrumentId = instrumentId;
         Price = price;
-        Value = price * quantity;
+        Value = price * initialQuantity;
         Date = date;
-        Type = type;
+        TradeSide = tradeSide;
         Status = status;
     }
 
     public string Id { get; }
-    public int Quantity { get; }
+    public int InitialQuantity { get; }
+    public int RemainingQuantity { get; private set; }
     public string InstrumentId { get; }
     public double Price { get; private set; }
     public DateTime Date { get; }
-    public OrderType Type { get; internal set; }
-    public OrderStatus Status { get; private set; } = OrderStatus.pending;
+    public TradeSide TradeSide { get; internal set; }
+    public OrderStatus Status { get; private set; }
     public double Value { get; private set; }
 
     public void SetPrice(double price)
@@ -38,16 +40,17 @@ public class Order
         SetValue();
     }
 
-    private void SetValue()
-    {
-        Value = Price * Quantity;
-    }
+    private void SetValue() => Value = Price * InitialQuantity;
+    public int GetRemainingQuantity() => RemainingQuantity;
+    public bool IsFilled() => GetRemainingQuantity() == 0;
 
-    private readonly List<OrderStatus> _finalStates = new List<OrderStatus>
+    public void Fill(int quantity)
     {
-        OrderStatus.cancelled,
-        OrderStatus.complete
-    };
+        if (quantity > GetRemainingQuantity())
+            throw new Exception($"Order {Id} cannot be filled for more than its remaining quantity");
+
+        RemainingQuantity -= quantity;
+    }
 
     public bool SetStatus(OrderStatus status)
     {
@@ -57,4 +60,10 @@ public class Order
         Status = status;
         return true;
     }
+
+    private readonly List<OrderStatus> _finalStates = new List<OrderStatus>
+    {
+        OrderStatus.cancelled,
+        OrderStatus.complete
+    };
 }

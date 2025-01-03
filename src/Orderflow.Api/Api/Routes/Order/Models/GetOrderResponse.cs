@@ -10,7 +10,7 @@ public class GetOrderResponse
         string instrumentId,
         double price,
         DateTime date,
-        OrderType type,
+        TradeSide type,
         OrderStatus status)
     {
         Id = id;
@@ -28,7 +28,7 @@ public class GetOrderResponse
     public string InstrumentId { get; }
     public double Price { get; }
     public DateTime Date { get; }
-    public OrderType Type { get; }
+    public TradeSide Type { get; }
     public OrderStatus Status { get; }
     public double Value { get; }
 }

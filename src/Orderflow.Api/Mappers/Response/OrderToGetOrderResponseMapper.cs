@@ -10,11 +10,11 @@ public class OrderToGetOrderResponseMapper : IMapper<Order, GetOrderResponse>
     {
         return new GetOrderResponse(
             id: source.Id,
-            quantity: source.Quantity,
+            quantity: source.InitialQuantity,
             instrumentId: source.InstrumentId,
             price: source.Price,
             date: source.Date,
-            type: source.Type,
+            type: source.TradeSide,
             status: source.Status);
     }
 }

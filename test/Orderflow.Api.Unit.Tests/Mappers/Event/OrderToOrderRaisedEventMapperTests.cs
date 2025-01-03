@@ -1,4 +1,3 @@
-using AutoFixture;
 using Orderflow.Api.Unit.Tests.Customizations;
 using Orderflow.Domain.Models;
 using Orderflow.Events;
@@ -20,7 +19,7 @@ public class OrderToOrderRaisedEventMapperTests
 
         Assert.Equal(source.Id, result.OrderId);
         Assert.Equal(source.InstrumentId, result.InstrumentId);
-        Assert.Equal(source.Quantity, result.Quantity);
+        Assert.Equal(source.InitialQuantity, result.Quantity);
         Assert.Equal(source.Price, result.Price);
         Assert.Equal(source.Value, result.Value);
         Assert.Equal(source.Status.ToString(), result.Status);

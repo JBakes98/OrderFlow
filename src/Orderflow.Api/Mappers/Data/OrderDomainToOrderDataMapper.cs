@@ -10,12 +10,13 @@ public class OrderDomainToOrderDataMapper : IMapper<Order, OrderEntity>
     {
         return new OrderEntity(
             source.Id,
-            source.Quantity,
+            source.InitialQuantity,
+            source.RemainingQuantity,
             source.InstrumentId,
             source.Price,
             source.Value,
             source.Date,
-            source.Type,
+            source.TradeSide,
             source.Status);
     }
 }

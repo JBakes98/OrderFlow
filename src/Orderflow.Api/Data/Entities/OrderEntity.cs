@@ -12,16 +12,18 @@ public class OrderEntity
 
     public OrderEntity(
         string id,
-        int quantity,
+        int initialQuantity,
+        int remainingQuantity,
         string instrumentId,
         double price,
         double value,
         DateTime date,
-        OrderType type,
+        TradeSide type,
         OrderStatus status)
     {
         Id = id;
-        Quantity = quantity;
+        InitialQuantity = initialQuantity;
+        RemainingQuantity = remainingQuantity;
         InstrumentId = instrumentId;
         Price = price;
         Value = value;
@@ -30,12 +32,13 @@ public class OrderEntity
         Status = status;
     }
 
-    [Key][MaxLength(36)] public string Id { get; private set; } = null!;
-    public int Quantity { get; private set; }
+    [Key] [MaxLength(36)] public string Id { get; private set; } = null!;
+    public int InitialQuantity { get; private set; }
+    public int RemainingQuantity { get; private set; }
     public double Price { get; private set; }
     public double Value { get; private set; }
     public DateTime Date { get; private set; }
-    public OrderType Type { get; private set; }
+    public TradeSide Type { get; private set; }
     public OrderStatus Status { get; private set; }
 
     [MaxLength(36)]

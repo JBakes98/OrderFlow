@@ -15,7 +15,7 @@ public class PostOrderRequestValidatorTests
         var request = new PostOrderRequest(
             quantity: 20,
             instrumentId: Guid.NewGuid().ToString(),
-            type: OrderType.buy.ToString());
+            type: TradeSide.buy.ToString());
 
         var result = _sut.Validate(request);
 
@@ -29,7 +29,7 @@ public class PostOrderRequestValidatorTests
         var request = new PostOrderRequest(
             quantity: -24,
             instrumentId: "invalid guid",
-            type: "invalid type");
+            type: "invalid tradeSide");
 
         var result = _sut.Validate(request);
 
@@ -37,7 +37,7 @@ public class PostOrderRequestValidatorTests
         Assert.Equal(expected: 3, actual: result.Errors.Count);
         Assert.Contains("InstrumentId invalid", result.Errors.Select(x => x.ErrorMessage).ToList());
         Assert.Contains("Quantity invalid", result.Errors.Select(x => x.ErrorMessage).ToList());
-        Assert.Contains("Type invalid", result.Errors.Select(x => x.ErrorMessage).ToList());
+        Assert.Contains("TradeSide invalid", result.Errors.Select(x => x.ErrorMessage).ToList());
     }
 
     [Theory]
@@ -57,7 +57,7 @@ public class PostOrderRequestValidatorTests
 
         Assert.False(condition: result.IsValid);
         Assert.Equal(expected: 4, actual: result.Errors.Count);
-        Assert.Contains("Type required", result.Errors.Select(x => x.ErrorMessage).ToList());
+        Assert.Contains("TradeSide required", result.Errors.Select(x => x.ErrorMessage).ToList());
         Assert.Contains("InstrumentId required", result.Errors.Select(x => x.ErrorMessage).ToList());
         Assert.Contains("Quantity required", result.Errors.Select(x => x.ErrorMessage).ToList());
         Assert.Contains("Quantity invalid", result.Errors.Select(x => x.ErrorMessage).ToList());

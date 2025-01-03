@@ -14,7 +14,7 @@ public class PostOrderRequestToOrderMapper : IMapper<PostOrderRequest, Order>
             source.InstrumentId,
             0,
             DateTime.Now.ToUniversalTime(),
-            Enum.Parse<OrderType>(source.Type));
+            Enum.Parse<TradeSide>(source.Type));
 
         return order;
     }

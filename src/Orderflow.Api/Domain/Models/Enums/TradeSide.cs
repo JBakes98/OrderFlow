@@ -1,6 +1,6 @@
 namespace Orderflow.Domain.Models.Enums;
 
-public enum OrderType
+public enum TradeSide
 {
     buy,
     sell
