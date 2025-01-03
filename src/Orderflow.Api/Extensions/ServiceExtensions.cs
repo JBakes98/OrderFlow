@@ -27,6 +27,7 @@ public static class ServiceExtensions
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IInstrumentRepository, InstrumentRepository>();
 
+        services.AddSingleton<IOrderBookManager, OrderBookManager>();
         services.AddScoped<IInstrumentService, InstrumentService>();
         services.AddScoped<IOrderService, OrderService>();
 
