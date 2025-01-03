@@ -25,6 +25,7 @@ public class OrderService : IOrderService
     private readonly IAmazonS3 _s3;
     private readonly IAlphaVantageService _alphaVantageService;
     private readonly IInstrumentService _instrumentService;
+    private readonly IOrderBookManager _orderBookManager;
 
     public OrderService(
         IOrderRepository repository,
@@ -33,8 +34,10 @@ public class OrderService : IOrderService
         IAmazonS3 s3,
         IMapper<OrderUpdateCommand, OrderUpdateEvent> orderUpdateCommandToOrderUpdateEventMapper,
         IAlphaVantageService alphaVantageService,
-        IInstrumentService instrumentService)
+        IInstrumentService instrumentService,
+        IOrderBookManager orderBookManager)
     {
+        _orderBookManager = Guard.Against.Null(orderBookManager);
         _instrumentService = Guard.Against.Null(instrumentService);
         _alphaVantageService = Guard.Against.Null(alphaVantageService);
         _orderUpdateCommandToOrderUpdateEventMapper = Guard.Against.Null(orderUpdateCommandToOrderUpdateEventMapper);
@@ -97,6 +100,11 @@ public class OrderService : IOrderService
         _diagnosticContext.Set("OrderEntity", order, true);
         _diagnosticContext.Set("OrderEvent", orderEvent, true);
         _diagnosticContext.Set("OrderPlaced", true);
+
+        var orderBook = _orderBookManager.GetOrderBook(order.InstrumentId);
+        var trades = orderBook.AddOrder(order);
+
+        _diagnosticContext.Set("Trades", trades, true);
 
         return order;
     }
