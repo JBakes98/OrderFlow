@@ -1,144 +1,143 @@
-using System.Net;
-using AutoFixture.Xunit2;
+using AutoFixture;
 using Moq;
-using Orderflow.Api.Unit.Tests.Customizations;
+using OneOf;
 using Orderflow.Data.Repositories.Interfaces;
-using Orderflow.Domain;
 using Orderflow.Domain.Models;
 using Orderflow.Events;
 using Orderflow.Mappers;
 using Orderflow.Services;
+using Serilog;
 
 namespace Orderflow.Api.Unit.Tests.Services;
 
 public class InstrumentServiceTests
 {
-    [Theory, AutoMoqData]
-    public async Task Should_RetrieveInstrument_If_Present(
-        [Frozen] Mock<IInstrumentRepository> mockRepository,
-        Instrument instrument,
-        InstrumentService sut)
+    private readonly IFixture _fixture;
+    private readonly Mock<IInstrumentRepository> _mockRepository;
+    private readonly Mock<IDiagnosticContext> _mockDiagnosticContext;
+    private readonly Mock<IMapper<Instrument, InstrumentCreatedEvent>> _mockEventMapper;
+    private readonly InstrumentService _instrumentService;
+
+    public InstrumentServiceTests()
     {
-        mockRepository.Setup(x =>
-                x.GetByIdAsync(instrument.Id))
-            .ReturnsAsync(instrument)
-            .Verifiable();
+        _fixture = new Fixture();
+        _mockRepository = new Mock<IInstrumentRepository>();
+        _mockDiagnosticContext = new Mock<IDiagnosticContext>();
+        _mockEventMapper = new Mock<IMapper<Instrument, InstrumentCreatedEvent>>();
 
-        var result = await sut.RetrieveInstrument(instrument.Id);
-
-        var retrievedInstrument = result.AsT0;
-
-        Assert.Equal(instrument, retrievedInstrument);
-        mockRepository.Verify();
+        _instrumentService = new InstrumentService(
+            _mockRepository.Object,
+            _mockDiagnosticContext.Object,
+            _mockEventMapper.Object);
     }
 
-    [Theory, AutoMoqData]
-    public async Task Should_ReturnError_If_InstrumentNotFound(
-        [Frozen] Mock<IInstrumentRepository> mockRepository,
-        InstrumentService sut,
-        string id)
+    [Fact]
+    public async Task RetrieveInstrument_ShouldReturnInstrument_WhenFound()
     {
-        var expectedError = new Error(HttpStatusCode.UnprocessableEntity, ErrorCodes.InstrumentNotFound);
+        // Arrange
+        var instrumentId = _fixture.Create<string>();
+        var instrument = _fixture.Create<Instrument>();
+        _mockRepository.Setup(r => r.GetByIdAsync(instrumentId))
+            .ReturnsAsync(OneOf<Instrument, Error>.FromT0(instrument));
 
-        mockRepository.Setup(x =>
-                x.GetByIdAsync(id))
-            .ReturnsAsync(expectedError)
-            .Verifiable();
+        // Act
+        var result = await _instrumentService.RetrieveInstrument(instrumentId);
 
-        var result = await sut.RetrieveInstrument(id);
-
-        var retrievedError = result.AsT1;
-
-        Assert.Equal(expectedError, retrievedError);
-        mockRepository.Verify();
-    }
-
-    [Theory, AutoMoqData]
-    public async Task Should_ReturnInstruments(
-        [Frozen] Mock<IInstrumentRepository> mockRepository,
-        InstrumentService sut,
-        List<Instrument> instruments)
-    {
-        mockRepository.Setup(x => x.QueryAsync())
-            .ReturnsAsync(instruments)
-            .Verifiable();
-
-        var result = await sut.RetrieveInstruments();
-
+        // Assert
         Assert.True(result.IsT0);
-
-        mockRepository.Verify();
+        Assert.Equal(instrument, result.AsT0);
+        _mockDiagnosticContext.Verify(d => d.Set("InstrumentEntity", instrument, true), Times.Once);
     }
 
-    [Theory, AutoMoqData]
-    public async Task Should_ReturnError_IfQuery_Fails(
-        [Frozen] Mock<IInstrumentRepository> mockRepository,
-        InstrumentService sut)
+    [Fact]
+    public async Task RetrieveInstrument_ShouldReturnError_WhenNotFound()
     {
-        var expectedError = new Error(HttpStatusCode.Conflict, ErrorCodes.InstrumentNotFound);
+        // Arrange
+        var instrumentId = _fixture.Create<string>();
+        var error = _fixture.Create<Error>();
+        _mockRepository.Setup(r => r.GetByIdAsync(instrumentId))
+            .ReturnsAsync(OneOf<Instrument, Error>.FromT1(error));
 
-        mockRepository.Setup(x => x.QueryAsync())
-            .ReturnsAsync(expectedError)
-            .Verifiable();
+        // Act
+        var result = await _instrumentService.RetrieveInstrument(instrumentId);
 
-        var result = await sut.RetrieveInstruments();
-
+        // Assert
         Assert.True(result.IsT1);
-        mockRepository.Verify();
-    }
-
-    [Theory, AutoMoqData]
-    public async Task Should_CreateInstrument_And_SaveTo_Repo(
-        [Frozen] Mock<IInstrumentRepository> mockRepository,
-        [Frozen] Mock<IMapper<Instrument, InstrumentCreatedEvent>> instrumentToInstrumentCreatedEventMapperMock,
-        Instrument instrument,
-        InstrumentCreatedEvent @event,
-        InstrumentService sut)
-    {
-        instrumentToInstrumentCreatedEventMapperMock
-            .Setup(x => x.Map(instrument))
-            .Returns(@event)
-            .Verifiable();
-
-        mockRepository
-            .Setup(x => x.InsertAsync(instrument, @event))
-            .ReturnsAsync((Error?)null)
-            .Verifiable();
-
-        var result = await sut.CreateInstrument(instrument);
-
-        var createdInstrument = result.AsT0;
-
-        Assert.Equal(instrument, createdInstrument);
-
-        mockRepository.Verify();
-        instrumentToInstrumentCreatedEventMapperMock.Verify();
-    }
-
-    [Theory, AutoMoqData]
-    public async Task Should_ReturnError_If_Repo_Insert_Fails(
-        [Frozen] Mock<IInstrumentRepository> mockRepository,
-        [Frozen] Mock<IMapper<Instrument, InstrumentCreatedEvent>> instrumentToInstrumentCreatedEventMapperMock,
-        Instrument instrument,
-        InstrumentCreatedEvent @event,
-        Error error,
-        InstrumentService sut)
-    {
-        instrumentToInstrumentCreatedEventMapperMock
-            .Setup(x => x.Map(instrument))
-            .Returns(@event)
-            .Verifiable();
-
-        mockRepository.Setup(x =>
-                x.InsertAsync(instrument, @event))
-            .ReturnsAsync(error)
-            .Verifiable();
-
-        var result = await sut.CreateInstrument(instrument);
-
         Assert.Equal(error, result.AsT1);
+    }
 
-        mockRepository.Verify();
-        instrumentToInstrumentCreatedEventMapperMock.Verify();
+    [Fact]
+    public async Task RetrieveInstruments_ShouldReturnInstruments_WhenFound()
+    {
+        // Arrange
+        var instruments = _fixture.Create<List<Instrument>>();
+        _mockRepository.Setup(r => r.QueryAsync())
+            .ReturnsAsync(OneOf<IEnumerable<Instrument>, Error>.FromT0(instruments));
+
+        // Act
+        var result = await _instrumentService.RetrieveInstruments();
+
+        // Assert
+        Assert.True(result.IsT0);
+        Assert.Equal(instruments, result.AsT0);
+    }
+
+    [Fact]
+    public async Task RetrieveInstruments_ShouldReturnError_WhenRepositoryFails()
+    {
+        // Arrange
+        var error = _fixture.Create<Error>();
+        _mockRepository.Setup(r => r.QueryAsync())
+            .ReturnsAsync(OneOf<IEnumerable<Instrument>, Error>.FromT1(error));
+
+        // Act
+        var result = await _instrumentService.RetrieveInstruments();
+
+        // Assert
+        Assert.True(result.IsT1);
+        Assert.Equal(error, result.AsT1);
+    }
+
+    [Fact]
+    public async Task CreateInstrument_ShouldReturnInstrument_WhenSuccessful()
+    {
+        // Arrange
+        var instrument = _fixture.Create<Instrument>();
+        var instrumentEvent = _fixture.Create<InstrumentCreatedEvent>();
+
+        _mockEventMapper.Setup(m => m.Map(instrument))
+            .Returns(instrumentEvent);
+
+        _mockRepository.Setup(r => r.InsertAsync(instrument, instrumentEvent))
+            .ReturnsAsync((Error)null!);
+
+        // Act
+        var result = await _instrumentService.CreateInstrument(instrument);
+
+        // Assert
+        Assert.True(result.IsT0);
+        Assert.Equal(instrument, result.AsT0);
+    }
+
+    [Fact]
+    public async Task CreateInstrument_ShouldReturnError_WhenInsertFails()
+    {
+        // Arrange
+        var instrument = _fixture.Create<Instrument>();
+        var instrumentEvent = _fixture.Create<InstrumentCreatedEvent>();
+        var error = _fixture.Create<Error>();
+
+        _mockEventMapper.Setup(m => m.Map(instrument))
+            .Returns(instrumentEvent);
+
+        _mockRepository.Setup(r => r.InsertAsync(instrument, instrumentEvent))
+            .ReturnsAsync(error);
+
+        // Act
+        var result = await _instrumentService.CreateInstrument(instrument);
+
+        // Assert
+        Assert.True(result.IsT1);
+        Assert.Equal(error, result.AsT1);
     }
 }

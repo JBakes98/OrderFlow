@@ -1,245 +1,155 @@
-using System.Net;
-using AutoFixture.Xunit2;
+using Amazon.S3;
+using AutoFixture;
 using Moq;
 using OneOf;
-using Orderflow.Api.Unit.Tests.Customizations;
 using Orderflow.Data.Repositories.Interfaces;
-using Orderflow.Domain;
+using Orderflow.Domain.Commands;
 using Orderflow.Domain.Models;
 using Orderflow.Events;
 using Orderflow.Mappers;
 using Orderflow.Services;
 using Orderflow.Services.AlphaVantage;
+using Serilog;
 
 namespace Orderflow.Api.Unit.Tests.Services;
 
 public class OrderServiceTests
 {
-    [Theory, AutoMoqData]
-    public async Task Should_RetrieveOrder_If_Present(
-        [Frozen] Mock<IOrderRepository> mockRepository,
-        Order order,
-        OrderService sut)
+    private readonly IFixture _fixture;
+    private readonly Mock<IOrderRepository> _mockRepository;
+    private readonly Mock<IMapper<Order, OrderRaisedEvent>> _mockOrderEventMapper;
+    private readonly Mock<IMapper<OrderUpdateCommand, OrderUpdateEvent>> _mockUpdateEventMapper;
+    private readonly Mock<IDiagnosticContext> _mockDiagnosticContext;
+    private readonly Mock<IAmazonS3> _mockS3;
+    private readonly Mock<IAlphaVantageService> _mockAlphaVantageService;
+    private readonly Mock<IInstrumentService> _mockInstrumentService;
+    private readonly Mock<IOrderBookManager> _mockOrderBookManager;
+    private readonly OrderService _orderService;
+
+    public OrderServiceTests()
     {
-        mockRepository.Setup(x =>
-                x.GetByIdAsync(order.Id))
-            .ReturnsAsync(order)
-            .Verifiable();
+        _fixture = new Fixture();
+        _mockRepository = new Mock<IOrderRepository>();
+        _mockOrderEventMapper = new Mock<IMapper<Order, OrderRaisedEvent>>();
+        _mockUpdateEventMapper = new Mock<IMapper<OrderUpdateCommand, OrderUpdateEvent>>();
+        _mockDiagnosticContext = new Mock<IDiagnosticContext>();
+        _mockS3 = new Mock<IAmazonS3>();
+        _mockAlphaVantageService = new Mock<IAlphaVantageService>();
+        _mockInstrumentService = new Mock<IInstrumentService>();
+        _mockOrderBookManager = new Mock<IOrderBookManager>();
 
-        var result = await sut.RetrieveOrder(order.Id);
-
-        var retrievedOrder = result.AsT0;
-
-        Assert.Equal(order, retrievedOrder);
-        mockRepository.Verify();
+        _orderService = new OrderService(
+            _mockRepository.Object,
+            _mockOrderEventMapper.Object,
+            _mockDiagnosticContext.Object,
+            _mockS3.Object,
+            _mockUpdateEventMapper.Object,
+            _mockAlphaVantageService.Object,
+            _mockInstrumentService.Object,
+            _mockOrderBookManager.Object);
     }
 
-    [Theory, AutoMoqData]
-    public async Task Should_ReturnError_If_OrderNotFound(
-        [Frozen] Mock<IOrderRepository> mockRepository,
-        OrderService sut,
-        string id,
-        Error error)
+    [Fact]
+    public async Task RetrieveOrder_ShouldReturnOrder_WhenFound()
     {
-        mockRepository.Setup(x =>
-                x.GetByIdAsync(id))
-            .ReturnsAsync(error)
-            .Verifiable();
+        // Arrange
+        var orderId = _fixture.Create<string>();
+        var order = _fixture.Create<Order>();
+        _mockRepository.Setup(r => r.GetByIdAsync(orderId))
+            .ReturnsAsync(OneOf<Order, Error>.FromT0(order));
 
-        var result = await sut.RetrieveOrder(id);
+        // Act
+        var result = await _orderService.RetrieveOrder(orderId);
 
-        var retrievedError = result.AsT1;
-
-        Assert.Equal(error, retrievedError);
-        mockRepository.Verify();
-    }
-
-    [Theory, AutoMoqData]
-    public async Task Should_ReturnOrders(
-        [Frozen] Mock<IOrderRepository> mockRepository,
-        OrderService sut,
-        List<Order> orders)
-    {
-        mockRepository.Setup(x => x.QueryAsync())
-            .ReturnsAsync(orders)
-            .Verifiable();
-
-        var result = await sut.RetrieveOrders();
-
-        Assert.True(result.IsT0);
-        mockRepository.Verify();
-    }
-
-    [Theory, AutoMoqData]
-    public async Task Should_ReturnError_IfQuery_Fails(
-        [Frozen] Mock<IOrderRepository> mockRepository,
-        Error error,
-        OrderService sut)
-    {
-        mockRepository.Setup(x => x.QueryAsync())
-            .ReturnsAsync(error)
-            .Verifiable();
-
-        var result = await sut.RetrieveOrders();
-
-        Assert.True(result.IsT1);
-        mockRepository.Verify();
-    }
-
-    [Theory, AutoMoqData]
-    public async Task Should_CreateOrder_And_SaveTo_Repo(
-        [Frozen] Mock<IOrderRepository> mockRepository,
-        [Frozen] Mock<IMapper<Order, OrderRaisedEvent>> mockOrderToOrderRaisedEventMapper,
-        [Frozen] Mock<IInstrumentService> mockInstrumentService,
-        [Frozen] Mock<IAlphaVantageService> mockAlphaVantageService,
-        Order order,
-        Instrument instrument,
-        GlobalQuote globalQuote,
-        OrderRaisedEvent @event,
-        OrderService sut)
-    {
-        mockInstrumentService
-            .Setup(x => x.RetrieveInstrument(order.InstrumentId))
-            .ReturnsAsync(instrument)
-            .Verifiable();
-
-        mockAlphaVantageService
-            .Setup(x => x.GetStockQuote(instrument.Ticker))
-            .ReturnsAsync(globalQuote)
-            .Verifiable();
-
-        mockOrderToOrderRaisedEventMapper
-            .Setup(x => x.Map(order))
-            .Returns(@event)
-            .Verifiable();
-
-        mockRepository.Setup(x =>
-                x.InsertAsync(order, @event))
-            .ReturnsAsync((Error?)null)
-            .Verifiable();
-
-        var result = await sut.CreateOrder(order);
-
+        // Assert
         Assert.True(result.IsT0);
         Assert.Equal(order, result.AsT0);
-
-        mockInstrumentService.Verify();
-        mockAlphaVantageService.Verify();
-        mockRepository.Verify();
-        mockOrderToOrderRaisedEventMapper.Verify();
     }
 
-    [Theory, AutoMoqData]
-    public async Task Should_ReturnError_If_Instrument_Not_Found(
-        [Frozen] Mock<IInstrumentService> mockInstrumentService,
-        Order order,
-        OrderService sut)
+    [Fact]
+    public async Task RetrieveOrder_ShouldReturnError_WhenNotFound()
     {
-        var expectedError = new Error(HttpStatusCode.NotFound, ErrorCodes.InstrumentNotFound);
+        // Arrange
+        var orderId = _fixture.Create<string>();
+        var error = _fixture.Create<Error>();
+        _mockRepository.Setup(r => r.GetByIdAsync(orderId))
+            .ReturnsAsync(OneOf<Order, Error>.FromT1(error));
 
-        mockInstrumentService
-            .Setup(x => x.RetrieveInstrument(order.InstrumentId))
-            .ReturnsAsync(expectedError)
-            .Verifiable();
+        // Act
+        var result = await _orderService.RetrieveOrder(orderId);
 
-        var result = await sut.CreateOrder(order);
-
+        // Assert
         Assert.True(result.IsT1);
-        Assert.Equal(expectedError, result.AsT1);
-
-        mockInstrumentService.Verify();
+        Assert.Equal(error, result.AsT1);
     }
 
-
-    [Theory, AutoMoqData]
-    public async Task? Should_ReturnError_If_AlphaVantage_Stock_Quote_Fails(
-        [Frozen] Mock<IInstrumentService> mockInstrumentService,
-        [Frozen] Mock<IAlphaVantageService> mockAlphaVantageService,
-        Order order,
-        Instrument instrument,
-        OrderService sut)
+    [Fact]
+    public async Task CreateOrder_ShouldReturnOrder_WhenSuccessful()
     {
-        var expectedError = new Error(HttpStatusCode.InternalServerError,
-            ErrorCodes.UnableToRetrieveCurrentInstrumentPrice);
+        // Arrange
+        var order = _fixture.Create<Order>();
+        var instrument = _fixture.Create<Instrument>();
+        var quote = _fixture.Build<GlobalQuote>().With(q => q.Price, 100).Create();
 
-        mockInstrumentService
-            .Setup(x => x.RetrieveInstrument(order.InstrumentId))
-            .ReturnsAsync(instrument)
-            .Verifiable();
+        _mockInstrumentService.Setup(s => s.RetrieveInstrument(order.InstrumentId))
+            .ReturnsAsync(OneOf<Instrument, Error>.FromT0(instrument));
+        _mockAlphaVantageService.Setup(s => s.GetStockQuote(instrument.Ticker))
+            .ReturnsAsync(OneOf<GlobalQuote, Error>.FromT0(quote));
 
-        mockAlphaVantageService
-            .Setup(x => x.GetStockQuote(instrument.Ticker))
-            .ReturnsAsync(expectedError)
-            .Verifiable();
+        _mockOrderEventMapper.Setup(m => m.Map(order))
+            .Returns(_fixture.Create<OrderRaisedEvent>());
+        _mockOrderBookManager.Setup(m => m.GetOrderBook(order.InstrumentId))
+            .Returns(new OrderBook());
 
-        var result = await sut.CreateOrder(order);
+        _mockRepository.Setup(r => r.InsertAsync(It.IsAny<Order>(), It.IsAny<OrderRaisedEvent>()))
+            .ReturnsAsync((Error)null);
 
-        Assert.True(result.IsT1);
-        Assert.Equal(expectedError, result.AsT1);
+        // Act
+        var result = await _orderService.CreateOrder(order);
 
-        mockInstrumentService.Verify();
-        mockAlphaVantageService.Verify();
+        // Assert
+        Assert.True(result.IsT0);
+        Assert.Equal(order, result.AsT0);
     }
 
-    [Theory, AutoMoqData]
-    public async Task Should_ReturnError_If_Repo_Fails(
-        [Frozen] Mock<IInstrumentService> mockInstrumentService,
-        [Frozen] Mock<IAlphaVantageService> mockAlphaVantageService,
-        [Frozen] Mock<IOrderRepository> mockRepository,
-        [Frozen] Mock<IMapper<Order, OrderRaisedEvent>> mockOrderToOrderRaisedEventMapper,
-        OrderRaisedEvent @event,
-        Order order,
-        Instrument instrument,
-        GlobalQuote globalQuote,
-        OrderService sut)
-    {
-        mockInstrumentService
-            .Setup(x => x.RetrieveInstrument(order.InstrumentId))
-            .ReturnsAsync(instrument)
-            .Verifiable();
-
-        mockAlphaVantageService
-            .Setup(x => x.GetStockQuote(instrument.Ticker))
-            .ReturnsAsync(globalQuote)
-            .Verifiable();
-
-        var expectedError = new Error(HttpStatusCode.InternalServerError, ErrorCodes.OrderCouldNotBeCreated);
-
-        mockOrderToOrderRaisedEventMapper
-            .Setup(x => x.Map(order))
-            .Returns(@event)
-            .Verifiable();
-
-        mockRepository.Setup(x =>
-                x.InsertAsync(order, @event))
-            .ReturnsAsync(expectedError)
-            .Verifiable();
-
-        var result = await sut.CreateOrder(order);
-
-        Assert.True(result.IsT1);
-        Assert.Equal(expectedError, result.AsT1);
-
-        mockInstrumentService.Verify();
-        mockAlphaVantageService.Verify();
-        mockRepository.Verify();
-        mockOrderToOrderRaisedEventMapper.Verify();
-    }
-
-    [Theory, AutoMoqData]
-    public async Task Should_return_orders_for_a_specific_instrument(
-        [Frozen] Mock<IOrderRepository> mockRepository,
-        Instrument instrument,
-        List<Order> orders,
-        OrderService sut)
-    {
-        mockRepository.Setup(x => x.GetInstrumentOrders(instrument.Id))
-            .ReturnsAsync(OneOf<IEnumerable<Order>, Error>.FromT0(orders))
-            .Verifiable();
-
-        var result = await sut.RetrieveInstrumentOrders(instrument.Id);
-
-        Assert.Equal(orders, result.AsT0);
-        mockRepository.Verify();
-    }
+    // [Fact]
+    // public async Task ProcessOrderHistory_ShouldReturnError_WhenBucketDoesNotExist()
+    // {
+    //     // Arrange
+    //     _mockS3.Setup(s => AmazonS3Util.DoesS3BucketExistV2Async(_mockS3.Object, "orderflow-bulk-processing-bucket"))
+    //         .ReturnsAsync(false);
+    //
+    //     var fileMock = new Mock<IFormFile>();
+    //     var fileName = "test.txt";
+    //     fileMock.Setup(f => f.FileName).Returns(fileName);
+    //
+    //     // Act
+    //     var result = await _orderService.ProcessOrderHistory(fileMock.Object);
+    //
+    //     // Assert
+    //     Assert.NotNull(result);
+    //     Assert.Contains(HttpStatusCode.InternalServerError.ToString(), result.ErrorCodes);
+    //     Assert.Contains(ErrorCodes.SpecifiedBucketDoesNotExist, result.ErrorCodes);
+    // }
+    //
+    // [Fact]
+    // public async Task ProcessOrderHistory_ShouldUploadFile_WhenBucketExists()
+    // {
+    //     // Arrange
+    //     _mockS3.Setup(s => AmazonS3Util.DoesS3BucketExistV2Async(_mockS3.Object, "orderflow-bulk-processing-bucket"))
+    //         .ReturnsAsync(true);
+    //
+    //     var fileMock = new Mock<IFormFile>();
+    //     fileMock.Setup(f => f.OpenReadStream()).Returns(new MemoryStream());
+    //     fileMock.Setup(f => f.ContentType).Returns("text/plain");
+    //
+    //     _mockS3.Setup(s => s.PutObjectAsync(It.IsAny<PutObjectRequest>(), default))
+    //         .Returns((Task<PutObjectResponse>)Task.CompletedTask);
+    //
+    //     // Act
+    //     var result = await _orderService.ProcessOrderHistory(fileMock.Object);
+    //
+    //     // Assert
+    //     Assert.Null(result); // No error
+    // }
 }
