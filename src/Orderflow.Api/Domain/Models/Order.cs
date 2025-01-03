@@ -24,15 +24,15 @@ public class Order
         Status = status;
     }
 
-    public string Id { get; }
-    public int InitialQuantity { get; }
-    public int RemainingQuantity { get; private set; }
-    public string InstrumentId { get; }
-    public double Price { get; private set; }
+    public string Id { get; set; }
+    public int InitialQuantity { get; set; }
+    public int RemainingQuantity { get; set; }
+    public string InstrumentId { get; set; }
+    public double Price { get; set; }
     public DateTime Date { get; }
-    public TradeSide TradeSide { get; internal set; }
-    public OrderStatus Status { get; private set; }
-    public double Value { get; private set; }
+    public TradeSide TradeSide { get; set; }
+    public OrderStatus Status { get; set; }
+    public double Value { get; set; }
 
     public void SetPrice(double price)
     {
