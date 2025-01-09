@@ -2,13 +2,22 @@ namespace Orderflow.Domain.Models;
 
 public class Trade
 {
-    public Trade(TradeInfo bidTrade, TradeInfo askTrade)
+    public Trade(Guid buyOrderId, Guid sellOrderId, double price, int quantity)
     {
-        BidTrade = bidTrade;
-        AskTrade = askTrade;
+        Id = Guid.NewGuid();
+        BuyOrderId = buyOrderId;
+        SellOrderId = sellOrderId;
+        Price = price;
+        Quantity = quantity;
+        Value = price * quantity;
+        Timestamp = DateTime.Now;
     }
 
-    public Guid Id { get; } = new Guid();
-    public TradeInfo BidTrade { get; set; }
-    public TradeInfo AskTrade { get; set; }
+    public Guid Id { get; }
+    public Guid BuyOrderId { get; }
+    public Guid SellOrderId { get; }
+    public double Price { get; }
+    public int Quantity { get; }
+    public double Value { get; }
+    public DateTime Timestamp { get; }
 }
