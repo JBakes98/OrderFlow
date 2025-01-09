@@ -1,8 +1,8 @@
 using Orderflow.Data.Entities;
 
-namespace Orderflow.Events;
+namespace Orderflow.Events.Factories;
 
-public interface IEventMapperFactory
+public interface IOutboxEventMapperFactory
 {
     OutboxEvent MapEvent<T>(T @event) where T : IEvent;
 }

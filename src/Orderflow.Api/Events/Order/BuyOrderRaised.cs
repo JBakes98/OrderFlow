@@ -1,4 +1,4 @@
-namespace Orderflow.Events;
+namespace Orderflow.Events.Order;
 
 public class BuyOrderRaised : OrderRaisedEvent
 {
