@@ -53,6 +53,13 @@ public static class ServiceExtensions
         services.AddScoped<IMapper<Exchange, ExchangeCreatedEvent>, ExchangeToExchangeCreatedEventMapper>();
 
 
+        services.AddScoped<IMapper<PostExchangeRequest, Exchange>, PostExchangeRequestToExchangeMapper>();
+        services.AddScoped<IMapper<Exchange, GetExchangeResponse>, ExchangeToGetExchangeResponseMapper>();
+        services.AddScoped<IMapper<Exchange, ExchangeEntity>, ExchangeDomainToExchangeDataMapper>();
+        services.AddScoped<IMapper<ExchangeEntity, Exchange>, ExchangeDataToExchangeDomainMapper>();
+        services.AddScoped<IMapper<Exchange, ExchangeCreatedEvent>, ExchangeToExchangeCreatedEventMapper>();
+
+
         services.AddScoped<IMapper<PostInstrumentRequest, Instrument>, PostInstrumentRequestToInstrumentMapper>();
         services.AddScoped<IMapper<Instrument, GetInstrumentResponse>, InstrumentToGetInstrumentResponseMapper>();
         services.AddScoped<IMapper<Instrument, InstrumentEntity>, InstrumentDomainToInstrumentDataMapper>();
