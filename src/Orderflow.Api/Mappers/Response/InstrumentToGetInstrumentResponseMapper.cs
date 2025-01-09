@@ -1,6 +1,5 @@
 using Orderflow.Api.Routes.Instrument.Models;
 using Orderflow.Domain.Models;
-using Orderflow.Extensions;
 
 namespace Orderflow.Mappers.Response;
 
@@ -9,10 +8,10 @@ public class InstrumentToGetInstrumentResponseMapper : IMapper<Instrument, GetIn
     public GetInstrumentResponse Map(Instrument source)
     {
         return new GetInstrumentResponse(
-            id: source.Id,
+            id: source.Id.ToString(),
             ticker: source.Ticker,
             name: source.Name,
             sector: source.Sector,
-            exchange: source.Exchange);
+            exchange: source.ExchangeId.ToString());
     }
 }

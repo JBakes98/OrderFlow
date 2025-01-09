@@ -7,7 +7,8 @@ using Orderflow.Data.Entities;
 using Orderflow.Data.Repositories.Interfaces;
 using Orderflow.Domain;
 using Orderflow.Domain.Models;
-using Orderflow.Events;
+using Orderflow.Events.Factories;
+using Orderflow.Events.Instrument;
 using Orderflow.Mappers;
 using Serilog;
 
@@ -17,7 +18,7 @@ public class InstrumentRepository : IInstrumentRepository
 {
     private readonly OrderflowDbContext _context;
     private readonly IDiagnosticContext _diagnosticContext;
-    private readonly IEventMapperFactory _eventMapperFactory;
+    private readonly IOutboxEventMapperFactory _outboxEventMapperFactory;
     private readonly IMapper<InstrumentEntity, Instrument> _instrumentDataToDomainMapper;
     private readonly IMapper<Instrument, InstrumentEntity> _instrumentDomainToDataMapper;
 
@@ -25,11 +26,11 @@ public class InstrumentRepository : IInstrumentRepository
     public InstrumentRepository(OrderflowDbContext context,
         IMapper<Instrument, InstrumentEntity> instrumentDomainToDataMapper,
         IMapper<InstrumentEntity, Instrument> instrumentDataToDomainMapper,
-        IEventMapperFactory eventMapperFactory,
+        IOutboxEventMapperFactory outboxEventMapperFactory,
         IDiagnosticContext diagnosticContext)
     {
         _diagnosticContext = Guard.Against.Null(diagnosticContext);
-        _eventMapperFactory = Guard.Against.Null(eventMapperFactory);
+        _outboxEventMapperFactory = Guard.Against.Null(outboxEventMapperFactory);
         _instrumentDataToDomainMapper = Guard.Against.Null(instrumentDataToDomainMapper);
         _instrumentDomainToDataMapper = Guard.Against.Null(instrumentDomainToDataMapper);
         _context = Guard.Against.Null(context);
@@ -46,7 +47,7 @@ public class InstrumentRepository : IInstrumentRepository
         return instruments;
     }
 
-    public async Task<OneOf<Instrument, Error>> GetByIdAsync(string id)
+    public async Task<OneOf<Instrument, Error>> GetByIdAsync(Guid id)
     {
         var instrumentEntity = await _context.Instruments.FindAsync(id);
 
@@ -60,7 +61,7 @@ public class InstrumentRepository : IInstrumentRepository
 
     public async Task<Error?> InsertAsync(Instrument source, InstrumentCreatedEvent @event)
     {
-        var outboxEvent = _eventMapperFactory.MapEvent(@event);
+        var outboxEvent = _outboxEventMapperFactory.MapEvent(@event);
         var entity = _instrumentDomainToDataMapper.Map(source);
 
         await using var transaction = await _context.Database.BeginTransactionAsync();

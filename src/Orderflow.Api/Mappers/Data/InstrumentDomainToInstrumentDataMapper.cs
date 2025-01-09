@@ -1,6 +1,5 @@
 using Orderflow.Data.Entities;
 using Orderflow.Domain.Models;
-using Orderflow.Extensions;
 
 namespace Orderflow.Mappers.Data;
 
@@ -13,6 +12,6 @@ public class InstrumentDomainToInstrumentDataMapper : IMapper<Instrument, Instru
             source.Ticker,
             source.Name,
             source.Sector,
-            source.Exchange);
+            source.ExchangeId);
     }
 }

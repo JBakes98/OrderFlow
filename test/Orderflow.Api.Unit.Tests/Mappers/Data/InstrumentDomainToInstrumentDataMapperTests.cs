@@ -14,7 +14,7 @@ public class InstrumentDomainToInstrumentDataMapperTests
         var result = sut.Map(source);
 
         Assert.Equal(source.Ticker, result.Ticker);
-        Assert.Equal(source.Exchange, result.Exchange);
+        Assert.Equal(source.ExchangeId, result.ExchangeId);
         Assert.Equal(source.Name, result.Name);
         Assert.Equal(source.Sector, result.Sector);
         Assert.Equal(source.Id, result.Id);

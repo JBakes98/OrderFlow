@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Orderflow.Api.Routes.Instrument.Models;
 using Orderflow.Mappers;
 using Orderflow.Services;
+using Orderflow.Services.Interfaces;
 
 namespace Orderflow.Api.Routes.Instrument.Endpoints;
 
@@ -10,7 +11,7 @@ public static class GetInstrument
     public static async Task<Results<Ok<GetInstrumentResponse>, ProblemHttpResult>> Handle(
         IInstrumentService instrumentService,
         IMapper<Domain.Models.Instrument, GetInstrumentResponse> instrumentToResponseMapper,
-        string id)
+        Guid id)
     {
         var result = await instrumentService.RetrieveInstrument(id);
 

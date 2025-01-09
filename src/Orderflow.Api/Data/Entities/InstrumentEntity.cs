@@ -9,23 +9,24 @@ public class InstrumentEntity
     }
 
     public InstrumentEntity(
-        string id,
+        Guid id,
         string ticker,
         string name,
         string sector,
-        string exchange)
+        Guid exchangeId)
     {
         Id = id;
         Ticker = ticker;
         Name = name;
         Sector = sector;
-        Exchange = exchange;
+        ExchangeId = exchangeId;
     }
 
-    [Key][MaxLength(36)] public string Id { get; private set; } = null!;
-    [MaxLength(5)] public string Ticker { get; private set; } = null!;
-    [MaxLength(256)] public string Name { get; private set; } = null!;
-    [MaxLength(256)] public string Sector { get; private set; } = null!;
-    [MaxLength(256)] public string Exchange { get; private set; } = null!;
+    [Key] public Guid Id { get; private set; }
+    [MaxLength(5)] [Required] public string Ticker { get; private set; }
+    [MaxLength(256)] public string Name { get; private set; }
+    [MaxLength(256)] public string Sector { get; private set; }
+    [Required] public Guid ExchangeId { get; private set; }
+    public virtual ExchangeEntity Exchange { get; init; } = null!;
     public ICollection<OrderEntity>? Orders { get; set; }
 }

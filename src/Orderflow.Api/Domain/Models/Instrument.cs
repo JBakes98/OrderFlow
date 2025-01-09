@@ -3,22 +3,22 @@ namespace Orderflow.Domain.Models;
 public class Instrument
 {
     public Instrument(
-        string id,
+        Guid id,
         string ticker,
         string name,
         string sector,
-        string exchange)
+        Guid exchange)
     {
         Id = id;
         Ticker = ticker;
         Name = name;
         Sector = sector;
-        Exchange = exchange;
+        ExchangeId = exchange;
     }
 
-    public string Id { get; }
+    public Guid Id { get; }
     public string Ticker { get; }
     public string Name { get; }
     public string Sector { get; }
-    public string Exchange { get; }
+    public Guid ExchangeId { get; }
 }

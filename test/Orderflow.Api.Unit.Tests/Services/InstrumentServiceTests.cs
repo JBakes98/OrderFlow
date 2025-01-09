@@ -3,7 +3,7 @@ using Moq;
 using OneOf;
 using Orderflow.Data.Repositories.Interfaces;
 using Orderflow.Domain.Models;
-using Orderflow.Events;
+using Orderflow.Events.Instrument;
 using Orderflow.Mappers;
 using Orderflow.Services;
 using Serilog;
@@ -35,8 +35,11 @@ public class InstrumentServiceTests
     public async Task RetrieveInstrument_ShouldReturnInstrument_WhenFound()
     {
         // Arrange
-        var instrumentId = _fixture.Create<string>();
-        var instrument = _fixture.Create<Instrument>();
+        var instrumentId = Guid.NewGuid();
+        var instrument = _fixture.Build<Instrument>()
+            .With(i => i.Id, instrumentId)
+            .Create();
+
         _mockRepository.Setup(r => r.GetByIdAsync(instrumentId))
             .ReturnsAsync(OneOf<Instrument, Error>.FromT0(instrument));
 
@@ -53,7 +56,7 @@ public class InstrumentServiceTests
     public async Task RetrieveInstrument_ShouldReturnError_WhenNotFound()
     {
         // Arrange
-        var instrumentId = _fixture.Create<string>();
+        var instrumentId = Guid.NewGuid();
         var error = _fixture.Create<Error>();
         _mockRepository.Setup(r => r.GetByIdAsync(instrumentId))
             .ReturnsAsync(OneOf<Instrument, Error>.FromT1(error));
