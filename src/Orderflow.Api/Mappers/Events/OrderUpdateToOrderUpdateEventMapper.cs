@@ -1,5 +1,5 @@
 using Orderflow.Domain.Commands;
-using Orderflow.Events;
+using Orderflow.Events.Order;
 
 namespace Orderflow.Mappers.Events;
 

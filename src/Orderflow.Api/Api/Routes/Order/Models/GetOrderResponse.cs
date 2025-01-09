@@ -9,7 +9,9 @@ public class GetOrderResponse
         int quantity,
         string instrumentId,
         double price,
-        DateTime date,
+        double value,
+        DateTime placed,
+        DateTime updated,
         TradeSide type,
         OrderStatus status)
     {
@@ -17,8 +19,9 @@ public class GetOrderResponse
         Quantity = quantity;
         InstrumentId = instrumentId;
         Price = price;
-        Value = price * quantity;
-        Date = date;
+        Value = value;
+        Placed = placed;
+        Updated = updated;
         Type = type;
         Status = status;
     }
@@ -27,7 +30,8 @@ public class GetOrderResponse
     public int Quantity { get; }
     public string InstrumentId { get; }
     public double Price { get; }
-    public DateTime Date { get; }
+    public DateTime Placed { get; }
+    public DateTime Updated { get; }
     public TradeSide Type { get; }
     public OrderStatus Status { get; }
     public double Value { get; }

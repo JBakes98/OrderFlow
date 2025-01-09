@@ -5,10 +5,11 @@ using OneOf;
 using Orderflow.Data.Repositories.Interfaces;
 using Orderflow.Domain.Commands;
 using Orderflow.Domain.Models;
-using Orderflow.Events;
+using Orderflow.Events.Order;
 using Orderflow.Mappers;
 using Orderflow.Services;
 using Orderflow.Services.AlphaVantage;
+using Orderflow.Services.Interfaces;
 using Serilog;
 
 namespace Orderflow.Api.Unit.Tests.Services;
@@ -24,6 +25,7 @@ public class OrderServiceTests
     private readonly Mock<IAlphaVantageService> _mockAlphaVantageService;
     private readonly Mock<IInstrumentService> _mockInstrumentService;
     private readonly Mock<IOrderBookManager> _mockOrderBookManager;
+    private readonly Mock<ITradeService> _mockTradeService;
     private readonly OrderService _orderService;
 
     public OrderServiceTests()
@@ -37,6 +39,7 @@ public class OrderServiceTests
         _mockAlphaVantageService = new Mock<IAlphaVantageService>();
         _mockInstrumentService = new Mock<IInstrumentService>();
         _mockOrderBookManager = new Mock<IOrderBookManager>();
+        _mockTradeService = new Mock<ITradeService>();
 
         _orderService = new OrderService(
             _mockRepository.Object,
@@ -46,7 +49,8 @@ public class OrderServiceTests
             _mockUpdateEventMapper.Object,
             _mockAlphaVantageService.Object,
             _mockInstrumentService.Object,
-            _mockOrderBookManager.Object);
+            _mockOrderBookManager.Object,
+            _mockTradeService.Object);
     }
 
     [Fact]

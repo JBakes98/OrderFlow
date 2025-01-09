@@ -9,12 +9,10 @@ public class PostOrderRequestToOrderMapper : IMapper<PostOrderRequest, Order>
     public Order Map(PostOrderRequest source)
     {
         var order = new Order(
-            Guid.NewGuid().ToString(),
-            source.Quantity,
-            source.InstrumentId,
-            0,
-            DateTime.Now.ToUniversalTime(),
-            Enum.Parse<TradeSide>(source.Type));
+            initialQuantity: source.Quantity,
+            instrumentId: Guid.Parse(source.InstrumentId),
+            price: source.Price,
+            side: Enum.Parse<TradeSide>(source.Side));
 
         return order;
     }

@@ -6,13 +6,10 @@ public static class OrderUserGroup
 {
     public static void MapOrderUserGroup(this WebApplication app)
     {
-        var group = app.MapUserGroup("order");
+        var group = app.MapUserGroup("orders");
 
         group.MapGet("/{id}", GetOrder.Handle);
         group.MapGet("/", ListOrder.Handle);
-
         group.MapPost("/", PostOrder.Handle);
-
-        group.MapPut("/{id}", PutOrder.Handle);
     }
 }

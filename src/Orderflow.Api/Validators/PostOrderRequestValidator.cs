@@ -25,13 +25,13 @@ public class PostOrderRequestValidator : AbstractValidator<PostOrderRequest>
             .Must(BeAValidQuantity)
             .WithMessage("Quantity invalid");
 
-        RuleFor(x => x.Type)
+        RuleFor(x => x.Side)
             .NotEmpty()
             .WithMessage("TradeSide required");
 
-        When(x => !string.IsNullOrEmpty(x.Type), () =>
+        When(x => !string.IsNullOrEmpty(x.Side), () =>
         {
-            RuleFor(x => x.Type)
+            RuleFor(x => x.Side)
                 .Must(i => Enum.IsDefined(typeof(TradeSide), i))
                 .WithMessage("TradeSide invalid");
         });

@@ -5,14 +5,17 @@ public class PostOrderRequest
     public PostOrderRequest(
         int quantity,
         string instrumentId,
-        string type)
+        string side,
+        double price)
     {
         Quantity = quantity;
         InstrumentId = instrumentId;
-        Type = type;
+        Side = side;
+        Price = price;
     }
 
     public string InstrumentId { get; }
     public int Quantity { get; }
-    public string Type { get; }
+    public string Side { get; }
+    public double Price { get; }
 }

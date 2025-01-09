@@ -15,7 +15,8 @@ public class PostOrderRequestValidatorTests
         var request = new PostOrderRequest(
             quantity: 20,
             instrumentId: Guid.NewGuid().ToString(),
-            type: TradeSide.buy.ToString());
+            side: TradeSide.buy.ToString(),
+            price: 232.12);
 
         var result = _sut.Validate(request);
 
@@ -29,7 +30,8 @@ public class PostOrderRequestValidatorTests
         var request = new PostOrderRequest(
             quantity: -24,
             instrumentId: "invalid guid",
-            type: "invalid tradeSide");
+            side: "invalid tradeSide",
+            price: 5353);
 
         var result = _sut.Validate(request);
 
@@ -51,7 +53,8 @@ public class PostOrderRequestValidatorTests
         var request = new PostOrderRequest(
             quantity: quantity,
             instrumentId: instrument,
-            type: type);
+            side: type,
+            price: 7567);
 
         var result = _sut.Validate(request);
 
