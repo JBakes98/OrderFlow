@@ -37,7 +37,6 @@ public class InstrumentServiceTests
         // Arrange
         var instrumentId = Guid.NewGuid();
         var instrument = _fixture.Build<Instrument>()
-            .With(i => i.Id, instrumentId)
             .Create();
 
         _mockRepository.Setup(r => r.GetByIdAsync(instrumentId))
