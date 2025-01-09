@@ -1,10 +1,12 @@
+using Orderflow.Services.Interfaces;
+
 namespace Orderflow.Services;
 
 public class OrderBookManager : IOrderBookManager
 {
-    private readonly Dictionary<string, OrderBook> _orderBooks = new();
+    private readonly Dictionary<Guid, OrderBook> _orderBooks = new();
 
-    public void AddOrderBook(string instrumentId)
+    public void AddOrderBook(Guid instrumentId)
     {
         if (_orderBooks.ContainsKey(instrumentId))
             return;
@@ -12,7 +14,7 @@ public class OrderBookManager : IOrderBookManager
         _orderBooks[instrumentId] = new OrderBook();
     }
 
-    public OrderBook GetOrderBook(string instrumentId)
+    public OrderBook GetOrderBook(Guid instrumentId)
     {
         if (!_orderBooks.ContainsKey(instrumentId))
             AddOrderBook(instrumentId);
@@ -22,7 +24,7 @@ public class OrderBookManager : IOrderBookManager
         return orderBook!;
     }
 
-    public void RemoveOrderBook(string instrumentId)
+    public void RemoveOrderBook(Guid instrumentId)
     {
         _orderBooks.Remove(instrumentId);
     }

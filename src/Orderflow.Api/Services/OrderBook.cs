@@ -1,29 +1,25 @@
 using Orderflow.Domain.Models;
 using Orderflow.Domain.Models.Enums;
+using Orderflow.Services.Interfaces;
 
 namespace Orderflow.Services;
 
 public class OrderBook : IOrderBook
 {
-    private class OrderEntry
-    {
-        public required Order Order { get; init; }
-    }
-
     private readonly SortedDictionary<double, LinkedList<Order>> _bids =
         new(Comparer<double>.Create((x, y) => y.CompareTo(x)));
 
     private readonly SortedDictionary<double, LinkedList<Order>> _asks = new(Comparer<double>.Default);
 
-    private readonly Dictionary<string, OrderEntry> _orders = new();
+    private readonly Dictionary<Guid, Order> _orders = new();
 
-    public void CancelOrders(List<string> orderIds)
+    public void CancelOrders(List<Guid> orderIds)
     {
         foreach (var id in orderIds)
             CancelOrderInternal(id);
     }
 
-    private void CancelOrderInternal(string id)
+    private void CancelOrderInternal(Guid id)
     {
         if (!_orders.ContainsKey(id))
             return;
@@ -33,11 +29,11 @@ public class OrderBook : IOrderBook
         if (orderEntry == null)
             return;
 
-        var order = orderEntry.Order;
+        var order = orderEntry;
         var price = order.Price;
         LinkedList<Order>? orders;
 
-        if (order.TradeSide == TradeSide.buy)
+        if (order.Side == TradeSide.buy)
             _bids.TryGetValue(price, out orders);
         else
             _asks.TryGetValue(price, out orders);
@@ -86,8 +82,8 @@ public class OrderBook : IOrderBook
 
                 var quantity = Math.Min(bid.GetRemainingQuantity(), ask.GetRemainingQuantity());
 
-                bid.Fill(quantity);
-                ask.Fill(quantity);
+                bid.UpdateQuantity(quantity);
+                ask.UpdateQuantity(quantity);
 
                 if (bid.IsFilled())
                 {
@@ -107,18 +103,7 @@ public class OrderBook : IOrderBook
                 if (_asks.Count == 0)
                     _asks.Remove(askPrice);
 
-                trades.Add(new Trade(
-                        new TradeInfo(
-                            bid.Id,
-                            bid.Price,
-                            quantity
-                        ),
-                        new TradeInfo(
-                            ask.Id,
-                            ask.Price,
-                            quantity)
-                    )
-                );
+                trades.Add(new Trade(bid.Id, ask.Id, bid.Price, quantity));
             }
 
             if (bids.Count == 0)
@@ -156,8 +141,8 @@ public class OrderBook : IOrderBook
             throw new InvalidOperationException($"Order with ID {order.Id} already exists.");
         }
 
-        _orders[order.Id] = new OrderEntry { Order = order };
-        var targetBook = order.TradeSide == TradeSide.buy ? _bids : _asks;
+        _orders[order.Id] = order;
+        var targetBook = order.Side == TradeSide.buy ? _bids : _asks;
 
         if (!targetBook.TryGetValue(order.Price, out var orderList))
         {
@@ -167,6 +152,6 @@ public class OrderBook : IOrderBook
 
         orderList.AddLast(order);
 
-        return CanMatch(order.TradeSide, order.Price) ? MatchOrders() : [];
+        return CanMatch(order.Side, order.Price) ? MatchOrders() : [];
     }
 }

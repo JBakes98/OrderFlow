@@ -15,9 +15,8 @@ public class OrderBookTests
         // Arrange
         var orderBook = new OrderBook();
         var buyOrder = _fixture.Build<Order>()
-            .With(o => o.TradeSide, TradeSide.buy)
+            .With(o => o.Side, TradeSide.buy)
             .With(o => o.Price, 100)
-            .With(o => o.Id, "BuyOrder1")
             .Create();
 
         // Act
@@ -32,18 +31,20 @@ public class OrderBookTests
     {
         // Arrange
         var orderBook = new OrderBook();
-        var duplicateOrder = _fixture.Build<Order>()
-            .With(o => o.Id, "Order1")
-            .With(o => o.TradeSide, TradeSide.sell)
+        var order = _fixture.Build<Order>()
+            .With(o => o.Side, TradeSide.sell)
             .With(o => o.Price, 200)
             .Create();
 
-        orderBook.AddOrder(duplicateOrder);
+        orderBook.AddOrder(order);
 
-        // Act & Assert
+        // Act
         var exception = Assert.Throws<InvalidOperationException>(() =>
-            orderBook.AddOrder(duplicateOrder));
-        Assert.Equal("Order with ID Order1 already exists.", exception.Message);
+            orderBook.AddOrder(order)
+        );
+
+        // Assert
+        Assert.Equal($"Order with ID {order.Id} already exists.", exception.Message);
     }
 
     [Fact]
@@ -52,15 +53,13 @@ public class OrderBookTests
         // Arrange
         var orderBook = new OrderBook();
         var buyOrder = _fixture.Build<Order>()
-            .With(o => o.TradeSide, TradeSide.buy)
+            .With(o => o.Side, TradeSide.buy)
             .With(o => o.Price, 150)
-            .With(o => o.Id, "BuyOrder1")
             .Create();
 
         var sellOrder = _fixture.Build<Order>()
-            .With(o => o.TradeSide, TradeSide.sell)
+            .With(o => o.Side, TradeSide.sell)
             .With(o => o.Price, 150)
-            .With(o => o.Id, "SellOrder1")
             .Create();
 
         // Act
@@ -70,10 +69,9 @@ public class OrderBookTests
         // Assert
         Assert.Single(trades);
         var trade = trades[0];
-        Assert.Equal("BuyOrder1", trade.BidTrade.OrderId);
-        Assert.Equal("SellOrder1", trade.AskTrade.OrderId);
-        Assert.Equal(150, trade.BidTrade.Price);
-        Assert.Equal(150, trade.AskTrade.Price);
+        Assert.Equal(buyOrder.Id, trade.BuyOrderId);
+        Assert.Equal(sellOrder.Id, trade.SellOrderId);
+        Assert.Equal(150, trade.Price);
     }
 
     [Fact]
@@ -82,15 +80,14 @@ public class OrderBookTests
         // Arrange
         var orderBook = new OrderBook();
         var buyOrder = _fixture.Build<Order>()
-            .With(o => o.TradeSide, TradeSide.buy)
+            .With(o => o.Side, TradeSide.buy)
             .With(o => o.Price, 120)
-            .With(o => o.Id, "BuyOrder1")
             .Create();
 
         orderBook.AddOrder(buyOrder);
 
         // Act
-        orderBook.CancelOrders(["BuyOrder1"]);
+        orderBook.CancelOrders([buyOrder.Id]);
 
         // Assert
         var trades = orderBook.AddOrder(buyOrder);
@@ -103,12 +100,12 @@ public class OrderBookTests
         // Arrange
         var orderBook = new OrderBook();
         var buyOrder = _fixture.Build<Order>()
-            .With(o => o.TradeSide, TradeSide.buy)
+            .With(o => o.Side, TradeSide.buy)
             .With(o => o.Price, 150)
             .Create();
 
         var sellOrder = _fixture.Build<Order>()
-            .With(o => o.TradeSide, TradeSide.sell)
+            .With(o => o.Side, TradeSide.sell)
             .With(o => o.Price, 150)
             .Create();
 
