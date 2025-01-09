@@ -1,8 +1,12 @@
 using Orderflow.Data.Entities;
+using Orderflow.Events.Exchange;
+using Orderflow.Events.Instrument;
+using Orderflow.Events.Order;
+using Orderflow.Events.Trade;
 
-namespace Orderflow.Events;
+namespace Orderflow.Events.Factories;
 
-public class EventMapperFactory : IEventMapperFactory
+public class OutboxEventMapperFactory : IOutboxEventMapperFactory
 {
     public OutboxEvent MapEvent<T>(T @event) where T : IEvent
     {
@@ -10,6 +14,15 @@ public class EventMapperFactory : IEventMapperFactory
 
         switch (@event)
         {
+            case ExchangeCreatedEvent exchangeCreatedEvent:
+                outboxEvent = new OutboxEvent(
+                    id: Guid.NewGuid().ToString(),
+                    streamId: exchangeCreatedEvent.ExchangeId,
+                    eventType: nameof(ExchangeCreatedEvent),
+                    timestamp: DateTime.Now.ToUniversalTime());
+                outboxEvent.SetPayload(payload: @event);
+                return outboxEvent;
+
             case InstrumentCreatedEvent instrumentCreatedEvent:
                 outboxEvent = new OutboxEvent(
                     id: Guid.NewGuid().ToString(),
@@ -42,6 +55,15 @@ public class EventMapperFactory : IEventMapperFactory
                     id: Guid.NewGuid().ToString(),
                     streamId: orderUpdateEvent.OrderId,
                     eventType: nameof(OrderUpdateEvent),
+                    timestamp: DateTime.Now.ToUniversalTime());
+                outboxEvent.SetPayload(@event);
+                return outboxEvent;
+
+            case TradeExecutedEvent tradeExecutedEvent:
+                outboxEvent = new OutboxEvent(
+                    id: Guid.NewGuid().ToString(),
+                    streamId: tradeExecutedEvent.TradeId,
+                    eventType: nameof(TradeExecutedEvent),
                     timestamp: DateTime.Now.ToUniversalTime());
                 outboxEvent.SetPayload(@event);
                 return outboxEvent;
