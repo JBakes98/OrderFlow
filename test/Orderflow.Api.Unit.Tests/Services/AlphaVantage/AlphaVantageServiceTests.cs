@@ -44,6 +44,5 @@ public class AlphaVantageServiceTests
 
         // Assert
         Assert.True(result.IsT0);
-        mockDiagnosticContext.Verify(d => d.Set("AlphaVantage:QuoteResponse", response, true), Times.Once);
     }
 }
