@@ -9,11 +9,11 @@ public class PostInstrumentRequestToInstrumentMapper : IMapper<PostInstrumentReq
     public Instrument Map(PostInstrumentRequest source)
     {
         return new Instrument(
-            Guid.NewGuid().ToString(),
+            Guid.NewGuid(),
             source.Ticker,
             source.Name,
             source.Sector,
-            source.Exchange
+            Guid.Parse(source.Exchange)
         );
     }
 }
