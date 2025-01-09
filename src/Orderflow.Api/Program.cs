@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Orderflow.Api.Authorization;
+using Orderflow.Api.Routes.Exchange;
 using Orderflow.Api.Routes.Instrument;
 using Orderflow.Api.Routes.Order;
 using Orderflow.Api.Swagger;
@@ -52,6 +53,7 @@ app.UseSerilogRequestLogging();
 
 app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
 
+app.MapExchangeUserGroup();
 app.MapInstrumentUserGroup();
 app.MapOrderUserGroup();
 
