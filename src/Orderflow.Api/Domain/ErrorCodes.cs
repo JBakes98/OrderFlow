@@ -2,6 +2,10 @@ namespace Orderflow.Domain;
 
 public static class ErrorCodes
 {
+    public const string ExchangeCouldNotBeCreated = "exchange_could_not_be_created";
+    public const string ExchangeNotFound = "exchange_not_found";
+
+
     public const string InstrumentNotFound = "instrument_not_found";
     public const string InstrumentCouldNotBeCreated = "instrument_could_not_be_created";
     public const string OrderCouldNotBeCreated = "order_could_not_be_created";
