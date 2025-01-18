@@ -4,5 +4,5 @@ namespace Orderflow.Services.Interfaces;
 
 public interface ITradeService
 {
-    public void ProcessTrades(List<Trade> trades);
+    public Task<Error?> ProcessTrades(List<Trade> trades);
 }
