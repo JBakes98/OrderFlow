@@ -154,4 +154,13 @@ public class OrderBook : IOrderBook
 
         return CanMatch(order.Side, order.Price) ? MatchOrders() : [];
     }
+
+    public (List<Order>, List<Order>) GetOrderBook()
+    {
+        var (_, bids) = _bids.FirstOrDefault();
+        var (_, asks) = _asks.FirstOrDefault();
+
+        return (bids == null ? [] : bids.ToList(),
+            asks == null ? [] : asks.ToList());
+    }
 }
