@@ -17,7 +17,5 @@ public class PostOrderRequestToOrderMapperTests
         Assert.Equal(Guid.Parse(source.InstrumentId), result.InstrumentId);
         Assert.Equal(Enum.Parse<TradeSide>(source.Side), result.Side);
         Assert.Equal(source.Quantity, result.InitialQuantity);
-
-        Assert.NotNull(result.Id);
     }
 }

@@ -15,7 +15,6 @@ public class AlphaVantageServiceTests
     public async Task Should_Get_StockQuote_From_AlphaVantage(
         [Frozen] Mock<IHttpClientFactory> httpClientFactoryMock,
         [Frozen] Mock<HttpMessageHandler> httpMessageHandlerMock,
-        [Frozen] Mock<IDiagnosticContext> mockDiagnosticContext,
         AlphaVantageService sut
     )
     {
