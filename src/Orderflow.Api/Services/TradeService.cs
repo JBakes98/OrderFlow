@@ -22,25 +22,15 @@ public class TradeService : ITradeService
         _repository = Guard.Against.Null(repository);
     }
 
-    public async void ProcessTrades(List<Trade> trades)
+    public async Task<Error?> ProcessTrades(List<Trade> trades)
     {
-        foreach (var trade in trades)
-        {
-            var err = await ProcessTrade(trade);
-        }
-    }
+        var tradeEvents = trades.Select(_tradeToTradeExecutedEventMapper.Map).ToList();
 
-    private async Task<Error?> ProcessTrade(Trade trade)
-    {
-        var tradeEvent = _tradeToTradeExecutedEventMapper.Map(trade);
-
-        var err = await _repository.InsertAsync(trade, tradeEvent);
+        var err = await _repository.InsertAsync(trades, tradeEvents);
 
         if (err != null)
             return err;
 
-        _diagnosticContext.Set("Trade", trade, true);
-        _diagnosticContext.Set("TradeEvent", tradeEvent, true);
         _diagnosticContext.Set("TradeExecuted", true);
 
         return null;
