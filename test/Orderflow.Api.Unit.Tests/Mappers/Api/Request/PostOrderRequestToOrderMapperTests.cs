@@ -1,9 +1,9 @@
 using Orderflow.Api.Routes.Order.Models;
 using Orderflow.Api.Unit.Tests.Customizations;
 using Orderflow.Domain.Models.Enums;
-using Orderflow.Mappers.Request;
+using Orderflow.Mappers.Api.Request;
 
-namespace Orderflow.Api.Unit.Tests.Mappers.Request;
+namespace Orderflow.Api.Unit.Tests.Mappers.Api.Request;
 
 public class PostOrderRequestToOrderMapperTests
 {

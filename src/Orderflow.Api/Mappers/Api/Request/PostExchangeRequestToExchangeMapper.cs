@@ -1,8 +1,7 @@
 using Orderflow.Api.Routes.Exchange.Models;
 using Orderflow.Domain.Models;
-using Orderflow.Extensions;
 
-namespace Orderflow.Mappers.Request;
+namespace Orderflow.Mappers.Api.Request;
 
 public class PostExchangeRequestToExchangeMapper : IMapper<PostExchangeRequest, Exchange>
 {

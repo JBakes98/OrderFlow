@@ -1,8 +1,8 @@
 using Orderflow.Api.Routes.Instrument.Models;
 using Orderflow.Api.Unit.Tests.Customizations;
-using Orderflow.Mappers.Request;
+using Orderflow.Mappers.Api.Request;
 
-namespace Orderflow.Api.Unit.Tests.Mappers.Request;
+namespace Orderflow.Api.Unit.Tests.Mappers.Api.Request;
 
 public class PostInstrumentRequestToInstrumentMapperTests
 {

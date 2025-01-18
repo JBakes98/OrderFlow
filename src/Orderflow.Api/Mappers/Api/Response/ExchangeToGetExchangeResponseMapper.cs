@@ -1,8 +1,7 @@
 using Orderflow.Api.Routes.Exchange.Models;
 using Orderflow.Domain.Models;
-using Orderflow.Extensions;
 
-namespace Orderflow.Mappers.Response;
+namespace Orderflow.Mappers.Api.Response;
 
 public class ExchangeToGetExchangeResponseMapper : IMapper<Exchange, GetExchangeResponse>
 {

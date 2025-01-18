@@ -2,7 +2,7 @@ using Orderflow.Api.Routes.Order.Models;
 using Orderflow.Domain.Models;
 using Orderflow.Domain.Models.Enums;
 
-namespace Orderflow.Mappers.Request;
+namespace Orderflow.Mappers.Api.Request;
 
 public class PostOrderRequestToOrderMapper : IMapper<PostOrderRequest, Order>
 {

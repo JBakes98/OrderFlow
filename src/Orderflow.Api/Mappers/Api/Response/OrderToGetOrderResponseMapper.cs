@@ -1,7 +1,7 @@
 using Orderflow.Api.Routes.Order.Models;
 using Orderflow.Domain.Models;
 
-namespace Orderflow.Mappers.Response;
+namespace Orderflow.Mappers.Api.Response;
 
 public class OrderToGetOrderResponseMapper : IMapper<Order, GetOrderResponse>
 {
@@ -10,12 +10,13 @@ public class OrderToGetOrderResponseMapper : IMapper<Order, GetOrderResponse>
         return new GetOrderResponse(
             id: source.Id.ToString(),
             quantity: source.InitialQuantity,
+            remainingQuantity: source.RemainingQuantity,
             instrumentId: source.InstrumentId.ToString(),
             price: source.Price,
             value: source.Value,
             placed: source.Placed,
             updated: source.Updated,
-            type: source.Side,
+            side: source.Side,
             status: source.Status);
     }
 }

@@ -1,7 +1,6 @@
-using Orderflow.Extensions;
 using Orderflow.Services.AlphaVantage.Api.Responses;
 
-namespace Orderflow.Mappers.Response.AlphaVantage;
+namespace Orderflow.Mappers.AlphaVantage;
 
 public class
     GlobalQuoteResponseToGlobalQuoteDomainMapper : IMapper<GetGlobalQuoteResponse, Orderflow.Domain.Models.GlobalQuote>

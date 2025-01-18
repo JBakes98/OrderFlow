@@ -1,5 +1,5 @@
 using Orderflow.Api.Unit.Tests.Customizations;
-using Orderflow.Mappers.Response.AlphaVantage;
+using Orderflow.Mappers.AlphaVantage;
 using Orderflow.Services.AlphaVantage.Api.Responses;
 
 namespace Orderflow.Api.Unit.Tests.Mappers.Response.AlphaVantage;
