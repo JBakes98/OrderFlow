@@ -8,9 +8,12 @@ public static class ExchangeUserGroup
     {
         var group = app.MapUserGroup("exchanges");
 
-        group.MapGet("/{id}", GetExchange.Handle);
-        group.MapGet("/", ListExchange.Handle);
+        group.MapGet("/{id}", GetExchange.Handle)
+            .WithSummary("Get a exchange");
+        group.MapGet("/", ListExchange.Handle)
+            .WithSummary("List exchanges");
 
-        group.MapPost("/", PostExchange.Handle);
+        group.MapPost("/", PostExchange.Handle)
+            .WithSummary("Create a exchange");
     }
 }

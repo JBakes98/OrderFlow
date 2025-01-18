@@ -8,9 +8,14 @@ public static class InstrumentUserGroup
     {
         var group = app.MapUserGroup("instruments");
 
-        group.MapGet("/{id}", GetInstrument.Handle);
-        group.MapGet("/", ListInstrument.Handle);
+        group.MapGet("/{id}", GetInstrument.Handle)
+            .WithSummary("Get a instrument");
 
-        group.MapPost("/", PostInstrument.Handle);
+        group.MapGet("/", ListInstrument.Handle)
+            .WithSummary("List instruments");
+
+
+        group.MapPost("/", PostInstrument.Handle)
+            .WithSummary("Create a instrument");
     }
 }

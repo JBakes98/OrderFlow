@@ -8,8 +8,13 @@ public static class OrderUserGroup
     {
         var group = app.MapUserGroup("orders");
 
-        group.MapGet("/{id}", GetOrder.Handle);
-        group.MapGet("/", ListOrder.Handle);
-        group.MapPost("/", PostOrder.Handle);
+        group.MapGet("/{id}", GetOrder.Handle)
+            .WithSummary("Get a order");
+
+        group.MapGet("/", ListOrder.Handle)
+            .WithSummary("List orders");
+
+        group.MapPost("/", PostOrder.Handle)
+            .WithSummary("Create a order");
     }
 }
