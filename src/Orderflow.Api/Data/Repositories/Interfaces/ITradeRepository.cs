@@ -5,5 +5,5 @@ namespace Orderflow.Data.Repositories.Interfaces;
 
 public interface ITradeRepository
 {
-    Task<Error?> InsertAsync(Trade trade, TradeExecutedEvent @event);
+    Task<Error?> InsertAsync(List<Trade> trades, List<TradeExecutedEvent> events);
 }

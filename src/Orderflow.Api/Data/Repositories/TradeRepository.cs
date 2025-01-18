@@ -28,17 +28,23 @@ public class TradeRepository : ITradeRepository
         _outboxEventMapperFactory = Guard.Against.Null(outboxEventMapperFactory);
     }
 
-    public async Task<Error?> InsertAsync(Trade trade, TradeExecutedEvent @event)
+    public async Task<Error?> InsertAsync(List<Trade> trades, List<TradeExecutedEvent> events)
     {
-        var outboxEvent = _outboxEventMapperFactory.MapEvent(@event);
-        var entity = _tradeDomainToEntityMapper.Map(trade);
+        if (trades.Count == 0 || trades.Count != events.Count)
+            return new Error(HttpStatusCode.InternalServerError, ErrorCodes.TradeExecutionFailed);
 
         await using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
-            _context.Set<TradeEntity>().Add(entity);
-            _context.Set<OutboxEvent>().Add(outboxEvent);
+            // Map and add all trades to the context
+            var tradeEntities = trades.Select(_tradeDomainToEntityMapper.Map).ToList();
+            _context.Set<TradeEntity>().AddRange(tradeEntities);
 
+            // Map and add all events to the context
+            var outboxEvents = events.Select(_outboxEventMapperFactory.MapEvent).ToList();
+            _context.Set<OutboxEvent>().AddRange(outboxEvents);
+
+            // Save changes within the transaction
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
 
@@ -47,7 +53,7 @@ public class TradeRepository : ITradeRepository
         catch (Exception e)
         {
             await transaction.RollbackAsync();
-            _diagnosticContext.Set("Trade.Error", $"Failed to execute trade: {e.Message}");
+            _diagnosticContext.Set("Trade.Error", $"Failed to execute trades: {e.Message}");
             return new Error(HttpStatusCode.InternalServerError, ErrorCodes.TradeExecutionFailed);
         }
     }
