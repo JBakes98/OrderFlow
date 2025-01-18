@@ -10,7 +10,7 @@ public class Trade
         Price = price;
         Quantity = quantity;
         Value = price * quantity;
-        Timestamp = DateTime.Now;
+        Timestamp = DateTime.Now.ToUniversalTime();
     }
 
     public Guid Id { get; }
