@@ -3,7 +3,6 @@ using AutoFixture;
 using Moq;
 using OneOf;
 using Orderflow.Data.Repositories.Interfaces;
-using Orderflow.Domain.Commands;
 using Orderflow.Domain.Models;
 using Orderflow.Events.Order;
 using Orderflow.Mappers;
@@ -19,13 +18,13 @@ public class OrderServiceTests
     private readonly IFixture _fixture;
     private readonly Mock<IOrderRepository> _mockRepository;
     private readonly Mock<IMapper<Order, OrderRaisedEvent>> _mockOrderEventMapper;
-    private readonly Mock<IMapper<OrderUpdateCommand, OrderUpdateEvent>> _mockUpdateEventMapper;
     private readonly Mock<IDiagnosticContext> _mockDiagnosticContext;
     private readonly Mock<IAmazonS3> _mockS3;
     private readonly Mock<IAlphaVantageService> _mockAlphaVantageService;
     private readonly Mock<IInstrumentService> _mockInstrumentService;
     private readonly Mock<IOrderBookManager> _mockOrderBookManager;
     private readonly Mock<ITradeService> _mockTradeService;
+    private readonly Mock<ITradeRepository> _mockTradeRepository;
     private readonly OrderService _orderService;
 
     public OrderServiceTests()
@@ -33,24 +32,24 @@ public class OrderServiceTests
         _fixture = new Fixture();
         _mockRepository = new Mock<IOrderRepository>();
         _mockOrderEventMapper = new Mock<IMapper<Order, OrderRaisedEvent>>();
-        _mockUpdateEventMapper = new Mock<IMapper<OrderUpdateCommand, OrderUpdateEvent>>();
         _mockDiagnosticContext = new Mock<IDiagnosticContext>();
         _mockS3 = new Mock<IAmazonS3>();
         _mockAlphaVantageService = new Mock<IAlphaVantageService>();
         _mockInstrumentService = new Mock<IInstrumentService>();
         _mockOrderBookManager = new Mock<IOrderBookManager>();
         _mockTradeService = new Mock<ITradeService>();
+        _mockTradeRepository = new Mock<ITradeRepository>();
 
         _orderService = new OrderService(
             _mockRepository.Object,
             _mockOrderEventMapper.Object,
             _mockDiagnosticContext.Object,
             _mockS3.Object,
-            _mockUpdateEventMapper.Object,
             _mockAlphaVantageService.Object,
             _mockInstrumentService.Object,
             _mockOrderBookManager.Object,
-            _mockTradeService.Object);
+            _mockTradeService.Object,
+            _mockTradeRepository.Object);
     }
 
     [Fact]

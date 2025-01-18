@@ -4,7 +4,6 @@ using Orderflow.Api.Routes.Order.Models;
 using Orderflow.Data.Entities;
 using Orderflow.Data.Repositories;
 using Orderflow.Data.Repositories.Interfaces;
-using Orderflow.Domain.Commands;
 using Orderflow.Domain.Models;
 using Orderflow.Events.Exchange;
 using Orderflow.Events.Factories;
@@ -46,7 +45,6 @@ public static class ServiceExtensions
         services.AddScoped<IMapper<Order, OrderEntity>, OrderDomainToOrderDataMapper>();
         services.AddScoped<IMapper<OrderEntity, Order>, OrderDataToOrderDomainMapper>();
         services.AddScoped<IMapper<Order, OrderRaisedEvent>, OrderToOrderRaisedEventMapper>();
-        services.AddScoped<IMapper<OrderUpdateCommand, OrderUpdateEvent>, OrderUpdateToOrderUpdateEventMapper>();
 
         services.AddScoped<IMapper<PostExchangeRequest, Exchange>, PostExchangeRequestToExchangeMapper>();
         services.AddScoped<IMapper<Exchange, GetExchangeResponse>, ExchangeToGetExchangeResponseMapper>();

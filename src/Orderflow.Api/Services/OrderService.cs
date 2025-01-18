@@ -6,7 +6,6 @@ using Ardalis.GuardClauses;
 using OneOf;
 using Orderflow.Data.Repositories.Interfaces;
 using Orderflow.Domain;
-using Orderflow.Domain.Commands;
 using Orderflow.Domain.Models;
 using Orderflow.Events.Order;
 using Orderflow.Mappers;
@@ -21,8 +20,8 @@ public class OrderService : IOrderService
 {
     private readonly IDiagnosticContext _diagnosticContext;
     private readonly IMapper<Order, OrderRaisedEvent> _orderToOrderRaisedEventMapper;
-    private readonly IMapper<OrderUpdateCommand, OrderUpdateEvent> _orderUpdateCommandToOrderUpdateEventMapper;
     private readonly IOrderRepository _repository;
+    private readonly ITradeRepository _tradeRepository;
     private readonly IAmazonS3 _s3;
     private readonly IAlphaVantageService _alphaVantageService;
     private readonly IInstrumentService _instrumentService;
@@ -34,16 +33,17 @@ public class OrderService : IOrderService
         IMapper<Order, OrderRaisedEvent> orderToOrderRaisedEventMapper,
         IDiagnosticContext diagnosticContext,
         IAmazonS3 s3,
-        IMapper<OrderUpdateCommand, OrderUpdateEvent> orderUpdateCommandToOrderUpdateEventMapper,
         IAlphaVantageService alphaVantageService,
         IInstrumentService instrumentService,
-        IOrderBookManager orderBookManager, ITradeService tradeService)
+        IOrderBookManager orderBookManager,
+        ITradeService tradeService,
+        ITradeRepository tradeRepository)
     {
+        _tradeRepository = Guard.Against.Null(tradeRepository);
         _tradeService = Guard.Against.Null(tradeService);
         _orderBookManager = Guard.Against.Null(orderBookManager);
         _instrumentService = Guard.Against.Null(instrumentService);
         _alphaVantageService = Guard.Against.Null(alphaVantageService);
-        _orderUpdateCommandToOrderUpdateEventMapper = Guard.Against.Null(orderUpdateCommandToOrderUpdateEventMapper);
         _s3 = Guard.Against.Null(s3);
         _diagnosticContext = Guard.Against.Null(diagnosticContext);
         _orderToOrderRaisedEventMapper = Guard.Against.Null(orderToOrderRaisedEventMapper);
@@ -97,7 +97,6 @@ public class OrderService : IOrderService
         }
 
         var orderEvent = _orderToOrderRaisedEventMapper.Map(order);
-
         var error = await _repository.InsertAsync(order, orderEvent);
 
         if (error != null)
@@ -111,7 +110,7 @@ public class OrderService : IOrderService
         var trades = orderBook.AddOrder(order);
 
         _diagnosticContext.Set("Trades", trades, true);
-        _tradeService.ProcessTrades(trades);
+        await _tradeService.ProcessTrades(trades);
 
         return order;
     }
