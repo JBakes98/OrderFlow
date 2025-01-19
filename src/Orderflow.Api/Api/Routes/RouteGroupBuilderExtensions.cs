@@ -1,18 +1,21 @@
 using System.Diagnostics.CodeAnalysis;
 using Orderflow.Api.Authorization;
-using Orderflow.Api.Swagger;
 
 namespace Orderflow.Api.Routes;
 
 public static class RouteGroupBuilderExtensions
 {
+    public const string User = nameof(User);
+    public const string Admin = nameof(Admin);
+
     public static RouteGroupBuilder MapUserGroup(this IEndpointRouteBuilder endpoints,
         [StringSyntax("Route")] string prefix, string? groupTagName = null,
         string[]? extraRequiredPolicies = null)
     {
         extraRequiredPolicies ??= [];
 
-        var group = endpoints.MapGroup(prefix).WithGroupName(SwaggerConfiguration.User);
+        var group = endpoints.MapGroup(prefix);
+        // .WithGroupName(User);
 
         if (groupTagName != null)
             group.WithTags(groupTagName);
@@ -28,13 +31,13 @@ public static class RouteGroupBuilderExtensions
     {
         extraRequiredPolicies ??= [];
 
-        var group = endpoints.MapGroup(prefix).WithGroupName(SwaggerConfiguration.Admin)
+        var group = endpoints.MapGroup(prefix).WithGroupName(Admin)
             .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies]);
 
         if (groupTagName != null)
             group.WithTags(groupTagName);
 
-        group.WithOpenApi();
+        group.MapOpenApi();
 
         return group;
     }

@@ -1,14 +1,17 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Orderflow.Api.Routes.Instrument.Models;
+using Orderflow.Extensions;
 using Orderflow.Mappers;
 using Orderflow.Services;
+using Orderflow.Services.Interfaces;
 
 namespace Orderflow.Api.Routes.Instrument.Endpoints;
 
 public static class PostInstrument
 {
-    public static async Task<Results<Ok<GetInstrumentResponse>, ProblemHttpResult>> Handle(
+    public static async Task<Results<Created<GetInstrumentResponse>, ProblemHttpResult>> Handle(
+        HttpContext context,
         IInstrumentService instrumentService,
         IMapper<PostInstrumentRequest, Domain.Models.Instrument> postInstrumentRequestToInstrumentMapper,
         IMapper<Domain.Models.Instrument, GetInstrumentResponse> instrumentToGetInstrumentResponseMapper,
@@ -23,6 +26,7 @@ public static class PostInstrument
 
         var response = instrumentToGetInstrumentResponseMapper.Map(instrument);
 
-        return TypedResults.Ok(response);
+        var uri = UriExtensions.GenerateUri(context, "instruments", response.Id);
+        return TypedResults.Created(uri, response);
     }
 }

@@ -13,6 +13,6 @@ public class InstrumentDataToInstrumentDomainMapper : IMapper<InstrumentEntity, 
             source.Ticker,
             source.Name,
             source.Sector,
-            source.Exchange);
+            source.ExchangeId);
     }
 }

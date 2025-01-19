@@ -14,10 +14,10 @@ public class InstrumentToInstrumentCreatedEventMapperTests
     {
         var result = sut.Map(source);
 
-        Assert.Equal(source.Id, result.InstrumentId);
+        Assert.Equal(source.Id.ToString(), result.InstrumentId);
         Assert.Equal(source.Ticker, result.Ticker);
         Assert.Equal(source.Name, result.Name);
-        Assert.Equal(source.Exchange, result.Exchange);
+        Assert.Equal(source.ExchangeId.ToString(), result.Exchange);
         Assert.Equal(source.Sector, result.Sector);
     }
 }

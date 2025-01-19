@@ -11,41 +11,51 @@ public class OrderEntity
     }
 
     public OrderEntity(
-        string id,
-        int quantity,
-        string instrumentId,
+        Guid id,
+        int initialQuantity,
+        int remainingQuantity,
+        Guid instrumentId,
         double price,
         double value,
-        DateTime date,
-        OrderType type,
+        DateTime placed,
+        DateTime updated,
+        TradeSide side,
         OrderStatus status)
     {
         Id = id;
-        Quantity = quantity;
+        InitialQuantity = initialQuantity;
+        RemainingQuantity = remainingQuantity;
         InstrumentId = instrumentId;
         Price = price;
         Value = value;
-        Date = date;
-        Type = type;
+        Placed = placed;
+        Updated = updated;
+        Side = side;
         Status = status;
     }
 
-    [Key][MaxLength(36)] public string Id { get; private set; } = null!;
-    public int Quantity { get; private set; }
+    [Key][MaxLength(36)] public Guid Id { get; private set; }
+
+    public int InitialQuantity { get; private set; }
+
+    public int RemainingQuantity { get; private set; }
+
     public double Price { get; private set; }
+
     public double Value { get; private set; }
-    public DateTime Date { get; private set; }
-    public OrderType Type { get; private set; }
+
+    public DateTime Placed { get; private set; }
+
+    public DateTime Updated { get; private set; }
+
+    public TradeSide Side { get; private set; }
+
     public OrderStatus Status { get; private set; }
 
-    [MaxLength(36)]
-    [ForeignKey("Instrument")]
-    public string InstrumentId { get; private set; } = null!;
+    [ForeignKey("Instrument")] public Guid InstrumentId { get; private set; }
 
     public virtual InstrumentEntity Instrument { get; init; } = null!;
 
-    public void UpdateStatus(OrderStatus status)
-    {
-        Status = status;
-    }
+    public ICollection<TradeEntity>? BuyTrades { get; set; }
+    public ICollection<TradeEntity>? SellTrades { get; set; }
 }

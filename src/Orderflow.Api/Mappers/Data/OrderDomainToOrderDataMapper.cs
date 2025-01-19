@@ -8,14 +8,6 @@ public class OrderDomainToOrderDataMapper : IMapper<Order, OrderEntity>
 {
     public OrderEntity Map(Order source)
     {
-        return new OrderEntity(
-            source.Id,
-            source.Quantity,
-            source.InstrumentId,
-            source.Price,
-            source.Value,
-            source.Date,
-            source.Type,
-            source.Status);
+        return source.DomainToEntity();
     }
 }

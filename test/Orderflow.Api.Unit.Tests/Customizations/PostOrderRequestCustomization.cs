@@ -11,7 +11,8 @@ public class PostOrderRequestCustomization : ICustomization
         fixture.Register(() => new PostOrderRequest(
             quantity: fixture.Create<int>(),
             instrumentId: Guid.NewGuid().ToString(),
-            type: fixture.Create<OrderType>().ToString())
+            side: fixture.Create<TradeSide>().ToString(),
+            price: fixture.Create<double>())
         );
     }
 }

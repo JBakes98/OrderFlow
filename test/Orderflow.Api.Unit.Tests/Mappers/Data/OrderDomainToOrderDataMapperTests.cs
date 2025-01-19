@@ -16,9 +16,11 @@ public class OrderDomainToOrderDataMapperTests
         Assert.Equal(source.Id, result.Id);
         Assert.Equal(source.InstrumentId, result.InstrumentId);
         Assert.Equal(source.Price, result.Price);
-        Assert.Equal(source.Quantity, result.Quantity);
-        Assert.Equal(source.Date, result.Date);
-        Assert.Equal(source.Type, result.Type);
+        Assert.Equal(source.InitialQuantity, result.InitialQuantity);
+        Assert.Equal(source.RemainingQuantity, result.RemainingQuantity);
+        Assert.Equal(source.Placed, result.Placed);
+        Assert.Equal(source.Updated, result.Updated);
+        Assert.Equal(source.Side, result.Side);
         Assert.Equal(source.Status, result.Status);
     }
 }

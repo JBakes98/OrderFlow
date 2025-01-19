@@ -5,31 +5,55 @@ namespace Orderflow.Domain.Models;
 public class Order
 {
     public Order(
-        string id,
-        int quantity,
-        string instrumentId,
+        int initialQuantity,
+        Guid instrumentId,
         double price,
-        DateTime date,
-        OrderType type,
-        OrderStatus status = OrderStatus.pending)
+        TradeSide side)
     {
-        Id = id;
-        Quantity = quantity;
+        Id = Guid.NewGuid();
+        InitialQuantity = initialQuantity;
+        RemainingQuantity = initialQuantity;
         InstrumentId = instrumentId;
         Price = price;
-        Value = price * quantity;
-        Date = date;
-        Type = type;
+        Value = price * initialQuantity;
+        Placed = DateTime.Now.ToUniversalTime();
+        Side = side;
+        Status = OrderStatus.pending;
+    }
+
+    public Order(
+        Guid id,
+        int initialQuantity,
+        int remainingQuantity,
+        double value,
+        Guid instrumentId,
+        double price,
+        DateTime placed,
+        DateTime updated,
+        TradeSide side,
+        OrderStatus status)
+    {
+        Id = id;
+        InitialQuantity = initialQuantity;
+        RemainingQuantity = remainingQuantity;
+        Value = value;
+        InstrumentId = instrumentId;
+        Price = price;
+        Placed = placed;
+        Updated = updated;
+        Side = side;
         Status = status;
     }
 
-    public string Id { get; }
-    public int Quantity { get; }
-    public string InstrumentId { get; }
-    public double Price { get; private set; }
-    public DateTime Date { get; }
-    public OrderType Type { get; internal set; }
-    public OrderStatus Status { get; private set; } = OrderStatus.pending;
+    public Guid Id { get; }
+    public int InitialQuantity { get; }
+    public int RemainingQuantity { get; private set; }
+    public Guid InstrumentId { get; }
+    public double Price { get; set; }
+    public DateTime Placed { get; }
+    public DateTime Updated { get; private set; }
+    public TradeSide Side { get; set; }
+    public OrderStatus Status { get; private set; }
     public double Value { get; private set; }
 
     public void SetPrice(double price)
@@ -38,23 +62,35 @@ public class Order
         SetValue();
     }
 
-    private void SetValue()
+    private void SetValue() => Value = Price * InitialQuantity;
+    public int GetRemainingQuantity() => RemainingQuantity;
+    public bool IsFilled() => GetRemainingQuantity() == 0;
+
+    public void UpdateQuantity(int volume)
     {
-        Value = Price * Quantity;
+        if (volume > RemainingQuantity)
+            throw new Exception($"Order {Id} cannot be filled for more than its remaining quantity");
+
+        if (RemainingQuantity == 0 || _finalStates.Contains(Status))
+            throw new Exception($"Order {Id} is in a final state");
+
+        RemainingQuantity -= volume;
+        Updated = DateTime.Now;
+
+        UpdateStatus(RemainingQuantity == 0 ? OrderStatus.filled : OrderStatus.part_filled);
     }
 
-    private readonly List<OrderStatus> _finalStates = new List<OrderStatus>
-    {
-        OrderStatus.cancelled,
-        OrderStatus.complete
-    };
-
-    public bool SetStatus(OrderStatus status)
+    private void UpdateStatus(OrderStatus status)
     {
         if (_finalStates.Contains(Status))
-            return false;
+            return;
 
         Status = status;
-        return true;
     }
+
+    private readonly List<OrderStatus> _finalStates =
+    [
+        OrderStatus.cancelled,
+        OrderStatus.filled
+    ];
 }

@@ -4,6 +4,7 @@ using Moq;
 using Moq.Protected;
 using Orderflow.Api.Unit.Tests.Customizations;
 using Orderflow.Services.AlphaVantage;
+using Serilog;
 using HttpClient = System.Net.Http.HttpClient;
 
 namespace Orderflow.Api.Unit.Tests.Services.AlphaVantage;
@@ -17,6 +18,7 @@ public class AlphaVantageServiceTests
         AlphaVantageService sut
     )
     {
+        // Arrange
         var response = new HttpResponseMessage(HttpStatusCode.OK)
         {
             Content = new StringContent(
@@ -36,8 +38,10 @@ public class AlphaVantageServiceTests
                 BaseAddress = new Uri("https://www.alphavantage.co/")
             });
 
-        var quoteResponse = await sut.GetStockQuote("AAPL");
+        // Act
+        var result = await sut.GetStockQuote("AAPL");
 
-        Assert.True(quoteResponse.IsT0);
+        // Assert
+        Assert.True(result.IsT0);
     }
 }

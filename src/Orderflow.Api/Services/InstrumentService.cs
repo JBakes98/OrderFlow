@@ -2,8 +2,9 @@ using Ardalis.GuardClauses;
 using OneOf;
 using Orderflow.Data.Repositories.Interfaces;
 using Orderflow.Domain.Models;
-using Orderflow.Events;
+using Orderflow.Events.Instrument;
 using Orderflow.Mappers;
+using Orderflow.Services.Interfaces;
 using Serilog;
 
 namespace Orderflow.Services;
@@ -24,7 +25,7 @@ public class InstrumentService : IInstrumentService
         _repository = Guard.Against.Null(repository);
     }
 
-    public async Task<OneOf<Instrument, Error>> RetrieveInstrument(string id)
+    public async Task<OneOf<Instrument, Error>> RetrieveInstrument(Guid id)
     {
         var result = await _repository.GetByIdAsync(id);
 

@@ -3,14 +3,16 @@ using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Orderflow.Api.Routes.Order.Models;
+using Orderflow.Extensions;
 using Orderflow.Mappers;
-using Orderflow.Services;
+using Orderflow.Services.Interfaces;
 
 namespace Orderflow.Api.Routes.Order.Endpoints;
 
 public static class PostOrder
 {
-    public static async Task<Results<Ok<GetOrderResponse>, ProblemHttpResult>> Handle(
+    public static async Task<Results<Created<GetOrderResponse>, ProblemHttpResult>> Handle(
+        HttpContext context,
         IValidator<PostOrderRequest> validator,
         IOrderService orderService,
         IMapper<PostOrderRequest, Domain.Models.Order> postOrderRequestToOrderMapper,
@@ -31,6 +33,7 @@ public static class PostOrder
 
         var response = orderToOrderResponseMapper.Map(order);
 
-        return TypedResults.Ok(response);
+        var uri = UriExtensions.GenerateUri(context, "orders", response.Id);
+        return TypedResults.Created(uri, response);
     }
 }

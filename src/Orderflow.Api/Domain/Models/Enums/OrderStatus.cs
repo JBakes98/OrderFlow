@@ -3,6 +3,7 @@ namespace Orderflow.Domain.Models.Enums;
 public enum OrderStatus
 {
     pending,
-    complete,
+    filled,
+    part_filled,
     cancelled
 }

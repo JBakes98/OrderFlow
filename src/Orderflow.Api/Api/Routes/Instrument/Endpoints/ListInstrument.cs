@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Orderflow.Api.Routes.Instrument.Models;
 using Orderflow.Mappers;
 using Orderflow.Services;
+using Orderflow.Services.Interfaces;
 
 namespace Orderflow.Api.Routes.Instrument.Endpoints;
 
