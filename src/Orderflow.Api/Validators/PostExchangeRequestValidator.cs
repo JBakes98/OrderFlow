@@ -16,6 +16,7 @@ public class PostExchangeRequestValidator : AbstractValidator<PostExchangeReques
             .NotEmpty()
             .WithMessage("Abbreviation required")
             .MinimumLength(2)
+            .WithMessage("Abbreviation invalid")
             .MaximumLength(50)
             .WithMessage("Abbreviation invalid");
 

@@ -10,7 +10,7 @@ public class PostOrderRequestValidatorTests
     private readonly PostOrderRequestValidator _sut = new();
 
     [Fact]
-    public void Should_return_valid_for_valid_request()
+    public void Validate_ShouldReturnValid_WhenRequestIsValid()
     {
         var request = new PostOrderRequest(
             quantity: 20,
@@ -25,7 +25,7 @@ public class PostOrderRequestValidatorTests
     }
 
     [Fact]
-    public void Should_return_invalid_for_invalid_request_with_errors()
+    public void Validate_ShouldReturnInvalid_WhenRequestIsInvalidWithErrors()
     {
         var request = new PostOrderRequest(
             quantity: -24,
@@ -45,7 +45,7 @@ public class PostOrderRequestValidatorTests
     [Theory]
     [InlineAutoData(null, null, null)]
     [InlineAutoData("", null, "")]
-    public void Should_return_invalid_for_invalid_types(
+    public void Validate_ShouldReturnInvalid_WhenRequestHasInvalidTypes(
         string type,
         int quantity,
         string instrument)
