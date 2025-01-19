@@ -15,7 +15,7 @@ public class PostInstrumentRequestToInstrumentMapperTests
 
         Assert.Equal(source.Ticker, result.Ticker);
         Assert.Equal(source.Name, result.Name);
-        Assert.Equal(Guid.Parse(source.Exchange), result.ExchangeId);
+        Assert.Equal(Guid.Parse(source.ExchangeId), result.ExchangeId);
         Assert.Equal(source.Sector, result.Sector);
     }
 }

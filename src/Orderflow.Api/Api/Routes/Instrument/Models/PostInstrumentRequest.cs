@@ -2,16 +2,16 @@ namespace Orderflow.Api.Routes.Instrument.Models;
 
 public class PostInstrumentRequest
 {
-    public string Ticker { get; set; }
-    public string Name { get; set; }
-    public string Sector { get; set; }
-    public string Exchange { get; set; }
+    public string Ticker { get; }
+    public string Name { get; }
+    public string Sector { get; }
+    public string ExchangeId { get; }
 
-    public PostInstrumentRequest(string ticker, string name, string sector, string exchange)
+    public PostInstrumentRequest(string ticker, string name, string sector, string exchangeId)
     {
         Ticker = ticker;
         Name = name;
         Sector = sector;
-        Exchange = exchange;
+        ExchangeId = exchangeId;
     }
 }
