@@ -136,12 +136,11 @@ public class OrderBook : IOrderBook
 
     public List<Trade> AddOrder(Order order)
     {
-        if (_orders.ContainsKey(order.Id))
+        if (!_orders.TryAdd(order.Id, order))
         {
             throw new InvalidOperationException($"Order with ID {order.Id} already exists.");
         }
 
-        _orders[order.Id] = order;
         var targetBook = order.Side == TradeSide.buy ? _bids : _asks;
 
         if (!targetBook.TryGetValue(order.Price, out var orderList))
@@ -157,10 +156,9 @@ public class OrderBook : IOrderBook
 
     public (List<Order>, List<Order>) GetOrderBook()
     {
-        var (_, bids) = _bids.FirstOrDefault();
-        var (_, asks) = _asks.FirstOrDefault();
+        var allBids = _bids.Values.SelectMany(bidList => bidList).ToList();
+        var allAsks = _asks.Values.SelectMany(askList => askList).ToList();
 
-        return (bids == null ? [] : bids.ToList(),
-            asks == null ? [] : asks.ToList());
+        return (allBids, allAsks);
     }
 }
