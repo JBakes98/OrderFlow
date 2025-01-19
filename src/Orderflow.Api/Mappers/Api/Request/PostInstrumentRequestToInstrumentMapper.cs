@@ -12,7 +12,7 @@ public class PostInstrumentRequestToInstrumentMapper : IMapper<PostInstrumentReq
             source.Ticker,
             source.Name,
             source.Sector,
-            Guid.Parse(source.Exchange)
+            Guid.Parse(source.ExchangeId)
         );
     }
 }
