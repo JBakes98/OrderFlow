@@ -34,7 +34,7 @@ public class OrderEntity
         Status = status;
     }
 
-    [Key] [MaxLength(36)] public Guid Id { get; private set; }
+    [Key][MaxLength(36)] public Guid Id { get; private set; }
 
     public int InitialQuantity { get; private set; }
 
