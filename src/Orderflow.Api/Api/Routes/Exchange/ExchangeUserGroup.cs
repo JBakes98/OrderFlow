@@ -7,13 +7,14 @@ public static class ExchangeUserGroup
 {
     public static void MapExchangeUserGroup(this WebApplication app)
     {
-        var extraRequiredPolicies = new string[0];
+        var extraRequiredPolicies = Array.Empty<string>();
 
         var group = app.MapUserGroup("exchanges");
 
         group.MapGet("/{id}", GetExchange.Handle)
             .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies])
             .WithSummary("Get a exchange");
+
         group.MapGet("/", ListExchange.Handle)
             .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies])
             .WithSummary("List exchanges");
