@@ -11,7 +11,7 @@ public static class InstrumentUserGroup
 
         var group = app.MapUserGroup("instruments");
 
-        group.MapGet("/{id}", GetInstrument.Handle)
+        group.MapGet("/{id}", Endpoints.GetInstrument.Handle)
             .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies])
             .WithSummary("Get a instrument");
 

@@ -9,13 +9,13 @@ using Serilog;
 
 namespace Orderflow.Services;
 
-public class InstrumentService : IInstrumentService
+public class CreateInstrumentService : ICreateInstrumentService
 {
     private readonly IDiagnosticContext _diagnosticContext;
     private readonly IMapper<Instrument, InstrumentCreatedEvent> _instrumentToInstrumentCreatedEvent;
     private readonly IInstrumentRepository _repository;
 
-    public InstrumentService(
+    public CreateInstrumentService(
         IInstrumentRepository repository,
         IDiagnosticContext diagnosticContext,
         IMapper<Instrument, InstrumentCreatedEvent> instrumentToInstrumentCreatedEvent)
@@ -23,19 +23,6 @@ public class InstrumentService : IInstrumentService
         _instrumentToInstrumentCreatedEvent = Guard.Against.Null(instrumentToInstrumentCreatedEvent);
         _diagnosticContext = Guard.Against.Null(diagnosticContext);
         _repository = Guard.Against.Null(repository);
-    }
-
-    public async Task<OneOf<Instrument, Error>> RetrieveInstrument(Guid id)
-    {
-        var result = await _repository.GetByIdAsync(id);
-
-        if (result.IsT1)
-            return result.AsT1;
-
-        var instrument = result.AsT0;
-        _diagnosticContext.Set("InstrumentEntity", instrument, true);
-
-        return instrument;
     }
 
     public async Task<OneOf<IEnumerable<Instrument>, Error>> RetrieveInstruments()

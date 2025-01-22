@@ -1,5 +1,5 @@
 using Orderflow.Api.Routes.Instrument.Models;
-using Orderflow.Validators;
+using Orderflow.Features.Instruments.Validators;
 
 namespace Orderflow.Api.Unit.Tests.Validators;
 
