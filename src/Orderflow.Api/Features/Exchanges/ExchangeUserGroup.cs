@@ -1,5 +1,6 @@
 using Orderflow.Api.Authorization;
 using Orderflow.Api.Routes.Exchange.Endpoints;
+using Orderflow.Features.Exchanges.GetExchange.Endpoints;
 
 namespace Orderflow.Api.Routes.Exchange;
 

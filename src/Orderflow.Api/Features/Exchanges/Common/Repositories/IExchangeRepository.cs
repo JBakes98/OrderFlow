@@ -2,6 +2,7 @@ using OneOf;
 using Orderflow.Domain.Models;
 using Orderflow.Events;
 using Orderflow.Events.Exchange;
+using Orderflow.Features.Exchanges.Common;
 
 namespace Orderflow.Data.Repositories.Interfaces;
 

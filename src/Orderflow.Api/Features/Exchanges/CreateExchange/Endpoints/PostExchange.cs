@@ -15,8 +15,8 @@ public static class PostExchange
         HttpContext context,
         IValidator<PostExchangeRequest> validator,
         ICreateExchangeService createExchangeService,
-        IMapper<PostExchangeRequest, Domain.Models.Exchange> postExchangeToExchangeMapper,
-        IMapper<Domain.Models.Exchange, GetExchangeResponse> exchangeToGetExchangeResponseMapper,
+        IMapper<PostExchangeRequest, Features.Exchanges.Common.Exchange> postExchangeToExchangeMapper,
+        IMapper<Features.Exchanges.Common.Exchange, GetExchangeResponse> exchangeToGetExchangeResponseMapper,
         [FromBody] PostExchangeRequest exchangeRequest)
     {
         var validationResult = await validator.ValidateAsync(exchangeRequest);

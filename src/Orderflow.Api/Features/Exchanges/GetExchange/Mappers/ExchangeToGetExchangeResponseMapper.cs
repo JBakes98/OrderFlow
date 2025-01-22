@@ -1,5 +1,6 @@
 using Orderflow.Api.Routes.Exchange.Models;
 using Orderflow.Domain.Models;
+using Orderflow.Features.Exchanges.Common;
 
 namespace Orderflow.Mappers.Api.Response;
 

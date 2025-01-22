@@ -1,5 +1,6 @@
 using Orderflow.Api.Unit.Tests.Customizations;
 using Orderflow.Domain.Models;
+using Orderflow.Features.Exchanges.Common;
 using Orderflow.Mappers.Api.Response;
 
 namespace Orderflow.Api.Unit.Tests.Mappers.Api.Response;

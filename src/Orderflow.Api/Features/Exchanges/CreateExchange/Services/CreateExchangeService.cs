@@ -2,13 +2,13 @@ using Ardalis.GuardClauses;
 using OneOf;
 using Orderflow.Data.Repositories.Interfaces;
 using Orderflow.Domain.Models;
-using Orderflow.Events;
 using Orderflow.Events.Exchange;
+using Orderflow.Features.Exchanges.Common;
 using Orderflow.Mappers;
 using Orderflow.Services.Interfaces;
 using Serilog;
 
-namespace Orderflow.Services;
+namespace Orderflow.Features.Exchanges.CreateExchange.Services;
 
 public class CreateExchangeService : ICreateExchangeService
 {

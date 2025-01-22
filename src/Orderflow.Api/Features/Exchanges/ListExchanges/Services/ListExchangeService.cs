@@ -2,18 +2,18 @@ using Ardalis.GuardClauses;
 using OneOf;
 using Orderflow.Data.Repositories.Interfaces;
 using Orderflow.Domain.Models;
-using Orderflow.Features.Exchanges.Common;
-using Orderflow.Features.Exchanges.GetExchange.Services;
+using Orderflow.Events.Exchange;
+using Orderflow.Mappers;
 using Serilog;
 
-namespace Orderflow.Services;
+namespace Orderflow.Features.Exchanges.ListExchanges.Services;
 
-public class GetExchangeService : IGetExchangeService
+public class ListExchangeService : IListExchangesService
 {
     private readonly IDiagnosticContext _diagnosticContext;
     private readonly IExchangeRepository _repository;
 
-    public GetExchangeService(
+    public ListExchangeService(
         IExchangeRepository repository,
         IDiagnosticContext diagnosticContext)
     {
@@ -21,16 +21,15 @@ public class GetExchangeService : IGetExchangeService
         _repository = Guard.Against.Null(repository);
     }
 
-    public async Task<OneOf<Exchange, Error>> GetExchangeById(Guid id)
+    public async Task<OneOf<IEnumerable<Features.Exchanges.Common.Exchange>, Error>> ListExchanges()
     {
-        var result = await _repository.GetByIdAsync(id);
+        var result = await _repository.QueryAsync();
 
         if (result.IsT1)
             return result.AsT1;
 
-        var exchange = result.AsT0;
-        _diagnosticContext.Set("ExchangeEntity", exchange, true);
+        var exchanges = result.AsT0;
 
-        return exchange;
+        return result;
     }
 }

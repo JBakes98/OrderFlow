@@ -1,6 +1,7 @@
 using Orderflow.Data.Entities;
 using Orderflow.Domain.Models;
 using Orderflow.Extensions;
+using Orderflow.Features.Exchanges.Common;
 
 namespace Orderflow.Mappers.Data;
 

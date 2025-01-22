@@ -1,4 +1,4 @@
-namespace Orderflow.Domain.Models;
+namespace Orderflow.Features.Exchanges.Common;
 
 public class Exchange
 {

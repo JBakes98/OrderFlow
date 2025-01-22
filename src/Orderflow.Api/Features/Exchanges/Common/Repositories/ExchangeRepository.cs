@@ -10,6 +10,7 @@ using Orderflow.Domain.Models;
 using Orderflow.Events;
 using Orderflow.Events.Factories;
 using Orderflow.Events.Exchange;
+using Orderflow.Features.Exchanges.Common;
 using Orderflow.Mappers;
 using Serilog;
 
