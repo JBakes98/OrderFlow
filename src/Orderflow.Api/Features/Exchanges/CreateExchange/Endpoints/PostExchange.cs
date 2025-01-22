@@ -14,7 +14,7 @@ public static class PostExchange
     public static async Task<Results<Created<GetExchangeResponse>, ProblemHttpResult>> Handle(
         HttpContext context,
         IValidator<PostExchangeRequest> validator,
-        IExchangeService exchangeService,
+        ICreateExchangeService createExchangeService,
         IMapper<PostExchangeRequest, Domain.Models.Exchange> postExchangeToExchangeMapper,
         IMapper<Domain.Models.Exchange, GetExchangeResponse> exchangeToGetExchangeResponseMapper,
         [FromBody] PostExchangeRequest exchangeRequest)
@@ -26,7 +26,7 @@ public static class PostExchange
 
         var exchange = postExchangeToExchangeMapper.Map(exchangeRequest);
 
-        var result = await exchangeService.CreateExchange(exchange);
+        var result = await createExchangeService.CreateExchange(exchange);
 
         if (result.TryPickT1(out var error, out _))
             return TypedResults.Problem(string.Join(",", error.ErrorCodes));
