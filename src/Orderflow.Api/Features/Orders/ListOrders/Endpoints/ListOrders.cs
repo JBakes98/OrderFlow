@@ -1,17 +1,18 @@
 using Microsoft.AspNetCore.Http.HttpResults;
+using Orderflow.Api.Routes.Order.ListOrders.Services;
 using Orderflow.Api.Routes.Order.Models;
 using Orderflow.Mappers;
 using Orderflow.Services.Interfaces;
 
 namespace Orderflow.Api.Routes.Order.Endpoints;
 
-public static class ListOrder
+public static class ListOrders
 {
     public static async Task<Results<Ok<IEnumerable<GetOrderResponse>>, ProblemHttpResult>> Handle(
-        IOrderService orderService,
+        IListOrdersService listOrdersService,
         IMapper<Domain.Models.Order, GetOrderResponse> orderToResponseMapper)
     {
-        var result = await orderService.RetrieveOrders();
+        var result = await listOrdersService.ListOrders();
 
         if (result.TryPickT1(out var error, out var orders))
             return TypedResults.Problem(string.Join(",", error.ErrorCodes), statusCode: (int)error.ErrorType);

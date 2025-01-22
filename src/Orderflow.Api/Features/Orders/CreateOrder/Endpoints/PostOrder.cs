@@ -14,7 +14,7 @@ public static class PostOrder
     public static async Task<Results<Created<GetOrderResponse>, ProblemHttpResult>> Handle(
         HttpContext context,
         IValidator<PostOrderRequest> validator,
-        IOrderService orderService,
+        ICreateOrderService createOrderService,
         IMapper<PostOrderRequest, Domain.Models.Order> postOrderRequestToOrderMapper,
         IMapper<Domain.Models.Order, GetOrderResponse> orderToOrderResponseMapper,
         [FromBody] PostOrderRequest orderRequest)
@@ -26,7 +26,7 @@ public static class PostOrder
 
         var order = postOrderRequestToOrderMapper.Map(orderRequest);
 
-        var result = await orderService.CreateOrder(order);
+        var result = await createOrderService.CreateOrder(order);
 
         if (result.TryPickT1(out var error, out _))
             return TypedResults.Problem(string.Join(",", error.ErrorCodes), statusCode: (int)error.ErrorType);

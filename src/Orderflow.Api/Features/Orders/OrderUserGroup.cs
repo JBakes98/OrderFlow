@@ -11,11 +11,11 @@ public static class OrderUserGroup
 
         var group = app.MapUserGroup("orders");
 
-        group.MapGet("/{id}", GetOrder.Handle)
+        group.MapGet("/{id}", Endpoints.GetOrder.Handle)
             .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies])
             .WithSummary("Get a order");
 
-        group.MapGet("/", ListOrder.Handle)
+        group.MapGet("/", Endpoints.ListOrders.Handle)
             .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies])
             .WithSummary("List orders");
 
