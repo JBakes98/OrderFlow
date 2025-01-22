@@ -10,13 +10,13 @@ using Serilog;
 
 namespace Orderflow.Services;
 
-public class ExchangeService : IExchangeService
+public class CreateExchangeService : ICreateExchangeService
 {
     private readonly IDiagnosticContext _diagnosticContext;
     private readonly IMapper<Exchange, ExchangeCreatedEvent> _exchangeToExchangeCreatedEvent;
     private readonly IExchangeRepository _repository;
 
-    public ExchangeService(
+    public CreateExchangeService(
         IExchangeRepository repository,
         IDiagnosticContext diagnosticContext,
         IMapper<Exchange, ExchangeCreatedEvent> exchangeToExchangeCreatedEvent)
