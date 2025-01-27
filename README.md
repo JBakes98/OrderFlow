@@ -4,7 +4,7 @@ Orderflow is a personal project designed for experimenting with various technolo
 
 ## Technologies Used
 
-- **Dotnet**: The project is written in Dotnet version 8.
+- **Dotnet**: The project is written in Dotnet version 10.
 - **Terraform**: Infrastructure as Code (IAC) is managed using Terraform.
 - **AWS**: The primary cloud provider, utilizing the following services:
   - DynamoDB
