@@ -1,5 +1,5 @@
 using AutoFixture;
-using Orderflow.Data.Entities;
+using Orderflow.Features.Orders.Common;
 
 namespace Orderflow.Api.Unit.Tests.Customizations;
 

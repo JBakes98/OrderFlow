@@ -1,8 +1,10 @@
 using FluentValidation;
-using Orderflow.Api.Routes.Exchange.Models;
-using Orderflow.Api.Routes.Instrument.Models;
-using Orderflow.Api.Routes.Order.Models;
-using Orderflow.Validators;
+using Orderflow.Features.Exchanges.CreateExchange.Contracts;
+using Orderflow.Features.Exchanges.CreateExchange.Validators;
+using Orderflow.Features.Instruments.CreateInstrument.Contracts;
+using Orderflow.Features.Instruments.CreateInstrument.Validators;
+using Orderflow.Features.Orders.CreateOrder.Contracts;
+using Orderflow.Features.Orders.CreateOrder.Validators;
 
 namespace Orderflow.Extensions;
 
