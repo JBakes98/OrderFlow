@@ -4,15 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using OneOf;
 using Orderflow.Data.DbContext;
 using Orderflow.Data.Entities;
-using Orderflow.Data.Repositories.Interfaces;
-using Orderflow.Domain;
-using Orderflow.Domain.Models;
 using Orderflow.Events.Factories;
-using Orderflow.Events.Order;
-using Orderflow.Mappers;
+using Orderflow.Features.Common;
+using Orderflow.Features.Orders.CreateOrder.Events;
 using Serilog;
 
-namespace Orderflow.Data.Repositories;
+namespace Orderflow.Features.Orders.Common.Repositories;
 
 public class OrderRepository : IOrderRepository
 {

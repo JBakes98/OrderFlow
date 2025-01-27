@@ -33,6 +33,8 @@
 
     <ItemGroup>
       <Folder Include="Controllers\" />
+        <Folder Include="Features\Orders\GetOrder\Services\"/>
+        <Folder Include="Features\Orders\ListOrders\Services\"/>
     </ItemGroup>
 
     <ItemGroup>

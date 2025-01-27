@@ -1,8 +1,8 @@
 using OneOf;
-using Orderflow.Domain.Models;
-using Orderflow.Events.Instrument;
+using Orderflow.Features.Common;
+using Orderflow.Features.Instruments.CreateInstrument.Events;
 
-namespace Orderflow.Data.Repositories.Interfaces;
+namespace Orderflow.Features.Instruments.Common.Repositories;
 
 public interface IInstrumentRepository
 {

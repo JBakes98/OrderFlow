@@ -1,30 +1,26 @@
 using Ardalis.GuardClauses;
 using OneOf;
-using Orderflow.Data.Repositories.Interfaces;
-using Orderflow.Domain.Models;
-using Orderflow.Events.Instrument;
-using Orderflow.Mappers;
+using Orderflow.Features.Common;
+using Orderflow.Features.Instruments.Common;
+using Orderflow.Features.Instruments.Common.Repositories;
 using Serilog;
 
-namespace Orderflow.Api.Routes.Instrument.ListInstruments.Services;
+namespace Orderflow.Features.Instruments.ListInstruments.Services;
 
 public class ListInstrumentsService : IListInstrumentsService
 {
     private readonly IDiagnosticContext _diagnosticContext;
-    private readonly IMapper<Domain.Models.Instrument, InstrumentCreatedEvent> _instrumentToInstrumentCreatedEvent;
     private readonly IInstrumentRepository _repository;
 
     public ListInstrumentsService(
         IInstrumentRepository repository,
-        IDiagnosticContext diagnosticContext,
-        IMapper<Domain.Models.Instrument, InstrumentCreatedEvent> instrumentToInstrumentCreatedEvent)
+        IDiagnosticContext diagnosticContext)
     {
-        _instrumentToInstrumentCreatedEvent = Guard.Against.Null(instrumentToInstrumentCreatedEvent);
         _diagnosticContext = Guard.Against.Null(diagnosticContext);
         _repository = Guard.Against.Null(repository);
     }
 
-    public async Task<OneOf<IEnumerable<Domain.Models.Instrument>, Error>> ListInstruments()
+    public async Task<OneOf<IEnumerable<Instrument>, Error>> ListInstruments()
     {
         var result = await _repository.QueryAsync();
 

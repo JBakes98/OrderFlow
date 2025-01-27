@@ -1,7 +1,8 @@
-using Orderflow.Api.Routes.Instrument.Models;
-using Orderflow.Domain.Models;
+using Orderflow.Features.Common;
+using Orderflow.Features.Instruments.Common;
+using Orderflow.Features.Instruments.CreateInstrument.Contracts;
 
-namespace Orderflow.Mappers.Api.Request;
+namespace Orderflow.Features.Instruments.CreateInstrument.Mappers;
 
 public class PostInstrumentRequestToInstrumentMapper : IMapper<PostInstrumentRequest, Instrument>
 {

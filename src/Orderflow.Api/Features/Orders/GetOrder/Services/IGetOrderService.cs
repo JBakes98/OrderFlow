@@ -1,9 +1,10 @@
 using OneOf;
-using Orderflow.Domain.Models;
+using Orderflow.Features.Common;
+using Orderflow.Features.Orders.Common;
 
-namespace Orderflow.Api.Routes.Order.GetOrder.Services;
+namespace Orderflow.Features.Orders.GetOrder.Services;
 
 public interface IGetOrderService
 {
-    Task<OneOf<Domain.Models.Order, Error>> GetOrder(string id);
+    Task<OneOf<Order, Error>> GetOrder(string id);
 }

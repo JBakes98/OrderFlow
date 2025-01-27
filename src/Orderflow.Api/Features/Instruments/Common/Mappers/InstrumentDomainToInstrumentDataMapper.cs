@@ -1,7 +1,6 @@
-using Orderflow.Data.Entities;
-using Orderflow.Domain.Models;
+using Orderflow.Features.Common;
 
-namespace Orderflow.Mappers.Data;
+namespace Orderflow.Features.Instruments.Common.Mappers;
 
 public class InstrumentDomainToInstrumentDataMapper : IMapper<Instrument, InstrumentEntity>
 {

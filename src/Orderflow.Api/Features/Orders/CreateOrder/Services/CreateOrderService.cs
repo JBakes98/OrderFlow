@@ -1,16 +1,16 @@
 using Ardalis.GuardClauses;
 using OneOf;
-using Orderflow.Api.Routes.Instrument.GetInstrument.Services;
-using Orderflow.Data.Repositories.Interfaces;
-using Orderflow.Domain.Models;
-using Orderflow.Events.Order;
-using Orderflow.Mappers;
-using Orderflow.Services.AlphaVantage;
-using Orderflow.Services.Interfaces;
+using Orderflow.Features.AlphaVantage.Services;
+using Orderflow.Features.Common;
+using Orderflow.Features.Instruments.GetInstrument.Services;
+using Orderflow.Features.Orders.Common;
+using Orderflow.Features.Orders.Common.Repositories;
+using Orderflow.Features.Orders.CreateOrder.Events;
+using Orderflow.Features.Trades.CreateTrade.Services;
 using Serilog;
-using Error = Orderflow.Domain.Models.Error;
+using Error = Orderflow.Features.Common.Error;
 
-namespace Orderflow.Services;
+namespace Orderflow.Features.Orders.CreateOrder.Services;
 
 public class CreateOrderService : ICreateOrderService
 {
@@ -20,7 +20,7 @@ public class CreateOrderService : ICreateOrderService
     private readonly IAlphaVantageService _alphaVantageService;
     private readonly IGetInstrumentService _getInstrumentService;
     private readonly IOrderBookManager _orderBookManager;
-    private readonly ITradeService _tradeService;
+    private readonly IProcessTradeService _processTradeService;
 
     public CreateOrderService(
         IOrderRepository repository,
@@ -29,9 +29,9 @@ public class CreateOrderService : ICreateOrderService
         IAlphaVantageService alphaVantageService,
         IGetInstrumentService getInstrumentService,
         IOrderBookManager orderBookManager,
-        ITradeService tradeService)
+        IProcessTradeService processTradeService)
     {
-        _tradeService = Guard.Against.Null(tradeService);
+        _processTradeService = Guard.Against.Null(processTradeService);
         _orderBookManager = Guard.Against.Null(orderBookManager);
         _getInstrumentService = Guard.Against.Null(getInstrumentService);
         _alphaVantageService = Guard.Against.Null(alphaVantageService);
@@ -69,7 +69,7 @@ public class CreateOrderService : ICreateOrderService
         var trades = orderBook.AddOrder(order);
 
         _diagnosticContext.Set("Trades", trades, true);
-        await _tradeService.ProcessTrades(trades);
+        await _processTradeService.ProcessTrades(trades);
 
         return order;
     }

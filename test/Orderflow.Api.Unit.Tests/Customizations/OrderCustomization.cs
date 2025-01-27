@@ -1,6 +1,6 @@
 using AutoFixture;
-using Orderflow.Domain.Models;
 using Orderflow.Domain.Models.Enums;
+using Orderflow.Features.Orders.Common;
 
 namespace Orderflow.Api.Unit.Tests.Customizations;
 

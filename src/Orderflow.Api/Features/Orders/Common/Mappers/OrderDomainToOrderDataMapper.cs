@@ -1,8 +1,7 @@
-using Orderflow.Data.Entities;
-using Orderflow.Domain.Models;
 using Orderflow.Extensions;
+using Orderflow.Features.Common;
 
-namespace Orderflow.Mappers.Data;
+namespace Orderflow.Features.Orders.Common.Mappers;
 
 public class OrderDomainToOrderDataMapper : IMapper<Order, OrderEntity>
 {

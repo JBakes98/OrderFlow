@@ -1,8 +1,9 @@
 using Orderflow.Data.Entities;
-using Orderflow.Events.Exchange;
-using Orderflow.Events.Instrument;
-using Orderflow.Events.Order;
-using Orderflow.Events.Trade;
+using Orderflow.Features.Exchanges.CreateExchange.Events;
+using Orderflow.Features.Instruments.CreateInstrument.Events;
+using Orderflow.Features.Orders.CreateOrder.Events;
+using Orderflow.Features.Orders.UpdateOrder.Events;
+using Orderflow.Features.Trades.CreateTrade.Events;
 
 namespace Orderflow.Events.Factories;
 

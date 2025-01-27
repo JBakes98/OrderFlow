@@ -1,10 +1,11 @@
 using Ardalis.GuardClauses;
 using OneOf;
-using Orderflow.Data.Repositories.Interfaces;
-using Orderflow.Domain.Models;
+using Orderflow.Features.Common;
+using Orderflow.Features.Orders.Common;
+using Orderflow.Features.Orders.Common.Repositories;
 using Serilog;
 
-namespace Orderflow.Api.Routes.Instrument.GetInstrumentOrders.Services;
+namespace Orderflow.Features.Instruments.GetInstrumentOrders.Services;
 
 public class GetInstrumentOrdersService : IGetInstrumentOrdersService
 {
@@ -19,7 +20,7 @@ public class GetInstrumentOrdersService : IGetInstrumentOrdersService
         _repository = Guard.Against.Null(repository);
     }
 
-    public async Task<OneOf<IEnumerable<Domain.Models.Order>, Error>> GetInstrumentOrders(string instrumentId)
+    public async Task<OneOf<IEnumerable<Order>, Error>> GetInstrumentOrders(string instrumentId)
     {
         var result = await _repository.GetInstrumentOrders(instrumentId);
 

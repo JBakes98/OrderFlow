@@ -1,20 +1,21 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Orderflow.Api.Routes.Instrument.Models;
 using Orderflow.Extensions;
-using Orderflow.Mappers;
-using Orderflow.Services;
-using Orderflow.Services.Interfaces;
+using Orderflow.Features.Common;
+using Orderflow.Features.Instruments.Common;
+using Orderflow.Features.Instruments.CreateInstrument.Contracts;
+using Orderflow.Features.Instruments.CreateInstrument.Services;
+using Orderflow.Features.Instruments.GetInstrument.Contracts;
 
-namespace Orderflow.Api.Routes.Instrument.Endpoints;
+namespace Orderflow.Features.Instruments.CreateInstrument.Endpoints;
 
 public static class PostInstrument
 {
     public static async Task<Results<Created<GetInstrumentResponse>, ProblemHttpResult>> Handle(
         HttpContext context,
         ICreateInstrumentService createInstrumentService,
-        IMapper<PostInstrumentRequest, Domain.Models.Instrument> postInstrumentRequestToInstrumentMapper,
-        IMapper<Domain.Models.Instrument, GetInstrumentResponse> instrumentToGetInstrumentResponseMapper,
+        IMapper<PostInstrumentRequest, Instrument> postInstrumentRequestToInstrumentMapper,
+        IMapper<Instrument, GetInstrumentResponse> instrumentToGetInstrumentResponseMapper,
         [FromBody] PostInstrumentRequest instrumentRequest)
     {
         var instrument = postInstrumentRequestToInstrumentMapper.Map(instrumentRequest);

@@ -1,6 +1,6 @@
 using System.Globalization;
 using AutoFixture;
-using Orderflow.Services.AlphaVantage.Api.Responses;
+using Orderflow.Features.AlphaVantage.Contracts;
 
 namespace Orderflow.Api.Unit.Tests.Customizations;
 

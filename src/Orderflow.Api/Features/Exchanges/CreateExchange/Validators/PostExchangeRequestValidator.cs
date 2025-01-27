@@ -1,8 +1,7 @@
 using FluentValidation;
-using Orderflow.Api.Routes.Exchange.Models;
-using Orderflow.Domain.Models.Enums;
+using Orderflow.Features.Exchanges.CreateExchange.Contracts;
 
-namespace Orderflow.Validators;
+namespace Orderflow.Features.Exchanges.CreateExchange.Validators;
 
 public class PostExchangeRequestValidator : AbstractValidator<PostExchangeRequest>
 {

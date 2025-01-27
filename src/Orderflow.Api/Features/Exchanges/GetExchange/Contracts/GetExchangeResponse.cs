@@ -1,4 +1,4 @@
-namespace Orderflow.Api.Routes.Exchange.Models;
+namespace Orderflow.Features.Exchanges.GetExchange.Contracts;
 
 public class GetExchangeResponse
 {

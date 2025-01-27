@@ -1,17 +1,16 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-using Orderflow.Api.Routes.Instrument.GetInstrument.Services;
-using Orderflow.Api.Routes.Instrument.Models;
-using Orderflow.Mappers;
-using Orderflow.Services;
-using Orderflow.Services.Interfaces;
+using Orderflow.Features.Common;
+using Orderflow.Features.Instruments.Common;
+using Orderflow.Features.Instruments.GetInstrument.Contracts;
+using Orderflow.Features.Instruments.GetInstrument.Services;
 
-namespace Orderflow.Api.Routes.Instrument.Endpoints;
+namespace Orderflow.Features.Instruments.GetInstrument.Endpoints;
 
 public static class GetInstrument
 {
     public static async Task<Results<Ok<GetInstrumentResponse>, ProblemHttpResult>> Handle(
         IGetInstrumentService getInstrumentService,
-        IMapper<Domain.Models.Instrument, GetInstrumentResponse> instrumentToResponseMapper,
+        IMapper<Instrument, GetInstrumentResponse> instrumentToResponseMapper,
         Guid id)
     {
         var result = await getInstrumentService.GetInstrument(id);

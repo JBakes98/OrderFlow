@@ -1,4 +1,6 @@
-namespace Orderflow.Events.Instrument;
+using Orderflow.Events;
+
+namespace Orderflow.Features.Instruments.CreateInstrument.Events;
 
 public class InstrumentCreatedEvent : IEvent
 {

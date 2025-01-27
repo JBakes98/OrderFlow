@@ -1,6 +1,6 @@
-using Orderflow.Domain.Models;
+using Orderflow.Features.Common;
 
-namespace Orderflow.Api.Routes.Order.UploadOrderFile.Services;
+namespace Orderflow.Features.Orders.UploadOrderFile.Services;
 
 public interface IUploadOrderFileService
 {

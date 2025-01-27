@@ -1,5 +1,5 @@
 using OneOf;
-using Orderflow.Domain.Models;
+using Orderflow.Features.Common;
 
 namespace Orderflow.Features.Exchanges.ListExchanges.Services;
 

@@ -1,10 +1,8 @@
 using OneOf;
-using Orderflow.Domain.Models;
-using Orderflow.Events;
-using Orderflow.Events.Exchange;
-using Orderflow.Features.Exchanges.Common;
+using Orderflow.Features.Common;
+using Orderflow.Features.Exchanges.CreateExchange.Events;
 
-namespace Orderflow.Data.Repositories.Interfaces;
+namespace Orderflow.Features.Exchanges.Common.Repositories;
 
 public interface IExchangeRepository
 {

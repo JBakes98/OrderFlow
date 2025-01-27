@@ -4,14 +4,13 @@ using System.Text.Json.Nodes;
 using Ardalis.GuardClauses;
 using Microsoft.Extensions.Options;
 using OneOf;
-using Orderflow.Domain;
 using Orderflow.Domain.Models;
-using Orderflow.Mappers;
+using Orderflow.Features.AlphaVantage.Contracts;
+using Orderflow.Features.Common;
 using Orderflow.Options;
-using Orderflow.Services.AlphaVantage.Api.Responses;
 using Serilog;
 
-namespace Orderflow.Services.AlphaVantage;
+namespace Orderflow.Features.AlphaVantage.Services;
 
 public class AlphaVantageService(
     IHttpClientFactory httpClientFactory,

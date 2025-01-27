@@ -1,7 +1,8 @@
 using Orderflow.Api.Authorization;
-using Orderflow.Api.Routes.Order.Endpoints;
+using Orderflow.Api.Routes;
+using Orderflow.Features.Orders.CreateOrder.Endpoints;
 
-namespace Orderflow.Api.Routes.Order;
+namespace Orderflow.Features.Orders;
 
 public static class OrderUserGroup
 {
@@ -11,11 +12,11 @@ public static class OrderUserGroup
 
         var group = app.MapUserGroup("orders");
 
-        group.MapGet("/{id}", Endpoints.GetOrder.Handle)
+        group.MapGet("/{id}", GetOrder.Endpoints.GetOrder.Handle)
             .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies])
             .WithSummary("Get a order");
 
-        group.MapGet("/", Endpoints.ListOrders.Handle)
+        group.MapGet("/", ListOrders.Endpoints.ListOrders.Handle)
             .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies])
             .WithSummary("List orders");
 

@@ -1,7 +1,8 @@
-using Orderflow.Api.Routes.Instrument.Models;
-using Orderflow.Domain.Models;
+using Orderflow.Features.Common;
+using Orderflow.Features.Instruments.Common;
+using Orderflow.Features.Instruments.GetInstrument.Contracts;
 
-namespace Orderflow.Mappers.Api.Response;
+namespace Orderflow.Features.Instruments.GetInstrument.Mappers;
 
 public class InstrumentToGetInstrumentResponseMapper : IMapper<Instrument, GetInstrumentResponse>
 {

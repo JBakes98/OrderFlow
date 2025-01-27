@@ -1,4 +1,4 @@
-namespace Orderflow.Api.Routes.Exchange.Models;
+namespace Orderflow.Features.Exchanges.CreateExchange.Contracts;
 
 public class PostExchangeRequest
 {

@@ -1,10 +1,8 @@
-using Orderflow.Domain.Models;
-using Orderflow.Events;
-using Orderflow.Events.Exchange;
-using Orderflow.Extensions;
+using Orderflow.Features.Common;
 using Orderflow.Features.Exchanges.Common;
+using Orderflow.Features.Exchanges.CreateExchange.Events;
 
-namespace Orderflow.Mappers.Events;
+namespace Orderflow.Features.Exchanges.CreateExchange.Mappers;
 
 public class ExchangeToExchangeCreatedEventMapper : IMapper<Exchange, ExchangeCreatedEvent>
 {

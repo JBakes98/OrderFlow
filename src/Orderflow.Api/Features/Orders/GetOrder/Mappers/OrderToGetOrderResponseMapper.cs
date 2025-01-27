@@ -1,7 +1,8 @@
-using Orderflow.Api.Routes.Order.Models;
-using Orderflow.Domain.Models;
+using Orderflow.Features.Common;
+using Orderflow.Features.Orders.Common;
+using Orderflow.Features.Orders.GetOrder.Contracts;
 
-namespace Orderflow.Mappers.Api.Response;
+namespace Orderflow.Features.Orders.GetOrder.Mappers;
 
 public class OrderToGetOrderResponseMapper : IMapper<Order, GetOrderResponse>
 {

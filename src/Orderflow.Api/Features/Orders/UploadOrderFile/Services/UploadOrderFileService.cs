@@ -3,11 +3,10 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Util;
 using Ardalis.GuardClauses;
-using Orderflow.Domain;
-using Orderflow.Domain.Models;
+using Orderflow.Features.Common;
 using Serilog;
 
-namespace Orderflow.Api.Routes.Order.UploadOrderFile.Services;
+namespace Orderflow.Features.Orders.UploadOrderFile.Services;
 
 public class UploadOrderFileService : IUploadOrderFileService
 {

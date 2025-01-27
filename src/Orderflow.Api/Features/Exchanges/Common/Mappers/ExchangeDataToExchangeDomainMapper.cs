@@ -1,9 +1,6 @@
-using Orderflow.Data.Entities;
-using Orderflow.Domain.Models;
-using Orderflow.Extensions;
-using Orderflow.Features.Exchanges.Common;
+using Orderflow.Features.Common;
 
-namespace Orderflow.Mappers.Domain;
+namespace Orderflow.Features.Exchanges.Common.Mappers;
 
 public class ExchangeDataToExchangeDomainMapper : IMapper<ExchangeEntity, Exchange>
 {

@@ -1,8 +1,9 @@
 using Orderflow.Api.Authorization;
-using Orderflow.Api.Routes.Exchange.Endpoints;
-using Orderflow.Features.Exchanges.GetExchange.Endpoints;
+using Orderflow.Api.Routes;
+using Orderflow.Features.Exchanges.CreateExchange.Endpoints;
+using Orderflow.Features.Exchanges.ListExchanges.Endpoints;
 
-namespace Orderflow.Api.Routes.Exchange;
+namespace Orderflow.Features.Exchanges;
 
 public static class ExchangeUserGroup
 {
@@ -12,7 +13,7 @@ public static class ExchangeUserGroup
 
         var group = app.MapUserGroup("exchanges");
 
-        group.MapGet("/{id}", GetExchange.Handle)
+        group.MapGet("/{id}", GetExchange.Endpoints.GetExchange.Handle)
             .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies])
             .WithSummary("Get a exchange");
 

@@ -1,4 +1,4 @@
-namespace Orderflow.Api.Routes.Instrument.Models;
+namespace Orderflow.Features.Instruments.GetInstrument.Contracts;
 
 public class GetInstrumentResponse
 {

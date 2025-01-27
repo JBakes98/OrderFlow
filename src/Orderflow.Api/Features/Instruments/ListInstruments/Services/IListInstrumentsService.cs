@@ -1,9 +1,10 @@
 using OneOf;
-using Orderflow.Domain.Models;
+using Orderflow.Features.Common;
+using Orderflow.Features.Instruments.Common;
 
-namespace Orderflow.Api.Routes.Instrument.ListInstruments.Services;
+namespace Orderflow.Features.Instruments.ListInstruments.Services;
 
 public interface IListInstrumentsService
 {
-    Task<OneOf<IEnumerable<Domain.Models.Instrument>, Error>> ListInstruments();
+    Task<OneOf<IEnumerable<Instrument>, Error>> ListInstruments();
 }

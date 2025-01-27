@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-using Orderflow.Api.Routes.Exchange.Models;
+using Orderflow.Features.Common;
+using Orderflow.Features.Exchanges.GetExchange.Contracts;
 using Orderflow.Features.Exchanges.GetExchange.Services;
-using Orderflow.Mappers;
 
 namespace Orderflow.Features.Exchanges.GetExchange.Endpoints;
 

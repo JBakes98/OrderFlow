@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using Orderflow.Features.Instruments.Common;
 
-namespace Orderflow.Data.Entities;
+namespace Orderflow.Features.Exchanges.Common;
 
 public class ExchangeEntity
 {

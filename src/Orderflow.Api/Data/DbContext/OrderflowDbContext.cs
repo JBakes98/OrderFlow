@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Orderflow.Data.Entities;
+using Orderflow.Features.Exchanges.Common;
+using Orderflow.Features.Instruments.Common;
+using Orderflow.Features.Orders.Common;
+using Orderflow.Features.Trades.Common;
 
 namespace Orderflow.Data.DbContext;
 

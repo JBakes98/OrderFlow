@@ -2,12 +2,14 @@ using System.Net;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Orderflow.Api.Routes.Order.Models;
 using Orderflow.Extensions;
-using Orderflow.Mappers;
-using Orderflow.Services.Interfaces;
+using Orderflow.Features.Common;
+using Orderflow.Features.Orders.Common;
+using Orderflow.Features.Orders.CreateOrder.Contracts;
+using Orderflow.Features.Orders.CreateOrder.Services;
+using Orderflow.Features.Orders.GetOrder.Contracts;
 
-namespace Orderflow.Api.Routes.Order.Endpoints;
+namespace Orderflow.Features.Orders.CreateOrder.Endpoints;
 
 public static class PostOrder
 {
@@ -15,8 +17,8 @@ public static class PostOrder
         HttpContext context,
         IValidator<PostOrderRequest> validator,
         ICreateOrderService createOrderService,
-        IMapper<PostOrderRequest, Domain.Models.Order> postOrderRequestToOrderMapper,
-        IMapper<Domain.Models.Order, GetOrderResponse> orderToOrderResponseMapper,
+        IMapper<PostOrderRequest, Order> postOrderRequestToOrderMapper,
+        IMapper<Order, GetOrderResponse> orderToOrderResponseMapper,
         [FromBody] PostOrderRequest orderRequest)
     {
         var validationResult = await validator.ValidateAsync(orderRequest);

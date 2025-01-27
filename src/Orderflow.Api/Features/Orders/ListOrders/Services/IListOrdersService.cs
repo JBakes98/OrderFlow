@@ -1,9 +1,10 @@
 using OneOf;
-using Orderflow.Domain.Models;
+using Orderflow.Features.Common;
+using Orderflow.Features.Orders.Common;
 
-namespace Orderflow.Api.Routes.Order.ListOrders.Services;
+namespace Orderflow.Features.Orders.ListOrders.Services;
 
 public interface IListOrdersService
 {
-    Task<OneOf<IEnumerable<Domain.Models.Order>, Error>> ListOrders();
+    Task<OneOf<IEnumerable<Order>, Error>> ListOrders();
 }

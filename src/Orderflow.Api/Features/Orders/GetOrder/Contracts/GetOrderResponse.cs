@@ -1,6 +1,6 @@
 using Orderflow.Domain.Models.Enums;
 
-namespace Orderflow.Api.Routes.Order.Models;
+namespace Orderflow.Features.Orders.GetOrder.Contracts;
 
 public class GetOrderResponse
 {

@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-using Orderflow.Api.Routes.Order.GetOrder.Services;
-using Orderflow.Api.Routes.Order.Models;
-using Orderflow.Mappers;
-using Orderflow.Services.Interfaces;
+using Orderflow.Features.Common;
+using Orderflow.Features.Orders.Common;
+using Orderflow.Features.Orders.GetOrder.Contracts;
+using Orderflow.Features.Orders.GetOrder.Services;
 
-namespace Orderflow.Api.Routes.Order.Endpoints;
+namespace Orderflow.Features.Orders.GetOrder.Endpoints;
 
 public static class GetOrder
 {
     public static async Task<Results<Ok<GetOrderResponse>, ProblemHttpResult>> Handle(
         IGetOrderService getOrderService,
-        IMapper<Domain.Models.Order, GetOrderResponse> orderToResponseMapper,
+        IMapper<Order, GetOrderResponse> orderToResponseMapper,
         string id)
     {
         var result = await getOrderService.GetOrder(id);

@@ -1,6 +1,6 @@
 using Orderflow.Domain.Models.Enums;
 
-namespace Orderflow.Domain.Models;
+namespace Orderflow.Features.Orders.Common;
 
 public class Order
 {
@@ -52,7 +52,7 @@ public class Order
     public double Price { get; set; }
     public DateTime Placed { get; }
     public DateTime Updated { get; private set; }
-    public TradeSide Side { get; set; }
+    public TradeSide Side { get; }
     public OrderStatus Status { get; private set; }
     public double Value { get; private set; }
 

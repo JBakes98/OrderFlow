@@ -1,7 +1,8 @@
 using OneOf;
-using Orderflow.Domain.Models;
+using Orderflow.Features.Common;
+using Orderflow.Features.Orders.Common;
 
-namespace Orderflow.Services.Interfaces;
+namespace Orderflow.Features.Orders.CreateOrder.Services;
 
 public interface ICreateOrderService
 {

@@ -1,4 +1,4 @@
-namespace Orderflow.Api.Routes.Order.Models;
+namespace Orderflow.Features.Orders.CreateOrder.Contracts;
 
 public class PostOrderRequest
 {

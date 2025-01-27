@@ -2,12 +2,13 @@ using System.Net;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Orderflow.Api.Routes.Exchange.Models;
 using Orderflow.Extensions;
-using Orderflow.Mappers;
-using Orderflow.Services.Interfaces;
+using Orderflow.Features.Common;
+using Orderflow.Features.Exchanges.CreateExchange.Contracts;
+using Orderflow.Features.Exchanges.CreateExchange.Services;
+using Orderflow.Features.Exchanges.GetExchange.Contracts;
 
-namespace Orderflow.Api.Routes.Exchange.Endpoints;
+namespace Orderflow.Features.Exchanges.CreateExchange.Endpoints;
 
 public static class PostExchange
 {

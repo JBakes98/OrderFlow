@@ -1,5 +1,4 @@
-using Orderflow.Data.Entities;
-using Orderflow.Domain.Models;
+using Orderflow.Features.Orders.Common;
 
 namespace Orderflow.Extensions;
 

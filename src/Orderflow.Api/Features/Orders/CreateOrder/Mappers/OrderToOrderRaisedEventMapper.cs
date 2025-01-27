@@ -1,8 +1,9 @@
-using Orderflow.Domain.Models;
 using Orderflow.Domain.Models.Enums;
-using Orderflow.Events.Order;
+using Orderflow.Features.Common;
+using Orderflow.Features.Orders.Common;
+using Orderflow.Features.Orders.CreateOrder.Events;
 
-namespace Orderflow.Mappers.Events;
+namespace Orderflow.Features.Orders.CreateOrder.Mappers;
 
 public class OrderToOrderRaisedEventMapper : IMapper<Order, OrderRaisedEvent>
 {

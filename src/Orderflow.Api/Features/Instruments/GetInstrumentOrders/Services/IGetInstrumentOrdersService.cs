@@ -1,9 +1,10 @@
 using OneOf;
-using Orderflow.Domain.Models;
+using Orderflow.Features.Common;
+using Orderflow.Features.Orders.Common;
 
-namespace Orderflow.Api.Routes.Instrument.GetInstrumentOrders.Services;
+namespace Orderflow.Features.Instruments.GetInstrumentOrders.Services;
 
 public interface IGetInstrumentOrdersService
 {
-    Task<OneOf<IEnumerable<Domain.Models.Order>, Error>> GetInstrumentOrders(string instrumentId);
+    Task<OneOf<IEnumerable<Order>, Error>> GetInstrumentOrders(string instrumentId);
 }

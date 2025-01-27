@@ -1,8 +1,8 @@
 using FluentValidation;
-using Orderflow.Api.Routes.Order.Models;
 using Orderflow.Domain.Models.Enums;
+using Orderflow.Features.Orders.CreateOrder.Contracts;
 
-namespace Orderflow.Validators;
+namespace Orderflow.Features.Orders.CreateOrder.Validators;
 
 public class PostOrderRequestValidator : AbstractValidator<PostOrderRequest>
 {

@@ -1,7 +1,8 @@
 using OneOf;
-using Orderflow.Domain.Models;
+using Orderflow.Features.Common;
+using Orderflow.Features.Instruments.Common;
 
-namespace Orderflow.Services.Interfaces;
+namespace Orderflow.Features.Instruments.CreateInstrument.Services;
 
 public interface ICreateInstrumentService
 {

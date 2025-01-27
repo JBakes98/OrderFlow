@@ -1,12 +1,11 @@
 using Ardalis.GuardClauses;
 using OneOf;
-using Orderflow.Data.Repositories.Interfaces;
-using Orderflow.Domain.Models;
+using Orderflow.Features.Common;
 using Orderflow.Features.Exchanges.Common;
-using Orderflow.Features.Exchanges.GetExchange.Services;
+using Orderflow.Features.Exchanges.Common.Repositories;
 using Serilog;
 
-namespace Orderflow.Services;
+namespace Orderflow.Features.Exchanges.GetExchange.Services;
 
 public class GetExchangeService : IGetExchangeService
 {

@@ -1,4 +1,6 @@
-namespace Orderflow.Events.Exchange;
+using Orderflow.Events;
+
+namespace Orderflow.Features.Exchanges.CreateExchange.Events;
 
 public class ExchangeCreatedEvent : IEvent
 {

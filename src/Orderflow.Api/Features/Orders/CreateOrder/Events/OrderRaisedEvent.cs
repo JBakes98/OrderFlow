@@ -1,4 +1,6 @@
-namespace Orderflow.Events.Order;
+using Orderflow.Events;
+
+namespace Orderflow.Features.Orders.CreateOrder.Events;
 
 public class OrderRaisedEvent : IEvent
 {

@@ -1,8 +1,8 @@
 using OneOf;
-using Orderflow.Domain.Models;
-using Orderflow.Events.Order;
+using Orderflow.Features.Common;
+using Orderflow.Features.Orders.CreateOrder.Events;
 
-namespace Orderflow.Data.Repositories.Interfaces;
+namespace Orderflow.Features.Orders.Common.Repositories;
 
 public interface IOrderRepository
 {

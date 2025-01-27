@@ -1,7 +1,8 @@
-using Orderflow.Domain.Models;
-using Orderflow.Events.Instrument;
+using Orderflow.Features.Common;
+using Orderflow.Features.Instruments.Common;
+using Orderflow.Features.Instruments.CreateInstrument.Events;
 
-namespace Orderflow.Mappers.Events;
+namespace Orderflow.Features.Instruments.CreateInstrument.Mappers;
 
 public class InstrumentToInstrumentCreatedEventMapper : IMapper<Instrument, InstrumentCreatedEvent>
 {

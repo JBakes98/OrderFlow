@@ -1,11 +1,9 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-using Orderflow.Api.Routes.Exchange.Models;
-using Orderflow.Features.Exchanges.GetExchange.Services;
+using Orderflow.Features.Common;
+using Orderflow.Features.Exchanges.GetExchange.Contracts;
 using Orderflow.Features.Exchanges.ListExchanges.Services;
-using Orderflow.Mappers;
-using Orderflow.Services.Interfaces;
 
-namespace Orderflow.Api.Routes.Exchange.Endpoints;
+namespace Orderflow.Features.Exchanges.ListExchanges.Endpoints;
 
 public static class ListExchange
 {

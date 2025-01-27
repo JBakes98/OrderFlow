@@ -1,5 +1,5 @@
 using AutoFixture;
-using Orderflow.Api.Routes.Instrument.Models;
+using Orderflow.Features.Instruments.CreateInstrument.Contracts;
 
 namespace Orderflow.Api.Unit.Tests.Customizations;
 

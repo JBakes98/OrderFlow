@@ -1,4 +1,4 @@
-namespace Orderflow.Domain.Models;
+namespace Orderflow.Features.Instruments.Common;
 
 public class Instrument
 {

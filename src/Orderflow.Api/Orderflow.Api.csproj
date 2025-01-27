@@ -47,4 +47,21 @@
         </Content>
     </ItemGroup>
 
+    <ItemGroup>
+        <Folder Include="Features\Exchanges\CreateExchange\"/>
+        <Folder Include="Features\Exchanges\ListExchanges\Contracts\"/>
+        <Folder Include="Features\Instruments\GetInstrument\Events\"/>
+        <Folder Include="Features\Instruments\GetInstrument\Validators\"/>
+        <Folder Include="Features\Instruments\ListInstruments\Contracts\"/>
+        <Folder Include="Features\Instruments\ListInstruments\Events\"/>
+        <Folder Include="Features\Instruments\ListInstruments\Mappers\"/>
+        <Folder Include="Features\Instruments\ListInstruments\Validators\"/>
+        <Folder Include="Features\Orders\GetOrder\Events\"/>
+        <Folder Include="Features\Orders\GetOrder\Validators\"/>
+        <Folder Include="Features\Orders\ListOrders\Contracts\"/>
+        <Folder Include="Features\Orders\ListOrders\Events\"/>
+        <Folder Include="Features\Orders\ListOrders\Mappers\"/>
+        <Folder Include="Features\Orders\ListOrders\Validators\"/>
+    </ItemGroup>
+
 </Project>

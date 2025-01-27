@@ -1,7 +1,7 @@
 using FluentValidation;
-using Orderflow.Api.Routes.Instrument.Models;
+using Orderflow.Features.Instruments.CreateInstrument.Contracts;
 
-namespace Orderflow.Features.Instruments.Validators;
+namespace Orderflow.Features.Instruments.CreateInstrument.Validators;
 
 public class PostInstrumentRequestValidator : AbstractValidator<PostInstrumentRequest>
 {

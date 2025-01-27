@@ -1,7 +1,9 @@
 using Orderflow.Api.Authorization;
-using Orderflow.Api.Routes.Instrument.Endpoints;
+using Orderflow.Api.Routes;
+using Orderflow.Features.Instruments.CreateInstrument.Endpoints;
+using Orderflow.Features.Instruments.ListInstruments.Endpoints;
 
-namespace Orderflow.Api.Routes.Instrument;
+namespace Orderflow.Features.Instruments;
 
 public static class InstrumentUserGroup
 {
@@ -11,7 +13,7 @@ public static class InstrumentUserGroup
 
         var group = app.MapUserGroup("instruments");
 
-        group.MapGet("/{id}", Endpoints.GetInstrument.Handle)
+        group.MapGet("/{id}", GetInstrument.Endpoints.GetInstrument.Handle)
             .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies])
             .WithSummary("Get a instrument");
 
