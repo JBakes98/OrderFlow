@@ -1,5 +1,5 @@
 using FluentValidation;
-using Orderflow.Domain.Models.Enums;
+using Orderflow.Features.Common.Enums;
 using Orderflow.Features.Orders.CreateOrder.Contracts;
 
 namespace Orderflow.Features.Orders.CreateOrder.Validators;

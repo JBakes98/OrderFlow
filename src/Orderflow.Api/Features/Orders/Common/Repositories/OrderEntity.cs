@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Orderflow.Domain.Models.Enums;
-using Orderflow.Features.Instruments.Common;
-using Orderflow.Features.Trades.Common;
+using Orderflow.Features.Common.Enums;
+using Orderflow.Features.Instruments.Common.Repositories;
+using Orderflow.Features.Trades.Common.Repositories;
 
-namespace Orderflow.Features.Orders.Common;
+namespace Orderflow.Features.Orders.Common.Repositories;
 
 public class OrderEntity
 {

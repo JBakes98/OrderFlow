@@ -4,6 +4,7 @@ using Amazon.S3.Model;
 using Amazon.S3.Util;
 using Ardalis.GuardClauses;
 using Orderflow.Features.Common;
+using Orderflow.Features.Common.Models;
 using Serilog;
 
 namespace Orderflow.Features.Orders.UploadOrderFile.Services;

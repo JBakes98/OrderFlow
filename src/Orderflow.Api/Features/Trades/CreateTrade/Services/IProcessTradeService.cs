@@ -1,5 +1,5 @@
-using Orderflow.Features.Common;
-using Orderflow.Features.Trades.Common;
+using Orderflow.Features.Common.Models;
+using Orderflow.Features.Trades.Common.Models;
 
 namespace Orderflow.Features.Trades.CreateTrade.Services;
 

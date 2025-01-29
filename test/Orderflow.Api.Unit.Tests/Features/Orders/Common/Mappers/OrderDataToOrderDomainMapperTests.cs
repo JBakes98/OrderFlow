@@ -1,6 +1,6 @@
 using Orderflow.Api.Unit.Tests.Customizations;
-using Orderflow.Features.Orders.Common;
 using Orderflow.Features.Orders.Common.Mappers;
+using Orderflow.Features.Orders.Common.Repositories;
 
 namespace Orderflow.Api.Unit.Tests.Features.Orders.Common.Mappers;
 

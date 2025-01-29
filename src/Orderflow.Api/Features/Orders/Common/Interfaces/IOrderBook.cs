@@ -1,6 +1,7 @@
-using Orderflow.Features.Trades.Common;
+using Orderflow.Features.Orders.Common.Models;
+using Orderflow.Features.Trades.Common.Models;
 
-namespace Orderflow.Features.Orders.Common;
+namespace Orderflow.Features.Orders.Common.Interfaces;
 
 public interface IOrderBook
 {

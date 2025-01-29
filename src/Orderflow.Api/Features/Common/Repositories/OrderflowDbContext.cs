@@ -1,11 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using Orderflow.Data.Entities;
-using Orderflow.Features.Exchanges.Common;
-using Orderflow.Features.Instruments.Common;
-using Orderflow.Features.Orders.Common;
-using Orderflow.Features.Trades.Common;
+using Orderflow.Features.Exchanges.Common.Repositories;
+using Orderflow.Features.Instruments.Common.Repositories;
+using Orderflow.Features.Orders.Common.Repositories;
+using Orderflow.Features.Trades.Common.Repositories;
 
-namespace Orderflow.Data.DbContext;
+namespace Orderflow.Features.Common.Repositories;
 
 public class OrderflowDbContext(DbContextOptions<OrderflowDbContext> options)
     : Microsoft.EntityFrameworkCore.DbContext(options)

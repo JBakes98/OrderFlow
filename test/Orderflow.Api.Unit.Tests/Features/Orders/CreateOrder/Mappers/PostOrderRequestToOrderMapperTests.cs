@@ -1,5 +1,5 @@
 using Orderflow.Api.Unit.Tests.Customizations;
-using Orderflow.Domain.Models.Enums;
+using Orderflow.Features.Common.Enums;
 using Orderflow.Features.Orders.CreateOrder.Contracts;
 using Orderflow.Features.Orders.CreateOrder.Mappers;
 

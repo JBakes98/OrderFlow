@@ -1,4 +1,4 @@
-namespace Orderflow.Features.Common;
+namespace Orderflow.Features.Common.Mappers;
 
 public interface IMapper<in TSource, out TDestination>
 {

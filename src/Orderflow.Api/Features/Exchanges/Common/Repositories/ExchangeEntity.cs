@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using Orderflow.Features.Instruments.Common;
+using Orderflow.Features.Instruments.Common.Repositories;
 
-namespace Orderflow.Features.Exchanges.Common;
+namespace Orderflow.Features.Exchanges.Common.Repositories;
 
 public class ExchangeEntity
 {

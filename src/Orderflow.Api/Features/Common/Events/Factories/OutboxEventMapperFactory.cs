@@ -1,11 +1,11 @@
-using Orderflow.Data.Entities;
+using Orderflow.Features.Common.Repositories;
 using Orderflow.Features.Exchanges.CreateExchange.Events;
 using Orderflow.Features.Instruments.CreateInstrument.Events;
 using Orderflow.Features.Orders.CreateOrder.Events;
 using Orderflow.Features.Orders.UpdateOrder.Events;
 using Orderflow.Features.Trades.CreateTrade.Events;
 
-namespace Orderflow.Events.Factories;
+namespace Orderflow.Features.Common.Events.Factories;
 
 public class OutboxEventMapperFactory : IOutboxEventMapperFactory
 {

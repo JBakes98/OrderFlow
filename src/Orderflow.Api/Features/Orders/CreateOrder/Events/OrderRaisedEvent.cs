@@ -1,4 +1,4 @@
-using Orderflow.Events;
+using Orderflow.Features.Common.Events;
 
 namespace Orderflow.Features.Orders.CreateOrder.Events;
 

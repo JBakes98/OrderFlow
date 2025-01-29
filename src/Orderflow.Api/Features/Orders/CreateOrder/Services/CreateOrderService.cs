@@ -1,14 +1,15 @@
 using Ardalis.GuardClauses;
 using OneOf;
 using Orderflow.Features.AlphaVantage.Services;
-using Orderflow.Features.Common;
+using Orderflow.Features.Common.Mappers;
 using Orderflow.Features.Instruments.GetInstrument.Services;
-using Orderflow.Features.Orders.Common;
+using Orderflow.Features.Orders.Common.Interfaces;
+using Orderflow.Features.Orders.Common.Models;
 using Orderflow.Features.Orders.Common.Repositories;
 using Orderflow.Features.Orders.CreateOrder.Events;
 using Orderflow.Features.Trades.CreateTrade.Services;
 using Serilog;
-using Error = Orderflow.Features.Common.Error;
+using Error = Orderflow.Features.Common.Models.Error;
 
 namespace Orderflow.Features.Orders.CreateOrder.Services;
 

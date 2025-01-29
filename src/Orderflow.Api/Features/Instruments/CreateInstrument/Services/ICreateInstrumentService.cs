@@ -1,6 +1,6 @@
 using OneOf;
-using Orderflow.Features.Common;
-using Orderflow.Features.Instruments.Common;
+using Orderflow.Features.Common.Models;
+using Orderflow.Features.Instruments.Common.Models;
 
 namespace Orderflow.Features.Instruments.CreateInstrument.Services;
 

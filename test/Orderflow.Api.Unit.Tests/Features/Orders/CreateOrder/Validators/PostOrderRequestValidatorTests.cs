@@ -1,5 +1,5 @@
 using AutoFixture.Xunit2;
-using Orderflow.Domain.Models.Enums;
+using Orderflow.Features.Common.Enums;
 using Orderflow.Features.Orders.CreateOrder.Contracts;
 using Orderflow.Features.Orders.CreateOrder.Validators;
 

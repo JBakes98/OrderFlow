@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-using Orderflow.Features.Common;
+using Orderflow.Features.Common.Mappers;
+using Orderflow.Features.Exchanges.Common.Models;
 using Orderflow.Features.Exchanges.GetExchange.Contracts;
 using Orderflow.Features.Exchanges.ListExchanges.Services;
 
@@ -9,7 +10,7 @@ public static class ListExchange
 {
     public static async Task<Results<Ok<IEnumerable<GetExchangeResponse>>, ProblemHttpResult>> Handle(
         IListExchangesService listExchangesService,
-        IMapper<Features.Exchanges.Common.Exchange, GetExchangeResponse> exchangeToResponseMapper)
+        IMapper<Exchange, GetExchangeResponse> exchangeToResponseMapper)
     {
         var result = await listExchangesService.ListExchanges();
 

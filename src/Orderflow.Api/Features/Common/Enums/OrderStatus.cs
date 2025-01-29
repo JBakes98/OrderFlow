@@ -1,4 +1,4 @@
-namespace Orderflow.Domain.Models.Enums;
+namespace Orderflow.Features.Common.Enums;
 
 public enum OrderStatus
 {

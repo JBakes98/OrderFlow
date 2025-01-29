@@ -1,5 +1,5 @@
 using Orderflow.Api.Unit.Tests.Customizations;
-using Orderflow.Features.Exchanges.Common;
+using Orderflow.Features.Exchanges.Common.Models;
 using Orderflow.Features.Exchanges.GetExchange.Mappers;
 
 namespace Orderflow.Api.Unit.Tests.Features.Exchanges.GetExchange.Mappers;

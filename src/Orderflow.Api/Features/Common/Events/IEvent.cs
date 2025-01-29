@@ -1,4 +1,4 @@
-namespace Orderflow.Events;
+namespace Orderflow.Features.Common.Events;
 
 public interface IEvent
 {

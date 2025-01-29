@@ -1,5 +1,5 @@
 using Orderflow.Api.Unit.Tests.Customizations;
-using Orderflow.Features.Instruments.Common;
+using Orderflow.Features.Instruments.Common.Models;
 using Orderflow.Features.Instruments.GetInstrument.Mappers;
 
 namespace Orderflow.Api.Unit.Tests.Features.Instruments.GetInstrument.Mappers;

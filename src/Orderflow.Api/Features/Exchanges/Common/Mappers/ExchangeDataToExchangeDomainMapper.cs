@@ -1,4 +1,6 @@
-using Orderflow.Features.Common;
+using Orderflow.Features.Common.Mappers;
+using Orderflow.Features.Exchanges.Common.Models;
+using Orderflow.Features.Exchanges.Common.Repositories;
 
 namespace Orderflow.Features.Exchanges.Common.Mappers;
 

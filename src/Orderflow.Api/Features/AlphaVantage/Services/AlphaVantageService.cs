@@ -4,9 +4,11 @@ using System.Text.Json.Nodes;
 using Ardalis.GuardClauses;
 using Microsoft.Extensions.Options;
 using OneOf;
-using Orderflow.Domain.Models;
 using Orderflow.Features.AlphaVantage.Contracts;
+using Orderflow.Features.AlphaVantage.Models;
 using Orderflow.Features.Common;
+using Orderflow.Features.Common.Mappers;
+using Orderflow.Features.Common.Models;
 using Orderflow.Options;
 using Serilog;
 

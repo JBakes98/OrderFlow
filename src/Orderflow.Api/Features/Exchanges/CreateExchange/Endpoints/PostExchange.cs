@@ -3,7 +3,8 @@ using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Orderflow.Extensions;
-using Orderflow.Features.Common;
+using Orderflow.Features.Common.Mappers;
+using Orderflow.Features.Exchanges.Common.Models;
 using Orderflow.Features.Exchanges.CreateExchange.Contracts;
 using Orderflow.Features.Exchanges.CreateExchange.Services;
 using Orderflow.Features.Exchanges.GetExchange.Contracts;
@@ -16,8 +17,8 @@ public static class PostExchange
         HttpContext context,
         IValidator<PostExchangeRequest> validator,
         ICreateExchangeService createExchangeService,
-        IMapper<PostExchangeRequest, Features.Exchanges.Common.Exchange> postExchangeToExchangeMapper,
-        IMapper<Features.Exchanges.Common.Exchange, GetExchangeResponse> exchangeToGetExchangeResponseMapper,
+        IMapper<PostExchangeRequest, Exchange> postExchangeToExchangeMapper,
+        IMapper<Exchange, GetExchangeResponse> exchangeToGetExchangeResponseMapper,
         [FromBody] PostExchangeRequest exchangeRequest)
     {
         var validationResult = await validator.ValidateAsync(exchangeRequest);

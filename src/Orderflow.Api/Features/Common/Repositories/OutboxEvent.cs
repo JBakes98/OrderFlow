@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 
-namespace Orderflow.Data.Entities;
+namespace Orderflow.Features.Common.Repositories;
 
 public class OutboxEvent
 {

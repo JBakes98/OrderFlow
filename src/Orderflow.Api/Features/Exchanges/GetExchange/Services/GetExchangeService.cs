@@ -1,7 +1,7 @@
 using Ardalis.GuardClauses;
 using OneOf;
-using Orderflow.Features.Common;
-using Orderflow.Features.Exchanges.Common;
+using Orderflow.Features.Common.Models;
+using Orderflow.Features.Exchanges.Common.Models;
 using Orderflow.Features.Exchanges.Common.Repositories;
 using Serilog;
 

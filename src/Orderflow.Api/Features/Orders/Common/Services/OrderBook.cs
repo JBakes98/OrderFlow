@@ -1,7 +1,9 @@
-using Orderflow.Domain.Models.Enums;
-using Orderflow.Features.Trades.Common;
+using Orderflow.Features.Common.Enums;
+using Orderflow.Features.Orders.Common.Interfaces;
+using Orderflow.Features.Orders.Common.Models;
+using Orderflow.Features.Trades.Common.Models;
 
-namespace Orderflow.Features.Orders.Common;
+namespace Orderflow.Features.Orders.Common.Services;
 
 public class OrderBook : IOrderBook
 {
