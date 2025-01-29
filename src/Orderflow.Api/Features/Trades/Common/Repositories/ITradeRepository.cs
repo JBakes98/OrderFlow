@@ -1,4 +1,5 @@
-using Orderflow.Features.Common;
+using Orderflow.Features.Common.Models;
+using Orderflow.Features.Trades.Common.Models;
 using Orderflow.Features.Trades.CreateTrade.Events;
 
 namespace Orderflow.Features.Trades.Common.Repositories;

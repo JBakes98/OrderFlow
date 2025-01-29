@@ -1,5 +1,5 @@
-using Orderflow.Features.Common;
-using Orderflow.Features.Orders.Common;
+using Orderflow.Features.Common.Mappers;
+using Orderflow.Features.Orders.Common.Models;
 using Orderflow.Features.Orders.GetOrder.Contracts;
 
 namespace Orderflow.Features.Orders.GetOrder.Mappers;

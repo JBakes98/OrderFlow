@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace Orderflow.Features.Common;
+namespace Orderflow.Features.Common.Models;
 
 public class Error
 {

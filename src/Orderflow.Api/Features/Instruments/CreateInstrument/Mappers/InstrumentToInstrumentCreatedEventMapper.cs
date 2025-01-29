@@ -1,5 +1,5 @@
-using Orderflow.Features.Common;
-using Orderflow.Features.Instruments.Common;
+using Orderflow.Features.Common.Mappers;
+using Orderflow.Features.Instruments.Common.Models;
 using Orderflow.Features.Instruments.CreateInstrument.Events;
 
 namespace Orderflow.Features.Instruments.CreateInstrument.Mappers;

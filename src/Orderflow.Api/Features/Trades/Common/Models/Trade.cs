@@ -1,4 +1,4 @@
-namespace Orderflow.Features.Trades.Common;
+namespace Orderflow.Features.Trades.Common.Models;
 
 public class Trade
 {

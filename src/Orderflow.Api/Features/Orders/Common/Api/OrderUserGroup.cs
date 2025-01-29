@@ -1,8 +1,7 @@
-using Orderflow.Api.Authorization;
 using Orderflow.Api.Routes;
 using Orderflow.Features.Orders.CreateOrder.Endpoints;
 
-namespace Orderflow.Features.Orders;
+namespace Orderflow.Features.Orders.Common.Api;
 
 public static class OrderUserGroup
 {
@@ -13,15 +12,15 @@ public static class OrderUserGroup
         var group = app.MapUserGroup("orders");
 
         group.MapGet("/{id}", GetOrder.Endpoints.GetOrder.Handle)
-            .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies])
+            // .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies])
             .WithSummary("Get a order");
 
         group.MapGet("/", ListOrders.Endpoints.ListOrders.Handle)
-            .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies])
+            // .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies])
             .WithSummary("List orders");
 
         group.MapPost("/", PostOrder.Handle)
-            .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies])
+            // .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies])
             .WithSummary("Create a order");
     }
 }

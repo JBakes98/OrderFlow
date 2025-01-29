@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Orderflow.Extensions;
-using Orderflow.Features.Common;
-using Orderflow.Features.Instruments.Common;
+using Orderflow.Features.Common.Mappers;
+using Orderflow.Features.Instruments.Common.Models;
 using Orderflow.Features.Instruments.CreateInstrument.Contracts;
 using Orderflow.Features.Instruments.CreateInstrument.Services;
 using Orderflow.Features.Instruments.GetInstrument.Contracts;

@@ -1,13 +1,13 @@
 using Ardalis.GuardClauses;
 using OneOf;
-using Orderflow.Features.Common;
-using Orderflow.Features.Orders.Common;
+using Orderflow.Features.Common.Models;
+using Orderflow.Features.Orders.Common.Models;
 using Orderflow.Features.Orders.Common.Repositories;
 using Serilog;
 
 namespace Orderflow.Features.Orders.ListOrders.Services;
 
-public class ListOrdersService
+public class ListOrdersService : IListOrdersService
 {
     private readonly IDiagnosticContext _diagnosticContext;
     private readonly IOrderRepository _repository;

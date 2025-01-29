@@ -1,6 +1,7 @@
 using Ardalis.GuardClauses;
 using OneOf;
-using Orderflow.Features.Common;
+using Orderflow.Features.Common.Models;
+using Orderflow.Features.Exchanges.Common.Models;
 using Orderflow.Features.Exchanges.Common.Repositories;
 using Serilog;
 
@@ -19,7 +20,7 @@ public class ListExchangesService : IListExchangesService
         _repository = Guard.Against.Null(repository);
     }
 
-    public async Task<OneOf<IEnumerable<Common.Exchange>, Error>> ListExchanges()
+    public async Task<OneOf<IEnumerable<Exchange>, Error>> ListExchanges()
     {
         var result = await _repository.QueryAsync();
 

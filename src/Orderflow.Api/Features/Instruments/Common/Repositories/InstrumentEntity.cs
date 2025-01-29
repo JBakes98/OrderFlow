@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using Orderflow.Features.Exchanges.Common;
-using Orderflow.Features.Orders.Common;
+using Orderflow.Features.Exchanges.Common.Repositories;
+using Orderflow.Features.Orders.Common.Repositories;
 
-namespace Orderflow.Features.Instruments.Common;
+namespace Orderflow.Features.Instruments.Common.Repositories;
 
 public class InstrumentEntity
 {

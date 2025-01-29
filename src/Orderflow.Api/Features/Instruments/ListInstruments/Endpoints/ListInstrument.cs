@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-using Orderflow.Features.Common;
-using Orderflow.Features.Instruments.Common;
+using Orderflow.Features.Common.Mappers;
+using Orderflow.Features.Instruments.Common.Models;
 using Orderflow.Features.Instruments.GetInstrument.Contracts;
 using Orderflow.Features.Instruments.ListInstruments.Services;
 

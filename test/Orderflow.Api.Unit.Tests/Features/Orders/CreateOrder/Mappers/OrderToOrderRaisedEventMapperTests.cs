@@ -1,7 +1,7 @@
 using AutoFixture;
 using Orderflow.Api.Unit.Tests.Customizations;
-using Orderflow.Domain.Models.Enums;
-using Orderflow.Features.Orders.Common;
+using Orderflow.Features.Common.Enums;
+using Orderflow.Features.Orders.Common.Models;
 using Orderflow.Features.Orders.CreateOrder.Events;
 using Orderflow.Features.Orders.CreateOrder.Mappers;
 

@@ -1,7 +1,7 @@
 using Orderflow.Features.AlphaVantage.Services;
 using Orderflow.Options;
 
-namespace Orderflow.Extensions;
+namespace Orderflow.Features.AlphaVantage;
 
 public static class AlphaVantageExtensions
 {

@@ -1,17 +1,19 @@
 using System.Net;
 using Moq;
 using OneOf;
-using Orderflow.Domain.Models;
-using Orderflow.Domain.Models.Enums;
+using Orderflow.Features.AlphaVantage.Models;
 using Orderflow.Features.AlphaVantage.Services;
-using Orderflow.Features.Common;
-using Orderflow.Features.Instruments.Common;
+using Orderflow.Features.Common.Enums;
+using Orderflow.Features.Common.Mappers;
+using Orderflow.Features.Common.Models;
+using Orderflow.Features.Instruments.Common.Models;
 using Orderflow.Features.Instruments.GetInstrument.Services;
-using Orderflow.Features.Orders.Common;
+using Orderflow.Features.Orders.Common.Interfaces;
+using Orderflow.Features.Orders.Common.Models;
 using Orderflow.Features.Orders.Common.Repositories;
 using Orderflow.Features.Orders.CreateOrder.Events;
 using Orderflow.Features.Orders.CreateOrder.Services;
-using Orderflow.Features.Trades.Common;
+using Orderflow.Features.Trades.Common.Models;
 using Orderflow.Features.Trades.CreateTrade.Services;
 using Serilog;
 

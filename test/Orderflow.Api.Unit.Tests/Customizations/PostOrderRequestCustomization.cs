@@ -1,5 +1,5 @@
 using AutoFixture;
-using Orderflow.Domain.Models.Enums;
+using Orderflow.Features.Common.Enums;
 using Orderflow.Features.Orders.CreateOrder.Contracts;
 
 namespace Orderflow.Api.Unit.Tests.Customizations;

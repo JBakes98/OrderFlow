@@ -1,14 +1,15 @@
 using Orderflow.Features.AlphaVantage.Contracts;
-using Orderflow.Features.Common;
+using Orderflow.Features.AlphaVantage.Models;
+using Orderflow.Features.Common.Mappers;
 
 namespace Orderflow.Features.AlphaVantage.Mappers;
 
 public class
-    GlobalQuoteResponseToGlobalQuoteDomainMapper : IMapper<GetGlobalQuoteResponse, Orderflow.Domain.Models.GlobalQuote>
+    GlobalQuoteResponseToGlobalQuoteDomainMapper : IMapper<GetGlobalQuoteResponse, GlobalQuote>
 {
-    public Orderflow.Domain.Models.GlobalQuote Map(GetGlobalQuoteResponse source)
+    public GlobalQuote Map(GetGlobalQuoteResponse source)
     {
-        return new Orderflow.Domain.Models.GlobalQuote
+        return new GlobalQuote
         {
             Symbol = source.Symbol,
             Change = double.Parse(source.Change),

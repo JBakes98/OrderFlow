@@ -1,4 +1,4 @@
-namespace Orderflow.Features.Orders.Common;
+namespace Orderflow.Features.Orders.Common.Interfaces;
 
 public interface IOrderBookManager
 {

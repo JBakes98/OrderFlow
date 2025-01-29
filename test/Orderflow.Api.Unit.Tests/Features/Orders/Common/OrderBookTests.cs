@@ -1,5 +1,6 @@
-using Orderflow.Domain.Models.Enums;
-using Orderflow.Features.Orders.Common;
+using Orderflow.Features.Common.Enums;
+using Orderflow.Features.Orders.Common.Models;
+using Orderflow.Features.Orders.Common.Services;
 
 namespace Orderflow.Api.Unit.Tests.Features.Orders.Common;
 

@@ -1,5 +1,5 @@
 using Orderflow.Api.Unit.Tests.Customizations;
-using Orderflow.Events.Factories;
+using Orderflow.Features.Common.Events.Factories;
 using Orderflow.Features.Instruments.CreateInstrument.Events;
 using Orderflow.Features.Orders.CreateOrder.Events;
 

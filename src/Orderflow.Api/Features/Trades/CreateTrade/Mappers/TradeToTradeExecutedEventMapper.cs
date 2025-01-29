@@ -1,5 +1,5 @@
-using Orderflow.Features.Common;
-using Orderflow.Features.Trades.Common;
+using Orderflow.Features.Common.Mappers;
+using Orderflow.Features.Trades.Common.Models;
 using Orderflow.Features.Trades.CreateTrade.Events;
 
 namespace Orderflow.Features.Trades.CreateTrade.Mappers;

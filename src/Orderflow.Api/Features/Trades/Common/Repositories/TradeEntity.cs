@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using Orderflow.Features.Orders.Common;
+using Orderflow.Features.Orders.Common.Repositories;
 
-namespace Orderflow.Features.Trades.Common;
+namespace Orderflow.Features.Trades.Common.Repositories;
 
 public class TradeEntity
 {

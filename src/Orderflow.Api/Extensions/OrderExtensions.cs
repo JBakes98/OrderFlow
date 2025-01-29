@@ -1,4 +1,5 @@
-using Orderflow.Features.Orders.Common;
+using Orderflow.Features.Orders.Common.Models;
+using Orderflow.Features.Orders.Common.Repositories;
 
 namespace Orderflow.Extensions;
 

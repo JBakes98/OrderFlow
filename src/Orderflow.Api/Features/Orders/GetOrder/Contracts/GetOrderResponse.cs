@@ -1,4 +1,4 @@
-using Orderflow.Domain.Models.Enums;
+using Orderflow.Features.Common.Enums;
 
 namespace Orderflow.Features.Orders.GetOrder.Contracts;
 
