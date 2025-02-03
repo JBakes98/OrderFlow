@@ -1,7 +1,8 @@
 using Ardalis.GuardClauses;
 using OneOf;
+using Orderflow.Common.Mappers;
+using Orderflow.Common.Webhooks;
 using Orderflow.Features.AlphaVantage.Services;
-using Orderflow.Features.Common.Mappers;
 using Orderflow.Features.Instruments.GetInstrument.Services;
 using Orderflow.Features.Orders.Common.Interfaces;
 using Orderflow.Features.Orders.Common.Models;
@@ -9,7 +10,7 @@ using Orderflow.Features.Orders.Common.Repositories;
 using Orderflow.Features.Orders.CreateOrder.Events;
 using Orderflow.Features.Trades.CreateTrade.Services;
 using Serilog;
-using Error = Orderflow.Features.Common.Models.Error;
+using Error = Orderflow.Common.Models.Error;
 
 namespace Orderflow.Features.Orders.CreateOrder.Services;
 
@@ -22,6 +23,7 @@ public class CreateOrderService : ICreateOrderService
     private readonly IGetInstrumentService _getInstrumentService;
     private readonly IOrderBookManager _orderBookManager;
     private readonly IProcessTradeService _processTradeService;
+    private readonly IWebhookService _webhookService;
 
     public CreateOrderService(
         IOrderRepository repository,
@@ -30,7 +32,8 @@ public class CreateOrderService : ICreateOrderService
         IAlphaVantageService alphaVantageService,
         IGetInstrumentService getInstrumentService,
         IOrderBookManager orderBookManager,
-        IProcessTradeService processTradeService)
+        IProcessTradeService processTradeService,
+        IWebhookService webhookService)
     {
         _processTradeService = Guard.Against.Null(processTradeService);
         _orderBookManager = Guard.Against.Null(orderBookManager);
@@ -39,6 +42,7 @@ public class CreateOrderService : ICreateOrderService
         _diagnosticContext = Guard.Against.Null(diagnosticContext);
         _orderToOrderRaisedEventMapper = Guard.Against.Null(orderToOrderRaisedEventMapper);
         _repository = Guard.Against.Null(repository);
+        _webhookService = Guard.Against.Null(webhookService);
     }
 
     public async Task<OneOf<Order, Error>> CreateOrder(Order order)
@@ -68,6 +72,8 @@ public class CreateOrderService : ICreateOrderService
 
         var orderBook = _orderBookManager.GetOrderBook(order.InstrumentId);
         var trades = orderBook.AddOrder(order);
+
+        await _webhookService.NotifySubscribersAsync(new { action = "new_order", order });
 
         _diagnosticContext.Set("Trades", trades, true);
         await _processTradeService.ProcessTrades(trades);

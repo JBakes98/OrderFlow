@@ -1,8 +1,9 @@
+using Orderflow.Common.Events.Factories;
+using Orderflow.Common.Mappers;
+using Orderflow.Common.Webhooks;
 using Orderflow.Features.AlphaVantage.Contracts;
 using Orderflow.Features.AlphaVantage.Mappers;
 using Orderflow.Features.AlphaVantage.Models;
-using Orderflow.Features.Common.Events.Factories;
-using Orderflow.Features.Common.Mappers;
 using Orderflow.Features.Exchanges.Common.Mappers;
 using Orderflow.Features.Exchanges.Common.Models;
 using Orderflow.Features.Exchanges.Common.Repositories;
@@ -46,12 +47,13 @@ using Orderflow.Features.Trades.CreateTrade.Events;
 using Orderflow.Features.Trades.CreateTrade.Mappers;
 using Orderflow.Features.Trades.CreateTrade.Services;
 
-namespace Orderflow.Extensions;
+namespace Orderflow.Common.Extensions;
 
 public static class ServiceExtensions
 {
     public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddSingleton<IWebhookService, WebhookService>();
         services.AddScoped<IOutboxEventMapperFactory, OutboxEventMapperFactory>();
 
         services.AddScoped<IOrderRepository, OrderRepository>();
