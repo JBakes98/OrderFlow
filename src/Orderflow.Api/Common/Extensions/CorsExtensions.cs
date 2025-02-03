@@ -1,6 +1,6 @@
 using Orderflow.Options;
 
-namespace Orderflow.Extensions;
+namespace Orderflow.Common.Extensions;
 
 public static class CorsExtensions
 {

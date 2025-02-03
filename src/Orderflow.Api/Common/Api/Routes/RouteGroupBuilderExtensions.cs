@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
-using Orderflow.Api.Authorization;
+using Orderflow.Common.Api.Authorization;
 
-namespace Orderflow.Api.Routes;
+namespace Orderflow.Common.Api.Routes;
 
 public static class RouteGroupBuilderExtensions
 {

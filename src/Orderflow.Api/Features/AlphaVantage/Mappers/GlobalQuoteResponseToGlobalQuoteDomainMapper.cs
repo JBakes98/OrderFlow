@@ -1,6 +1,6 @@
+using Orderflow.Common.Mappers;
 using Orderflow.Features.AlphaVantage.Contracts;
 using Orderflow.Features.AlphaVantage.Models;
-using Orderflow.Features.Common.Mappers;
 
 namespace Orderflow.Features.AlphaVantage.Mappers;
 

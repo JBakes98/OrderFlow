@@ -2,8 +2,8 @@ using System.Net;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Orderflow.Extensions;
-using Orderflow.Features.Common.Mappers;
+using Orderflow.Common.Extensions;
+using Orderflow.Common.Mappers;
 using Orderflow.Features.Exchanges.Common.Models;
 using Orderflow.Features.Exchanges.CreateExchange.Contracts;
 using Orderflow.Features.Exchanges.CreateExchange.Services;
@@ -36,6 +36,7 @@ public static class PostExchange
         var response = exchangeToGetExchangeResponseMapper.Map(exchange);
 
         var uri = UriExtensions.GenerateUri(context, "exchanges", response.Id);
+
         return TypedResults.Created(uri, response);
     }
 }

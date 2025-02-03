@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-using Orderflow.Features.Common.Mappers;
+using Orderflow.Common.Mappers;
 using Orderflow.Features.Exchanges.Common.Models;
 using Orderflow.Features.Exchanges.GetExchange.Contracts;
 using Orderflow.Features.Exchanges.GetExchange.Services;

@@ -1,6 +1,6 @@
 using OneOf;
+using Orderflow.Common.Models;
 using Orderflow.Features.AlphaVantage.Models;
-using Orderflow.Features.Common.Models;
 
 namespace Orderflow.Features.AlphaVantage.Services;
 

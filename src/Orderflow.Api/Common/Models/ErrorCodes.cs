@@ -1,4 +1,4 @@
-namespace Orderflow.Features.Common;
+namespace Orderflow.Common.Models;
 
 public static class ErrorCodes
 {

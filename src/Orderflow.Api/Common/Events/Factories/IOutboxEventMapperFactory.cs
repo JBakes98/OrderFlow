@@ -1,6 +1,6 @@
-using Orderflow.Features.Common.Repositories;
+using Orderflow.Common.Repositories;
 
-namespace Orderflow.Features.Common.Events.Factories;
+namespace Orderflow.Common.Events.Factories;
 
 public interface IOutboxEventMapperFactory
 {

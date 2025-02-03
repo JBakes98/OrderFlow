@@ -1,4 +1,4 @@
-using Orderflow.Features.Common.Models;
+using Orderflow.Common.Models;
 
 namespace Orderflow.Features.Orders.UploadOrderFile.Services;
 
