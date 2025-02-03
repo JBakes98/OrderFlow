@@ -37,6 +37,8 @@ using Orderflow.Features.Orders.CreateOrder.Services;
 using Orderflow.Features.Orders.GetOrder.Contracts;
 using Orderflow.Features.Orders.GetOrder.Mappers;
 using Orderflow.Features.Orders.GetOrder.Services;
+using Orderflow.Features.Orders.GetOrderBook.Contracts;
+using Orderflow.Features.Orders.GetOrderBook.Mappers;
 using Orderflow.Features.Orders.ListOrders.Services;
 using Orderflow.Features.Trades.Common.Models;
 using Orderflow.Features.Trades.Common.Repositories;
@@ -71,6 +73,7 @@ public static class ServiceExtensions
 
         services.AddScoped<IMapper<PostOrderRequest, Order>, PostOrderRequestToOrderMapper>();
         services.AddScoped<IMapper<Order, GetOrderResponse>, OrderToGetOrderResponseMapper>();
+        services.AddScoped<IMapper<Order, OrderBooksOrderResponse>, OrderToOrderBookOrderResponseMapper>();
         services.AddScoped<IMapper<Order, OrderEntity>, OrderDomainToOrderDataMapper>();
         services.AddScoped<IMapper<OrderEntity, Order>, OrderDataToOrderDomainMapper>();
         services.AddScoped<IMapper<Order, OrderRaisedEvent>, OrderToOrderRaisedEventMapper>();

@@ -22,5 +22,8 @@ public static class OrderUserGroup
         group.MapPost("/", PostOrder.Handle)
             // .RequireAuthorization([AuthorizationPolicy.Admin, .. extraRequiredPolicies])
             .WithSummary("Create a order");
+
+        group.MapGet("/orderbook/{id}", GetOrderBook.Endpoints.GetOrderBook.Handle)
+            .WithSummary("Get an instruments Orderbook");
     }
 }
