@@ -1,11 +1,12 @@
 using System.Net;
 using Moq;
 using OneOf;
+using Orderflow.Common.Mappers;
+using Orderflow.Common.Models;
+using Orderflow.Common.Webhooks;
 using Orderflow.Features.AlphaVantage.Models;
 using Orderflow.Features.AlphaVantage.Services;
 using Orderflow.Features.Common.Enums;
-using Orderflow.Features.Common.Mappers;
-using Orderflow.Features.Common.Models;
 using Orderflow.Features.Instruments.Common.Models;
 using Orderflow.Features.Instruments.GetInstrument.Services;
 using Orderflow.Features.Orders.Common.Interfaces;
@@ -29,6 +30,7 @@ public class CreateOrderServiceTests
     private readonly Mock<IOrderBookManager> _orderBookManagerMock;
     private readonly Mock<IOrderBook> _orderBookMock;
     private readonly Mock<IProcessTradeService> _processTradeServiceMock;
+    private readonly Mock<IWebhookService> _webhookServiceMock;
     private readonly CreateOrderService _service;
 
     public CreateOrderServiceTests()
@@ -41,6 +43,7 @@ public class CreateOrderServiceTests
         _orderBookManagerMock = new Mock<IOrderBookManager>();
         _orderBookMock = new Mock<IOrderBook>();
         _processTradeServiceMock = new Mock<IProcessTradeService>();
+        _webhookServiceMock = new Mock<IWebhookService>();
 
         _service = new CreateOrderService(
             _repositoryMock.Object,
@@ -49,7 +52,8 @@ public class CreateOrderServiceTests
             _alphaVantageServiceMock.Object,
             _getInstrumentServiceMock.Object,
             _orderBookManagerMock.Object,
-            _processTradeServiceMock.Object
+            _processTradeServiceMock.Object,
+            _webhookServiceMock.Object
         );
     }
 
@@ -73,7 +77,7 @@ public class CreateOrderServiceTests
 
         _repositoryMock
             .Setup(repo => repo.InsertAsync(order, orderEvent))
-            .ReturnsAsync((Error)null);
+            .ReturnsAsync((Error)null!);
 
         _orderBookMock.Setup(orderBook => orderBook.AddOrder(order))
             .Returns(trades);
@@ -84,7 +88,7 @@ public class CreateOrderServiceTests
 
         _processTradeServiceMock
             .Setup(service => service.ProcessTrades(trades))
-            .ReturnsAsync((Error)null);
+            .ReturnsAsync((Error)null!);
 
         // Act
         var result = await _service.CreateOrder(order);

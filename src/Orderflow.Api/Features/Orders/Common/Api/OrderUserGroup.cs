@@ -1,4 +1,5 @@
-using Orderflow.Api.Routes;
+using Orderflow.Common.Api.Routes;
+using Orderflow.Common.Webhooks;
 using Orderflow.Features.Orders.CreateOrder.Endpoints;
 
 namespace Orderflow.Features.Orders.Common.Api;
@@ -25,5 +26,18 @@ public static class OrderUserGroup
 
         group.MapGet("/orderbook/{id}", GetOrderBook.Endpoints.GetOrderBook.Handle)
             .WithSummary("Get an instruments Orderbook");
+
+        // Subscribe to webhook
+        app.MapPost("/webhooks/subscribe", Endpoints.PostWebhookSubscribe.Handle)
+            .WithSummary("Subscribe to webhook");
+
+// Notify all subscribers (trigger webhook updates)
+        app.MapPost("/webhooks/notify", async (object payload) =>
+        {
+            var webhookService = new WebhookService();
+
+            await webhookService.NotifySubscribersAsync(payload);
+            return Results.Ok();
+        });
     }
 }

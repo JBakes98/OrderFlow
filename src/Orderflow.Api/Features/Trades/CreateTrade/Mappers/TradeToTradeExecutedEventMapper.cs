@@ -1,4 +1,4 @@
-using Orderflow.Features.Common.Mappers;
+using Orderflow.Common.Mappers;
 using Orderflow.Features.Trades.Common.Models;
 using Orderflow.Features.Trades.CreateTrade.Events;
 

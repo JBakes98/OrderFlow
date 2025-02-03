@@ -1,5 +1,5 @@
 using OneOf;
-using Orderflow.Features.Common.Models;
+using Orderflow.Common.Models;
 using Orderflow.Features.Orders.Common.Models;
 using Orderflow.Features.Orders.CreateOrder.Events;
 

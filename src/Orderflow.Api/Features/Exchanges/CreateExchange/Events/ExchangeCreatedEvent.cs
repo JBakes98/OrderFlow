@@ -1,4 +1,4 @@
-using Orderflow.Features.Common.Events;
+using Orderflow.Common.Events;
 
 namespace Orderflow.Features.Exchanges.CreateExchange.Events;
 

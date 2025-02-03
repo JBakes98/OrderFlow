@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
-using Orderflow.Api.Authorization;
-using Orderflow.Extensions;
+using Orderflow.Common.Api.Authorization;
+using Orderflow.Common.Extensions;
 using Orderflow.Features.AlphaVantage;
 using Orderflow.Features.Exchanges.Common.Api;
 using Orderflow.Features.Instruments.Common.Api;
