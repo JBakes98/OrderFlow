@@ -1,7 +1,7 @@
 using Serilog;
 using Serilog.Exceptions;
 
-namespace Orderflow.Extensions;
+namespace Orderflow.Common.Extensions;
 
 public static class LoggingExtensions
 {

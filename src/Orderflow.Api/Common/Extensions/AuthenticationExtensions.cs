@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Orderflow.Options;
 
-namespace Orderflow.Extensions;
+namespace Orderflow.Common.Extensions;
 
 public static class AuthenticationExtensions
 {

@@ -6,7 +6,7 @@ using Orderflow.Features.Instruments.CreateInstrument.Validators;
 using Orderflow.Features.Orders.CreateOrder.Contracts;
 using Orderflow.Features.Orders.CreateOrder.Validators;
 
-namespace Orderflow.Extensions;
+namespace Orderflow.Common.Extensions;
 
 public static class ValidatorExtensions
 {

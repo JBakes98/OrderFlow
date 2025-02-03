@@ -1,10 +1,9 @@
 using System.Net;
 using Ardalis.GuardClauses;
-using Orderflow.Features.Common;
-using Orderflow.Features.Common.Events.Factories;
-using Orderflow.Features.Common.Mappers;
-using Orderflow.Features.Common.Models;
-using Orderflow.Features.Common.Repositories;
+using Orderflow.Common.Events.Factories;
+using Orderflow.Common.Mappers;
+using Orderflow.Common.Models;
+using Orderflow.Common.Repositories;
 using Orderflow.Features.Trades.Common.Models;
 using Orderflow.Features.Trades.CreateTrade.Events;
 using Serilog;

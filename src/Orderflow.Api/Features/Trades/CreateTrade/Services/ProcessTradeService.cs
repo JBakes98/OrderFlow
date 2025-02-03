@@ -1,6 +1,6 @@
 using Ardalis.GuardClauses;
-using Orderflow.Features.Common.Mappers;
-using Orderflow.Features.Common.Models;
+using Orderflow.Common.Mappers;
+using Orderflow.Common.Models;
 using Orderflow.Features.Trades.Common.Models;
 using Orderflow.Features.Trades.Common.Repositories;
 using Orderflow.Features.Trades.CreateTrade.Events;

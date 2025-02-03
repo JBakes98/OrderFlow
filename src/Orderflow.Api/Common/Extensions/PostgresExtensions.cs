@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Orderflow.Features.Common.Repositories;
+using Orderflow.Common.Repositories;
 
-namespace Orderflow.Extensions;
+namespace Orderflow.Common.Extensions;
 
 public static class PostgresExtensions
 {

@@ -4,7 +4,7 @@ using Orderflow.Features.Instruments.Common.Repositories;
 using Orderflow.Features.Orders.Common.Repositories;
 using Orderflow.Features.Trades.Common.Repositories;
 
-namespace Orderflow.Features.Common.Repositories;
+namespace Orderflow.Common.Repositories;
 
 public class OrderflowDbContext(DbContextOptions<OrderflowDbContext> options)
     : Microsoft.EntityFrameworkCore.DbContext(options)

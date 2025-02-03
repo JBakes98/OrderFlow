@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Orderflow.Extensions;
+namespace Orderflow.Common.Extensions;
 
 public static class ConfigurationExtensions
 {

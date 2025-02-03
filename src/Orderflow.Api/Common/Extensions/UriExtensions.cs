@@ -1,4 +1,4 @@
-namespace Orderflow.Extensions;
+namespace Orderflow.Common.Extensions;
 
 public static class UriExtensions
 {

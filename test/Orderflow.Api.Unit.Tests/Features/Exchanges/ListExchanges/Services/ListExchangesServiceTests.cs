@@ -1,7 +1,7 @@
 using System.Net;
 using Moq;
 using OneOf;
-using Orderflow.Features.Common.Models;
+using Orderflow.Common.Models;
 using Orderflow.Features.Exchanges.Common.Models;
 using Orderflow.Features.Exchanges.Common.Repositories;
 using Orderflow.Features.Exchanges.ListExchanges.Services;

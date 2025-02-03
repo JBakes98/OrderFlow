@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 
-namespace Orderflow.Api.Authorization;
+namespace Orderflow.Common.Api.Authorization;
 
 public static class AuthorizationPolicy
 {
