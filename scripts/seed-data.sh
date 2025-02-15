@@ -1,7 +1,7 @@
 #!/bin/zsh
 
-URL="http://localhost:5212/orders"
-INSTRUMENT_ID="cd16f716-ef54-469b-b571-6761313b9c7d"  # Replace with actual instrument ID
+URL="http://localhost:8080/orders"
+INSTRUMENT_ID="09e6bd80-1904-4d82-9fa0-22e12f56c5c4"  # Replace with actual instrument ID
 NUM_REQUESTS=100  # Number of requests to send
 
 for i in {1..$NUM_REQUESTS}; do
