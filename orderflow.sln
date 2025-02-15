@@ -5,7 +5,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yml = docker-compose.yml
 		docker-compose.infra.yml = docker-compose.infra.yml
 		docker-compose.ui.yml = docker-compose.ui.yml
-		docker-compose.logging.yml = docker-compose.logging.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orderflow.Api", "src\Orderflow.Api\Orderflow.Api.csproj", "{38813860-FF7B-499C-AFF5-07C1F3EAFBDB}"
