@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using OpenTelemetry;
+using OpenTelemetry.Metrics;
 using Orderflow.Common.Api.Authorization;
 using Orderflow.Common.Extensions;
 using Orderflow.Features.AlphaVantage;
@@ -8,56 +10,70 @@ using Orderflow.Features.Orders.Common.Api;
 using Scalar.AspNetCore;
 using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace Orderflow;
 
-var configBuilder = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", false, false)
-    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, false)
-    .AddEnvironmentVariables("ORDERFLOW_");
-
-var config = configBuilder.Build();
-
-builder.RegisterLogging(config);
-
-builder.Services.RegisterAwsServices(config);
-builder.Services.RegisterPostgres(config);
-builder.Services.RegisterServices(config);
-builder.Services.RegisterValidators();
-builder.Services.RegisterAlphaVantage(config);
-
-builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.RegisterAuthentication(config);
-builder.Services.AddAuthorization(opt => { opt.AddAuthorizationPolicies(); });
-
-builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
+public static class Program
 {
-    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
-});
+    static void Main(string[] args)
+    {
+        using MeterProvider meterProvider = Sdk.CreateMeterProviderBuilder()
+            .AddMeter("Orderflow.Orderbook")
+            .AddPrometheusHttpListener(
+                opt => opt.UriPrefixes = ["http://localhost:9464/"])
+            .Build();
 
-builder.Services.AddProblemDetails();
+        var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.RegisterCors(config);
+        var configBuilder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", false, false)
+            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, false)
+            .AddEnvironmentVariables("ORDERFLOW_");
 
-builder.Services.AddOpenApi();
+        var config = configBuilder.Build();
 
-var app = builder.Build();
+        builder.RegisterLogging(config);
+        builder.AddOtel(config);
 
-app.UseCors("OrderflowDashboard");
-app.UseHttpsRedirection();
-app.UseExceptionHandler();
+        builder.Services.RegisterAwsServices(config);
+        builder.Services.RegisterPostgres(config);
+        builder.Services.RegisterServices(config);
+        builder.Services.RegisterValidators();
+        builder.Services.RegisterAlphaVantage(config);
 
-app.UseSerilogRequestLogging();
+        builder.Services.RegisterAuthentication(config);
+        builder.Services.AddAuthorization(opt => { opt.AddAuthorizationPolicies(); });
+        builder.Services.RegisterCors(config);
 
-app.MapExchangeUserGroup();
-app.MapInstrumentUserGroup();
-app.MapOrderUserGroup();
+        builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
+        {
+            options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
+        builder.Services.AddProblemDetails();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference();
+
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddOpenApi();
+
+        var app = builder.Build();
+
+        app.MapPrometheusScrapingEndpoint();
+        app.UseSerilogRequestLogging();
+
+        app.UseCors("OrderflowDashboard");
+        app.UseHttpsRedirection();
+        app.UseExceptionHandler();
+
+        app.MapExchangeUserGroup();
+        app.MapInstrumentUserGroup();
+        app.MapOrderUserGroup();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.MapOpenApi();
+            app.MapScalarApiReference();
+        }
+
+        app.Run();
+    }
 }
-
-app.Run();
