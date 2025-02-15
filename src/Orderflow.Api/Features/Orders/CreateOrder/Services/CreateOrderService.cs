@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using OneOf;
+using Orderflow.Common.Extensions;
 using Orderflow.Common.Mappers;
 using Orderflow.Common.Webhooks;
 using Orderflow.Features.AlphaVantage.Services;
@@ -69,6 +70,8 @@ public class CreateOrderService : ICreateOrderService
         _diagnosticContext.Set("Order", order, true);
         _diagnosticContext.Set("OrderEvent", orderEvent, true);
         _diagnosticContext.Set("OrderPlaced", true);
+        MetricExtensions.CountOrdersPlaced.Add(1);
+
 
         var orderBook = _orderBookManager.GetOrderBook(order.InstrumentId);
         var trades = orderBook.AddOrder(order);
