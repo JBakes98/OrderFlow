@@ -31,7 +31,7 @@ public static class OrderUserGroup
         app.MapPost("/webhooks/subscribe", Endpoints.PostWebhookSubscribe.Handle)
             .WithSummary("Subscribe to webhook");
 
-// Notify all subscribers (trigger webhook updates)
+        // Notify all subscribers (trigger webhook updates)
         app.MapPost("/webhooks/notify", async (object payload) =>
         {
             var webhookService = new WebhookService();
